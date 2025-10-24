@@ -3,8 +3,11 @@ import 'package:inventory_manager/bloc/inventory/inventory_event.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_state.dart';
 import 'package:inventory_manager/models/inventory_batch.dart';
 import 'package:inventory_manager/services/consumption_service.dart';
+import 'package:inventory_manager/services/recipe_database.dart';
 
 class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
+  final RecipeDatabase _database = RecipeDatabase.instance;
+
   InventoryBloc() : super(const InventoryInitial()) {
     on<LoadInventory>(_onLoadInventory);
     on<AddInventoryBatch>(_onAddInventoryBatch);
@@ -22,9 +25,7 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
   ) async {
     emit(const InventoryLoading());
     try {
-      // TODO: Load from repository/database
-      // For now, start with empty list
-      final batches = <InventoryBatch>[];
+      final batches = await _database.getAllInventoryBatches();
       emit(InventoryLoaded(batches: batches));
     } catch (e) {
       emit(InventoryError('Failed to load inventory: $e'));
@@ -39,7 +40,7 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
     if (state is InventoryLoaded) {
       final currentState = state as InventoryLoaded;
       try {
-        // TODO: Save to repository/database
+        await _database.createInventoryBatch(event.batch);
         final updatedBatches = List<InventoryBatch>.from(currentState.batches)
           ..add(event.batch);
         final sortedBatches = _sortBatches(updatedBatches, currentState.currentSort);
@@ -58,7 +59,7 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
     if (state is InventoryLoaded) {
       final currentState = state as InventoryLoaded;
       try {
-        // TODO: Update in repository/database
+        await _database.updateInventoryBatch(event.batch);
         final updatedBatches = currentState.batches.map((batch) {
           return batch.id == event.batch.id ? event.batch : batch;
         }).toList();
@@ -78,7 +79,7 @@ class InventoryBloc extends Bloc<InventoryEvent, InventoryState> {
     if (state is InventoryLoaded) {
       final currentState = state as InventoryLoaded;
       try {
-        // TODO: Delete from repository/database
+        await _database.deleteInventoryBatch(event.batchId);
         final updatedBatches = currentState.batches
             .where((batch) => batch.id != event.batchId)
             .toList();

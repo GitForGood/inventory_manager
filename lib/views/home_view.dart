@@ -4,6 +4,11 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/services/storage_calculator_service.dart';
+import 'package:inventory_manager/views/barcode_scanner_view.dart';
+import 'package:inventory_manager/views/batch_form_view.dart';
+import 'package:inventory_manager/views/food_item_detail_view.dart';
+import 'package:inventory_manager/widgets/storage_summary_card.dart';
+import 'package:inventory_manager/models/food_item_group.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -79,7 +84,7 @@ class HomeView extends StatelessWidget {
                   return Column(
                     children: [
                       if (storageStatus != null)
-                        _StorageSummaryCard(status: storageStatus),
+                        StorageSummaryCard(status: storageStatus),
                       Expanded(
                         child: Center(
                           child: Column(
@@ -101,48 +106,65 @@ class HomeView extends StatelessWidget {
                   );
                 }
 
+                // Group batches by food item
+                final groupedItems = FoodItemGroup.groupBatches(filteredBatches);
+
                 return Column(
                   children: [
                     if (storageStatus != null)
-                      _StorageSummaryCard(status: storageStatus),
+                      StorageSummaryCard(status: storageStatus),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: filteredBatches.length,
+                        itemCount: groupedItems.length,
                         itemBuilder: (context, index) {
-                          final batch = filteredBatches[index];
-                          final isExpired = batch.isExpired();
-                          final isExpiringSoon = batch.isExpiringSoon();
+                          final group = groupedItems[index];
+                          final status = group.expirationStatus;
+
+                          Color statusColor;
+                          switch (status) {
+                            case ExpirationStatus.expired:
+                              statusColor = Colors.red;
+                              break;
+                            case ExpirationStatus.expiringSoon:
+                              statusColor = Colors.orange;
+                              break;
+                            case ExpirationStatus.fresh:
+                              statusColor = Colors.green;
+                              break;
+                          }
 
                           return Card(
                             margin: const EdgeInsets.symmetric(
-                              horizontal: 8,
+                              horizontal: 16,
                               vertical: 4,
                             ),
+                            shape: Theme.of(context).cardTheme.shape,
                             child: ListTile(
                               leading: CircleAvatar(
-                                backgroundColor: isExpired
-                                    ? Colors.red
-                                    : isExpiringSoon
-                                    ? Colors.orange
-                                    : Colors.green,
+                                backgroundColor: statusColor,
                                 child: Text(
-                                  batch.count.toString(),
+                                  group.batchCount.toString(),
                                   style: const TextStyle(color: Colors.white),
                                 ),
                               ),
-                              title: Text(batch.item.name),
+                              title: Text(group.foodItem.name),
                               subtitle: Text(
-                                'Expires: ${_formatDate(batch.expirationDate)}\n'
-                                '${batch.daysUntilExpiration()} days remaining',
+                                'Closest expiry: ${_formatDate(group.closestExpirationDate)}\n'
+                                '${group.daysUntilClosestExpiration >= 0 ? "${group.daysUntilClosestExpiration} days remaining" : "Expired ${-group.daysUntilClosestExpiration} days ago"}',
                               ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete_outline),
-                                onPressed: () {
-                                  _confirmDelete(context, batch.id);
-                                },
+                              trailing: Text(
+                                '${group.totalCount}',
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                               onTap: () {
-                                // TODO: Navigate to batch details
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FoodItemDetailView(group: group),
+                                  ),
+                                );
                               },
                             ),
                           );
@@ -170,23 +192,36 @@ class HomeView extends StatelessWidget {
         children: [
           SpeedDialChild(
             child: const Icon(Icons.inventory),
-            label: 'Restock Item in Inventory',
+            label: 'Restock Existing Item',
             onTap: () {
-              debugPrint('Tried to restock');
+              _showRestockDialog(context);
             },
           ),
           SpeedDialChild(
             child: const Icon(Icons.barcode_reader),
             label: 'Scan Barcode',
             onTap: () {
-              debugPrint('Tried to open camera');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BarcodeScannerView(),
+                ),
+              );
             },
           ),
           SpeedDialChild(
             child: const Icon(Icons.keyboard),
-            label: 'Enter Barcode Manually',
+            label: 'Enter Manually',
             onTap: () {
-              debugPrint('Tried to manually enter barcode');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BatchFormView(
+                    barcode: null,
+                    productData: null,
+                  ),
+                ),
+              );
             },
           ),
         ],
@@ -318,238 +353,65 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  void _confirmDelete(BuildContext context, String batchId) {
+  void _showRestockDialog(BuildContext context) {
+    final inventoryState = context.read<InventoryBloc>().state;
+
+    if (inventoryState is! InventoryLoaded || inventoryState.batches.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No items in inventory to restock. Add a new item first.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    // Group batches to get unique food items
+    final groups = FoodItemGroup.groupBatches(inventoryState.batches);
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Batch'),
-        content: const Text('Are you sure you want to delete this batch?'),
+        title: const Text('Restock Item'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: groups.length,
+            itemBuilder: (context, index) {
+              final group = groups[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  child: Text(
+                    group.totalCount.toString(),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+                title: Text(group.foodItem.name),
+                subtitle: Text('${group.batchCount} batch${group.batchCount > 1 ? "es" : ""}'),
+                onTap: () {
+                  Navigator.pop(dialogContext);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FoodItemDetailView(group: group),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
-          TextButton(
-            onPressed: () {
-              context.read<InventoryBloc>().add(DeleteInventoryBatch(batchId));
-              Navigator.pop(dialogContext);
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showAddBatchDialog(BuildContext context) {
-    // TODO: Implement proper add batch form
-    showDialog(
-      context: context,
-      builder: (dialogContext) => SimpleDialog(
-        title: const Text('Choose item'),
-        children: [
-          ListTile(title: Text('Scan barcode')),
-          ListTile(title: Text('Choose from storage')),
-          ListTile(title: Text('Manually enter barcode')),
-        ],
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Add batch form coming soon!')),
-    );
-  }
-}
-
-class _StorageSummaryCard extends StatelessWidget {
-  final StorageStatus status;
-
-  const _StorageSummaryCard({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Card(
-      margin: const EdgeInsets.all(12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.analytics_outlined,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Storage Overview',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _SummaryItem(
-                  icon: Icons.inventory_2,
-                  label: 'Items',
-                  value: status.totalItems.toString(),
-                  color: Colors.blue,
-                ),
-                _SummaryItem(
-                  icon: Icons.category,
-                  label: 'Batches',
-                  value: status.totalBatches.toString(),
-                  color: Colors.purple,
-                ),
-                _SummaryItem(
-                  icon: Icons.calendar_today,
-                  label: 'Days',
-                  value: status.estimatedDays.toStringAsFixed(1),
-                  color: status.estimatedDays < 7
-                      ? Colors.red
-                      : status.estimatedDays < 14
-                      ? Colors.orange
-                      : Colors.green,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    size: 20,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Limited by ${status.limitingFactor} (~${status.estimatedDays.toStringAsFixed(1)} days)',
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _NutrientChip(
-                  label: 'Carbs',
-                  value: status.totalNutrition['carbohydrates']!,
-                  color: Colors.orange,
-                ),
-                _NutrientChip(
-                  label: 'Fats',
-                  value: status.totalNutrition['fats']!,
-                  color: Colors.yellow,
-                ),
-                _NutrientChip(
-                  label: 'Protein',
-                  value: status.totalNutrition['protein']!,
-                  color: Colors.red,
-                ),
-                _NutrientChip(
-                  label: 'Kcal',
-                  value: status.totalNutrition['kcal']!,
-                  color: Colors.deepOrange,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SummaryItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  const _SummaryItem({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 32),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        Text(label, style: Theme.of(context).textTheme.bodySmall),
-      ],
-    );
-  }
-}
-
-class _NutrientChip extends StatelessWidget {
-  final String label;
-  final double value;
-  final Color color;
-
-  const _NutrientChip({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color, width: 1),
-      ),
-      child: Column(
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10,
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            value > 1000
-                ? '${(value / 1000).toStringAsFixed(1)}k'
-                : value.toStringAsFixed(0),
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
         ],
       ),
     );
   }
 }
+
+
+

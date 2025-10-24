@@ -4,16 +4,19 @@ import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/bloc/recipes/recipes_barrel.dart';
 import 'package:inventory_manager/bloc/quota/quota_barrel.dart';
+import 'package:inventory_manager/repositories/recipe_repository.dart';
 import 'package:inventory_manager/repositories/settings_repository.dart';
-import 'package:inventory_manager/repositories/favorites_repository.dart';
 import 'package:inventory_manager/repositories/quota_repository.dart';
+import 'package:inventory_manager/services/app_initialization.dart';
 import 'package:inventory_manager/themes/nixie_theme.dart';
 import 'package:inventory_manager/views/home_view.dart';
 import 'package:inventory_manager/views/recipes_view.dart';
 import 'package:inventory_manager/views/quota_view.dart';
 import 'package:inventory_manager/views/settings_view.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppInitialization.initialize();
   runApp(const MyApp());
 }
 
@@ -34,7 +37,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-              RecipesBloc(repository: FavoritesRepository())
+              RecipesBloc(repository: RecipeRepository())
                 ..add(const LoadFavorites()),
         ),
         BlocProvider(

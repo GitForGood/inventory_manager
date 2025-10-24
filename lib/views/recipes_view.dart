@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/recipes/recipes_barrel.dart';
 import 'package:inventory_manager/models/recipe.dart';
+import 'package:inventory_manager/views/recipe_form_view.dart';
 
 class RecipesView extends StatefulWidget {
   const RecipesView({super.key});
@@ -18,7 +19,11 @@ class _RecipesViewState extends State<RecipesView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    // Initialize with 2 tabs, Favorites tab is index 0 (default)
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+
+    // Load all recipes when the view is opened (lazy loading)
+    context.read<RecipesBloc>().add(const LoadAllRecipes());
   }
 
   @override
@@ -36,8 +41,8 @@ class _RecipesViewState extends State<RecipesView>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(icon: Icon(Icons.search), text: 'Browse'),
             Tab(icon: Icon(Icons.favorite), text: 'Favorites'),
+            Tab(icon: Icon(Icons.restaurant_menu), text: 'All Recipes'),
           ],
         ),
       ),
@@ -55,48 +60,23 @@ class _RecipesViewState extends State<RecipesView>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildBrowseTab(),
             _buildFavoritesTab(),
+            _buildAllRecipesTab(),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildBrowseTab() {
-    return BlocBuilder<RecipesBloc, RecipesState>(
-      builder: (context, state) {
-        if (state is RecipesLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is RecipesLoaded) {
-          if (!state.hasApiKey) {
-            return _buildApiKeyPrompt();
-          }
-
-          return Column(
-            children: [
-              _buildSearchBar(state),
-              if (state.searchResults.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${state.searchResults.length} results for "${state.lastQuery}"',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ),
-                Expanded(
-                  child: _buildRecipeGrid(state.searchResults, state),
-                ),
-              ] else
-                Expanded(
-                  child: _buildEmptyState(),
-                ),
-            ],
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const RecipeFormView(),
+            ),
           );
-        }
-
-        return const Center(child: Text('Loading recipes...'));
-      },
+        },
+        icon: const Icon(Icons.add),
+        label: const Text('New Recipe'),
+      ),
     );
   }
 
@@ -136,60 +116,67 @@ class _RecipesViewState extends State<RecipesView>
     );
   }
 
+  Widget _buildAllRecipesTab() {
+    return BlocBuilder<RecipesBloc, RecipesState>(
+      builder: (context, state) {
+        if (state is RecipesLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is RecipesLoaded) {
+          return Column(
+            children: [
+              _buildSearchBar(state),
+              if (state.searchResults.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '${state.searchResults.length} recipe${state.searchResults.length == 1 ? '' : 's'}${state.lastQuery != null ? ' - ${state.lastQuery}' : ''}',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ),
+                Expanded(
+                  child: _buildRecipeGrid(state.searchResults, state),
+                ),
+              ] else
+                Expanded(
+                  child: _buildEmptyState(),
+                ),
+            ],
+          );
+        }
+
+        return const Center(child: Text('Loading recipes...'));
+      },
+    );
+  }
+
   Widget _buildSearchBar(RecipesLoaded state) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
-      child: Column(
-        children: [
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search recipes...',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: _searchController.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _searchController.clear();
-                        context.read<RecipesBloc>().add(const ClearSearch());
-                      },
-                    )
-                  : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onSubmitted: (value) {
-              if (value.isNotEmpty) {
-                context.read<RecipesBloc>().add(SearchRecipes(value));
-              }
-            },
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          hintText: 'Search recipes by title...',
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: _searchController.text.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
                   onPressed: () {
-                    context.read<RecipesBloc>().add(const LoadRandomRecipes());
+                    _searchController.clear();
+                    context.read<RecipesBloc>().add(const LoadAllRecipes());
                   },
-                  icon: const Icon(Icons.shuffle),
-                  label: const Text('Random'),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    _showApiKeyDialog();
-                  },
-                  icon: const Icon(Icons.settings),
-                  label: const Text('API Key'),
-                ),
-              ),
-            ],
+                )
+              : null,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-        ],
+        ),
+        onSubmitted: (value) {
+          if (value.isNotEmpty) {
+            context.read<RecipesBloc>().add(SearchRecipes(value));
+          } else {
+            context.read<RecipesBloc>().add(const LoadAllRecipes());
+          }
+        },
       ),
     );
   }
@@ -228,94 +215,11 @@ class _RecipesViewState extends State<RecipesView>
           Icon(Icons.restaurant_menu, size: 64, color: Colors.grey[400]),
           const SizedBox(height: 16),
           const Text(
-            'Search for recipes',
+            'No recipes found',
             style: TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 8),
-          const Text('Try searching or get random recipes'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildApiKeyPrompt() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.key, size: 64),
-            const SizedBox(height: 16),
-            const Text(
-              'API Key Required',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'To browse recipes, you need a free Spoonacular API key.',
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _showApiKeyDialog,
-              child: const Text('Set API Key'),
-            ),
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () {
-                // TODO: Open Spoonacular website
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Visit: spoonacular.com/food-api'),
-                  ),
-                );
-              },
-              child: const Text('Get a free API key at Spoonacular'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showApiKeyDialog() {
-    final controller = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Spoonacular API Key'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Enter your Spoonacular API key to browse recipes.',
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller,
-              decoration: const InputDecoration(
-                labelText: 'API Key',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                context.read<RecipesBloc>().add(SetApiKey(controller.text));
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: const Text('Save'),
-          ),
+          const Text('Try a different search or create a new recipe'),
         ],
       ),
     );
@@ -359,6 +263,7 @@ class _RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAlias,
+      elevation: 2,
       child: InkWell(
         onTap: onTap,
         child: Column(
@@ -368,7 +273,7 @@ class _RecipeCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  if (recipe.imageUrl != null)
+                  if (recipe.imageUrl != null && recipe.imageUrl!.isNotEmpty)
                     Image.network(
                       recipe.imageUrl!,
                       fit: BoxFit.cover,
@@ -402,7 +307,7 @@ class _RecipeCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -410,26 +315,26 @@ class _RecipeCard extends StatelessWidget {
                     recipe.title,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 15,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.schedule, size: 14),
+                      const Icon(Icons.schedule, size: 16, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
                         '${recipe.readyInMinutes} min',
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 13, color: Colors.grey),
                       ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.people, size: 14),
+                      const Spacer(),
+                      const Icon(Icons.restaurant, size: 16, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
-                        '${recipe.servings}',
-                        style: const TextStyle(fontSize: 12),
+                        '${recipe.ingredients.length} ing.',
+                        style: const TextStyle(fontSize: 13, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -483,20 +388,25 @@ class _RecipeDetailsSheet extends StatelessWidget {
                 ),
           ),
           const SizedBox(height: 16),
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: [
               Chip(
                 avatar: const Icon(Icons.schedule, size: 16),
-                label: Text('${recipe.readyInMinutes} min'),
+                label: Text('${recipe.readyInMinutes} minutes'),
               ),
-              const SizedBox(width: 8),
               Chip(
                 avatar: const Icon(Icons.people, size: 16),
                 label: Text('${recipe.servings} servings'),
               ),
+              Chip(
+                avatar: const Icon(Icons.restaurant, size: 16),
+                label: Text('${recipe.ingredients.length} ingredients'),
+              ),
             ],
           ),
-          if (recipe.summary != null) ...[
+          if (recipe.summary != null && recipe.summary!.isNotEmpty) ...[
             const SizedBox(height: 16),
             const Text(
               'Summary',
@@ -519,11 +429,10 @@ class _RecipeDetailsSheet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text('• '),
-                          Expanded(child: Text(ingredient)),
+                          Expanded(child: Text(ingredient.displayString)),
                         ],
                       ),
-                    ))
-                ,
+                    )),
           ],
           if (recipe.instructions.isNotEmpty) ...[
             const SizedBox(height: 16),
@@ -534,12 +443,34 @@ class _RecipeDetailsSheet extends StatelessWidget {
             const SizedBox(height: 8),
             ...recipe.instructions.asMap().entries.map(
                   (entry) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${entry.key + 1}. '),
-                        Expanded(child: Text(entry.value)),
+                        Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${entry.key + 1}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(entry.value),
+                          ),
+                        ),
                       ],
                     ),
                   ),

@@ -23,19 +23,29 @@ class SearchRecipes extends RecipesEvent {
   List<Object?> get props => [query];
 }
 
-// Load random recipes
-class LoadRandomRecipes extends RecipesEvent {
-  const LoadRandomRecipes();
-}
-
-// Search by ingredients from inventory
+// Search by ingredients from inventory (by ingredient IDs)
 class SearchByIngredients extends RecipesEvent {
-  final List<String> ingredients;
+  final List<int> ingredientIds;
 
-  const SearchByIngredients(this.ingredients);
+  const SearchByIngredients(this.ingredientIds);
 
   @override
-  List<Object?> get props => [ingredients];
+  List<Object?> get props => [ingredientIds];
+}
+
+// Load all recipes (lazy loaded when navigating to recipe view)
+class LoadAllRecipes extends RecipesEvent {
+  const LoadAllRecipes();
+}
+
+// Get recipes for a specific food item
+class GetRecipesForFoodItem extends RecipesEvent {
+  final String foodItemId;
+
+  const GetRecipesForFoodItem(this.foodItemId);
+
+  @override
+  List<Object?> get props => [foodItemId];
 }
 
 // Toggle favorite status
@@ -51,14 +61,4 @@ class ToggleFavorite extends RecipesEvent {
 // Clear search results
 class ClearSearch extends RecipesEvent {
   const ClearSearch();
-}
-
-// Set API key
-class SetApiKey extends RecipesEvent {
-  final String apiKey;
-
-  const SetApiKey(this.apiKey);
-
-  @override
-  List<Object?> get props => [apiKey];
 }

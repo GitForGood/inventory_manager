@@ -1,23 +1,22 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/recipes/recipes_event.dart';
 import 'package:inventory_manager/bloc/recipes/recipes_state.dart';
-import 'package:inventory_manager/repositories/favorites_repository.dart';
-import 'package:inventory_manager/services/recipe_api_service.dart';
+import 'package:inventory_manager/repositories/recipe_repository.dart';
 
 class RecipesBloc extends Bloc<RecipesEvent, RecipesState> {
-  final FavoritesRepository repository;
+  final RecipeRepository repository;
 
   RecipesBloc({required this.repository}) : super(const RecipesInitial()) {
     on<LoadFavorites>(_onLoadFavorites);
+    on<LoadAllRecipes>(_onLoadAllRecipes);
     on<SearchRecipes>(_onSearchRecipes);
-    on<LoadRandomRecipes>(_onLoadRandomRecipes);
     on<SearchByIngredients>(_onSearchByIngredients);
+    on<GetRecipesForFoodItem>(_onGetRecipesForFoodItem);
     on<ToggleFavorite>(_onToggleFavorite);
     on<ClearSearch>(_onClearSearch);
-    on<SetApiKey>(_onSetApiKey);
   }
 
-  // Load favorites from repository
+  // Load favorites from database (called on app startup)
   Future<void> _onLoadFavorites(
     LoadFavorites event,
     Emitter<RecipesState> emit,
@@ -25,22 +24,38 @@ class RecipesBloc extends Bloc<RecipesEvent, RecipesState> {
     emit(const RecipesLoading());
     try {
       final favorites = await repository.loadFavorites();
-      final apiKey = await repository.loadApiKey();
-
-      if (apiKey != null && apiKey.isNotEmpty) {
-        RecipeApiService.setApiKey(apiKey);
-      }
 
       emit(RecipesLoaded(
         favorites: favorites,
-        hasApiKey: apiKey != null && apiKey.isNotEmpty,
       ));
     } catch (e) {
       emit(RecipesError('Failed to load favorites: $e'));
     }
   }
 
-  // Search recipes
+  // Load all recipes (lazy loaded when navigating to recipe view)
+  Future<void> _onLoadAllRecipes(
+    LoadAllRecipes event,
+    Emitter<RecipesState> emit,
+  ) async {
+    if (state is RecipesLoaded) {
+      final currentState = state as RecipesLoaded;
+      emit(const RecipesLoading());
+      try {
+        final allRecipes = await repository.loadAllRecipes();
+
+        emit(currentState.copyWith(
+          searchResults: allRecipes,
+          lastQuery: 'All Recipes',
+        ));
+      } catch (e) {
+        emit(RecipesError('Failed to load recipes: $e'));
+        emit(currentState);
+      }
+    }
+  }
+
+  // Search recipes (searches local database first, can be extended for API)
   Future<void> _onSearchRecipes(
     SearchRecipes event,
     Emitter<RecipesState> emit,
@@ -48,18 +63,10 @@ class RecipesBloc extends Bloc<RecipesEvent, RecipesState> {
     if (state is RecipesLoaded) {
       final currentState = state as RecipesLoaded;
 
-      if (!currentState.hasApiKey) {
-        emit(const RecipesError('Please set your Spoonacular API key in settings'));
-        emit(currentState);
-        return;
-      }
-
       emit(const RecipesLoading());
       try {
-        final results = await RecipeApiService.searchRecipes(
-          query: event.query,
-          number: 20,
-        );
+        // Search local database
+        final results = await repository.searchRecipes(event.query);
 
         emit(currentState.copyWith(
           searchResults: results,
@@ -72,36 +79,8 @@ class RecipesBloc extends Bloc<RecipesEvent, RecipesState> {
     }
   }
 
-  // Load random recipes
-  Future<void> _onLoadRandomRecipes(
-    LoadRandomRecipes event,
-    Emitter<RecipesState> emit,
-  ) async {
-    if (state is RecipesLoaded) {
-      final currentState = state as RecipesLoaded;
 
-      if (!currentState.hasApiKey) {
-        emit(const RecipesError('Please set your Spoonacular API key in settings'));
-        emit(currentState);
-        return;
-      }
-
-      emit(const RecipesLoading());
-      try {
-        final results = await RecipeApiService.getRandomRecipes(number: 10);
-
-        emit(currentState.copyWith(
-          searchResults: results,
-          lastQuery: 'Random Recipes',
-        ));
-      } catch (e) {
-        emit(RecipesError('Failed to load random recipes: $e'));
-        emit(currentState);
-      }
-    }
-  }
-
-  // Search by ingredients
+  // Search by ingredients (uses local database)
   Future<void> _onSearchByIngredients(
     SearchByIngredients event,
     Emitter<RecipesState> emit,
@@ -109,18 +88,9 @@ class RecipesBloc extends Bloc<RecipesEvent, RecipesState> {
     if (state is RecipesLoaded) {
       final currentState = state as RecipesLoaded;
 
-      if (!currentState.hasApiKey) {
-        emit(const RecipesError('Please set your Spoonacular API key in settings'));
-        emit(currentState);
-        return;
-      }
-
       emit(const RecipesLoading());
       try {
-        final results = await RecipeApiService.searchByIngredients(
-          ingredients: event.ingredients,
-          number: 15,
-        );
+        final results = await repository.searchByIngredients(event.ingredientIds);
 
         emit(currentState.copyWith(
           searchResults: results,
@@ -128,6 +98,29 @@ class RecipesBloc extends Bloc<RecipesEvent, RecipesState> {
         ));
       } catch (e) {
         emit(RecipesError('Search by ingredients failed: $e'));
+        emit(currentState);
+      }
+    }
+  }
+
+  // Get recipes for a specific food item
+  Future<void> _onGetRecipesForFoodItem(
+    GetRecipesForFoodItem event,
+    Emitter<RecipesState> emit,
+  ) async {
+    if (state is RecipesLoaded) {
+      final currentState = state as RecipesLoaded;
+
+      emit(const RecipesLoading());
+      try {
+        final results = await repository.getRecipesForFoodItem(event.foodItemId);
+
+        emit(currentState.copyWith(
+          searchResults: results,
+          lastQuery: 'Recipes for Food Item',
+        ));
+      } catch (e) {
+        emit(RecipesError('Failed to load recipes for food item: $e'));
         emit(currentState);
       }
     }
@@ -141,14 +134,13 @@ class RecipesBloc extends Bloc<RecipesEvent, RecipesState> {
     if (state is RecipesLoaded) {
       final currentState = state as RecipesLoaded;
       try {
-        final isFav = currentState.isFavorite(event.recipe.id);
-
-        if (isFav) {
-          await repository.removeFavorite(event.recipe.id);
-        } else {
-          await repository.addFavorite(event.recipe);
+        if (event.recipe.id == null) {
+          emit(const RecipesError('Cannot favorite a recipe without an ID'));
+          emit(currentState);
+          return;
         }
 
+        await repository.toggleFavorite(event.recipe.id!);
         final updatedFavorites = await repository.loadFavorites();
 
         emit(currentState.copyWith(favorites: updatedFavorites));
@@ -170,26 +162,6 @@ class RecipesBloc extends Bloc<RecipesEvent, RecipesState> {
         searchResults: [],
         lastQuery: null,
       ));
-    }
-  }
-
-  // Set API key
-  Future<void> _onSetApiKey(
-    SetApiKey event,
-    Emitter<RecipesState> emit,
-  ) async {
-    try {
-      await repository.saveApiKey(event.apiKey);
-      RecipeApiService.setApiKey(event.apiKey);
-
-      if (state is RecipesLoaded) {
-        final currentState = state as RecipesLoaded;
-        emit(currentState.copyWith(hasApiKey: true));
-      } else {
-        emit(const RecipesLoaded(hasApiKey: true));
-      }
-    } catch (e) {
-      emit(RecipesError('Failed to save API key: $e'));
     }
   }
 }

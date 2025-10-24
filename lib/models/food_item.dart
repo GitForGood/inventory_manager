@@ -8,6 +8,8 @@ class FoodItem {
   final double fatsPerHundredGrams;
   final double proteinPerHundredGrams;
   final double kcalPerHundredGrams;
+  // ingredient tags for recipe lookup
+  final List<int> ingredientIds; // IDs of ingredients this food item corresponds to
 
   FoodItem({
     required this.id,
@@ -17,6 +19,7 @@ class FoodItem {
     required this.fatsPerHundredGrams,
     required this.proteinPerHundredGrams,
     required this.kcalPerHundredGrams,
+    this.ingredientIds = const [],
   });
 
   // CopyWith method for immutable updates
@@ -28,6 +31,7 @@ class FoodItem {
     double? fatsPerHundredGrams,
     double? proteinPerHundredGrams,
     double? kcalPerHundredGrams,
+    List<int>? ingredientIds,
   }) {
     return FoodItem(
       id: id ?? this.id,
@@ -37,6 +41,7 @@ class FoodItem {
       fatsPerHundredGrams: fatsPerHundredGrams ?? this.fatsPerHundredGrams,
       proteinPerHundredGrams: proteinPerHundredGrams ?? this.proteinPerHundredGrams,
       kcalPerHundredGrams: kcalPerHundredGrams ?? this.kcalPerHundredGrams,
+      ingredientIds: ingredientIds ?? this.ingredientIds,
     );
   }
 
@@ -68,7 +73,16 @@ class FoodItem {
         other.carbohydratesPerHundredGrams == carbohydratesPerHundredGrams &&
         other.fatsPerHundredGrams == fatsPerHundredGrams &&
         other.proteinPerHundredGrams == proteinPerHundredGrams &&
-        other.kcalPerHundredGrams == kcalPerHundredGrams;
+        other.kcalPerHundredGrams == kcalPerHundredGrams &&
+        _listEquals(other.ingredientIds, ingredientIds);
+  }
+
+  bool _listEquals(List<int> a, List<int> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
   }
 
   // HashCode for collections and comparisons
@@ -82,6 +96,7 @@ class FoodItem {
       fatsPerHundredGrams,
       proteinPerHundredGrams,
       kcalPerHundredGrams,
+      Object.hashAll(ingredientIds),
     );
   }
 

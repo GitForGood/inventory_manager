@@ -22,35 +22,32 @@ class RecipesLoading extends RecipesState {
 class RecipesLoaded extends RecipesState {
   final List<Recipe> searchResults;
   final List<Recipe> favorites;
-  final bool hasApiKey;
   final String? lastQuery;
 
   const RecipesLoaded({
     this.searchResults = const [],
     this.favorites = const [],
-    this.hasApiKey = false,
     this.lastQuery,
   });
 
   // Check if a recipe is favorited
-  bool isFavorite(String recipeId) {
+  bool isFavorite(int? recipeId) {
+    if (recipeId == null) return false;
     return favorites.any((recipe) => recipe.id == recipeId);
   }
 
   @override
-  List<Object?> get props => [searchResults, favorites, hasApiKey, lastQuery];
+  List<Object?> get props => [searchResults, favorites, lastQuery];
 
   // CopyWith for state updates
   RecipesLoaded copyWith({
     List<Recipe>? searchResults,
     List<Recipe>? favorites,
-    bool? hasApiKey,
     String? lastQuery,
   }) {
     return RecipesLoaded(
       searchResults: searchResults ?? this.searchResults,
       favorites: favorites ?? this.favorites,
-      hasApiKey: hasApiKey ?? this.hasApiKey,
       lastQuery: lastQuery ?? this.lastQuery,
     );
   }

@@ -1,16 +1,19 @@
+import 'package:inventory_manager/models/recipe_ingredient.dart';
+
 class Recipe {
-  final String id;
+  final int? id; // Changed to int? for database auto-increment
   final String title;
   final String? imageUrl;
-  final int readyInMinutes;
-  final int servings;
+  final int readyInMinutes; // renamed from time
+  final int servings; // renamed from portions
   final String? summary;
-  final List<String> ingredients;
-  final List<String> instructions;
+  final List<RecipeIngredient> ingredients; // Changed to RecipeIngredient list
+  final List<String> instructions; // This will be stored as recipe_steps
   final Map<String, double>? nutrition; // Optional nutritional info
+  final bool isFavorite; // Added for favoriting
 
   const Recipe({
-    required this.id,
+    this.id,
     required this.title,
     this.imageUrl,
     required this.readyInMinutes,
@@ -19,19 +22,21 @@ class Recipe {
     required this.ingredients,
     required this.instructions,
     this.nutrition,
+    this.isFavorite = false,
   });
 
   // CopyWith method for immutable updates
   Recipe copyWith({
-    String? id,
+    int? id,
     String? title,
     String? imageUrl,
     int? readyInMinutes,
     int? servings,
     String? summary,
-    List<String>? ingredients,
+    List<RecipeIngredient>? ingredients,
     List<String>? instructions,
     Map<String, double>? nutrition,
+    bool? isFavorite,
   }) {
     return Recipe(
       id: id ?? this.id,
@@ -40,9 +45,10 @@ class Recipe {
       readyInMinutes: readyInMinutes ?? this.readyInMinutes,
       servings: servings ?? this.servings,
       summary: summary ?? this.summary,
-      ingredients: ingredients ?? this.ingredients,
-      instructions: instructions ?? this.instructions,
+      ingredients: ingredients ?? List.from(this.ingredients),
+      instructions: instructions ?? List.from(this.instructions),
       nutrition: nutrition ?? this.nutrition,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
@@ -60,11 +66,11 @@ class Recipe {
   // ToString for debugging
   @override
   String toString() {
-    return 'Recipe(id: $id, title: $title, readyIn: $readyInMinutes min, servings: $servings)';
+    return 'Recipe(id: $id, title: $title, readyIn: $readyInMinutes min, servings: $servings, favorite: $isFavorite)';
   }
 
-  // Convert to JSON for storage (favorites)
-  Map<String, dynamic> toJson() {
+  // Convert to Map for database storage (recipes table only)
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
@@ -72,38 +78,74 @@ class Recipe {
       'readyInMinutes': readyInMinutes,
       'servings': servings,
       'summary': summary,
-      'ingredients': ingredients,
-      'instructions': instructions,
-      'nutrition': nutrition,
+      'isFavorite': isFavorite ? 1 : 0,
     };
   }
 
-  // Create from JSON (for favorites and API responses)
+  // Convert to JSON for legacy API compatibility
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id?.toString(),
+      'title': title,
+      'imageUrl': imageUrl,
+      'readyInMinutes': readyInMinutes,
+      'servings': servings,
+      'summary': summary,
+      'ingredients': ingredients.map((i) => i.displayString).toList(),
+      'instructions': instructions,
+      'nutrition': nutrition,
+      'isFavorite': isFavorite,
+    };
+  }
+
+  // Create from Map (database row) - requires separate loading of ingredients/steps
+  factory Recipe.fromMap(Map<String, dynamic> map, {
+    List<RecipeIngredient>? ingredients,
+    List<String>? instructions,
+  }) {
+    return Recipe(
+      id: map['id'] as int?,
+      title: map['title'] as String,
+      imageUrl: map['imageUrl'] as String?,
+      readyInMinutes: map['readyInMinutes'] as int,
+      servings: map['servings'] as int,
+      summary: map['summary'] as String?,
+      ingredients: ingredients ?? [],
+      instructions: instructions ?? [],
+      isFavorite: (map['isFavorite'] as int?) == 1,
+    );
+  }
+
+  // Create from JSON (for API responses and legacy data)
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
-      id: json['id']?.toString() ?? '',
+      id: json['id'] != null ? int.tryParse(json['id'].toString()) : null,
       title: json['title'] as String? ?? 'Unknown Recipe',
       imageUrl: json['image'] as String? ?? json['imageUrl'] as String?,
       readyInMinutes: (json['readyInMinutes'] as num?)?.toInt() ?? 0,
       servings: (json['servings'] as num?)?.toInt() ?? 1,
       summary: json['summary'] as String?,
-      ingredients: _parseIngredients(json),
+      ingredients: _parseIngredientsFromJson(json),
       instructions: _parseInstructions(json),
       nutrition: _parseNutrition(json),
+      isFavorite: json['isFavorite'] as bool? ?? false,
     );
   }
 
-  static List<String> _parseIngredients(Map<String, dynamic> json) {
+  // Parse ingredients from API JSON - creates RecipeIngredient objects
+  // Note: This is a temporary solution for API data, proper database storage should be used
+  static List<RecipeIngredient> _parseIngredientsFromJson(Map<String, dynamic> json) {
     if (json['extendedIngredients'] != null) {
-      final List<dynamic> extendedIngredients = json['extendedIngredients'] as List<dynamic>;
-      return extendedIngredients
-          .map((ing) => ing['original'] as String? ?? '')
-          .where((str) => str.isNotEmpty)
-          .toList();
-    } else if (json['ingredients'] != null) {
-      return (json['ingredients'] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList();
+      // API response format - we'll need to convert these to proper RecipeIngredient objects
+      // For now, return empty list as this requires ingredient/unit lookup
+      return [];
+    } else if (json['ingredients'] != null && json['ingredients'] is List) {
+      // Already in our format or legacy format
+      if ((json['ingredients'] as List).isNotEmpty &&
+          (json['ingredients'] as List).first is Map) {
+        // Assume it's RecipeIngredient format
+        return [];
+      }
     }
     return [];
   }
