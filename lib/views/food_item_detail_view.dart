@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/models/food_item_group.dart';
 import 'package:inventory_manager/models/inventory_batch.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 /// Detailed view showing all batches for a specific food item
 class FoodItemDetailView extends StatelessWidget {
@@ -15,12 +16,41 @@ class FoodItemDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nutrition = group.getTotalNutrition();
-    final batches = group.batchesSortedByExpiration;
+    return BlocBuilder<InventoryBloc, InventoryState>(
+      builder: (context, state) {
+        // Rebuild the group from the current inventory state
+        final FoodItemGroup currentGroup;
+        if (state is InventoryLoaded) {
+          // Filter batches for this food item and create an updated group
+          final currentBatches = state.batches
+              .where((batch) => batch.item.id == group.foodItem.id)
+              .toList();
+          currentGroup = FoodItemGroup(
+            foodItem: group.foodItem,
+            batches: currentBatches,
+          );
+        } else {
+          // Fallback to the original group if state is not loaded
+          currentGroup = group;
+        }
 
+        final nutrition = currentGroup.getTotalNutrition();
+        final batches = currentGroup.batchesSortedByExpiration;
+
+        return _buildScaffold(context, currentGroup, nutrition, batches);
+      },
+    );
+  }
+
+  Widget _buildScaffold(
+    BuildContext context,
+    FoodItemGroup currentGroup,
+    Map<String, double> nutrition,
+    List<InventoryBatch> batches,
+  ) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(group.foodItem.name),
+        title: Text(currentGroup.foodItem.name),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_outline),
@@ -30,12 +60,11 @@ class FoodItemDetailView extends StatelessWidget {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
         children: [
           // Summary Card
           Card(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -49,17 +78,17 @@ class FoodItemDetailView extends StatelessWidget {
                     children: [
                       _SummaryItem(
                         label: 'Total Items',
-                        value: group.totalCount.toString(),
+                        value: currentGroup.totalCount.toString(),
                         icon: Icons.inventory_2,
                       ),
                       _SummaryItem(
                         label: 'Batches',
-                        value: group.batchCount.toString(),
-                        icon: Icons.layers,
+                        value: currentGroup.batchCount.toString(),
+                        icon: Symbols.package_2,
                       ),
                       _SummaryItem(
-                        label: 'Weight/Item',
-                        value: '${group.foodItem.weightPerItemGrams.toStringAsFixed(0)}g',
+                        label: 'Total Weight',
+                        value: '~${(currentGroup.totalCount * currentGroup.foodItem.weightPerItemGrams/1000).toStringAsFixed(0)}kg',
                         icon: Icons.scale,
                       ),
                     ],
@@ -71,7 +100,7 @@ class FoodItemDetailView extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Nutrition Card
+          /*/ Nutrition Card
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -112,25 +141,26 @@ class FoodItemDetailView extends StatelessWidget {
               ),
             ),
           ),
-
-          const SizedBox(height: 16),
+          */
 
           // Batches Section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Batches',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              ElevatedButton.icon(
-                onPressed: () => _showQuickRestockDialog(context),
-                icon: const Icon(Icons.add),
-                label: const Text('Add Batch'),
-              ),
-            ],
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Batches',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                ElevatedButton.icon(
+                  onPressed: () => _showQuickRestockDialog(context),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add Batch'),
+                ),
+              ],
+            ),
           ),
-
           const SizedBox(height: 8),
 
           // Batches List
@@ -150,7 +180,7 @@ class FoodItemDetailView extends StatelessWidget {
                           : Colors.green,
                   child: Text(
                     batch.count.toString(),
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ),
                 title: Text(
@@ -300,6 +330,7 @@ class FoodItemDetailView extends StatelessWidget {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 64),
           title: const Text('Edit Batch'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -314,13 +345,14 @@ class FoodItemDetailView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Card(
-                child: InkWell(
+                  margin: EdgeInsets.zero,
+                  child: InkWell(
                   onTap: () async {
                     final picked = await showDatePicker(
                       context: context,
                       initialDate: expirationDate,
                       firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+                      lastDate: DateTime.now().add(const Duration(days: 365 * 25)),
                     );
                     if (picked != null) {
                       setState(() {
@@ -333,12 +365,14 @@ class FoodItemDetailView extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Expiration Date'),
+                        Text('Expiration Date:', style: Theme.of(context).textTheme.labelSmall?.copyWith(fontStyle: FontStyle.normal)),
+                        const SizedBox(width: 8),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
                               _formatDate(expirationDate),
-                              style: Theme.of(context).textTheme.titleMedium,
+                              style: Theme.of(context).textTheme.titleSmall,
                             ),
                             const SizedBox(width: 8),
                             const Icon(Icons.calendar_today),
@@ -410,8 +444,14 @@ class FoodItemDetailView extends StatelessWidget {
               Navigator.pop(dialogContext);
 
               // If this was the last batch, navigate back
-              if (group.batchCount == 1) {
-                Navigator.pop(context);
+              final currentState = context.read<InventoryBloc>().state;
+              if (currentState is InventoryLoaded) {
+                final remainingBatches = currentState.batches
+                    .where((b) => b.item.id == group.foodItem.id)
+                    .length;
+                if (remainingBatches == 0) {
+                  Navigator.pop(context);
+                }
               }
 
               ScaffoldMessenger.of(context).showSnackBar(
@@ -429,12 +469,20 @@ class FoodItemDetailView extends StatelessWidget {
   }
 
   void _confirmDeleteAllBatches(BuildContext context) {
+    // Get current batches from the bloc state
+    final state = context.read<InventoryBloc>().state;
+    if (state is! InventoryLoaded) return;
+
+    final currentBatches = state.batches
+        .where((batch) => batch.item.id == group.foodItem.id)
+        .toList();
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Delete All Batches'),
         content: Text(
-          'Are you sure you want to delete all ${group.batchCount} batches of ${group.foodItem.name}?',
+          'Are you sure you want to delete all ${currentBatches.length} batches of ${group.foodItem.name}?',
         ),
         actions: [
           TextButton(
@@ -444,7 +492,7 @@ class FoodItemDetailView extends StatelessWidget {
           TextButton(
             onPressed: () {
               // Delete all batches
-              for (final batch in group.batches) {
+              for (final batch in currentBatches) {
                 context.read<InventoryBloc>().add(DeleteInventoryBatch(batch.id));
               }
 

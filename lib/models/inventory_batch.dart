@@ -6,6 +6,7 @@ class InventoryBatch {
   final int count;
   final int initialCount;
   final DateTime expirationDate;
+  final DateTime dateAdded;
 
   InventoryBatch({
     required this.id,
@@ -13,6 +14,7 @@ class InventoryBatch {
     required this.count,
     required this.initialCount,
     required this.expirationDate,
+    required this.dateAdded,
   });
 
   // CopyWith method for immutable updates
@@ -22,6 +24,7 @@ class InventoryBatch {
     int? count,
     int? initialCount,
     DateTime? expirationDate,
+    DateTime? dateAdded,
   }) {
     return InventoryBatch(
       id: id ?? this.id,
@@ -29,6 +32,7 @@ class InventoryBatch {
       count: count ?? this.count,
       initialCount: initialCount ?? this.initialCount,
       expirationDate: expirationDate ?? this.expirationDate,
+      dateAdded: dateAdded ?? this.dateAdded,
     );
   }
 

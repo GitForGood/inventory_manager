@@ -54,6 +54,7 @@ dependencies:
 
   # Barcode scanning
   mobile_scanner: ^5.2.3
+  material_symbols_icons: ^4.2874.0
 
 dev_dependencies:
   flutter_test:

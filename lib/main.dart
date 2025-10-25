@@ -58,8 +58,8 @@ class MyApp extends StatelessWidget {
 
           return MaterialApp(
             title: 'Inventory Manager',
-            theme: NixieTubeTheme.lightTheme,
-            darkTheme: NixieTubeTheme.darkTheme,
+            theme: NixieTubeTheme.darkTheme,
+            highContrastTheme: NixieTubeTheme.highContrastDarkTheme,
             themeMode: themeMode,
             home: const MainNavigationScreen(),
             debugShowCheckedModeBanner: false,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_manager/services/storage_calculator_service.dart';
-import 'package:inventory_manager/widgets/nutrient_chip.dart';
 import 'package:inventory_manager/widgets/summary_item.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class StorageSummaryCard extends StatelessWidget {
   final StorageStatus status;
@@ -34,18 +34,19 @@ class StorageSummaryCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 SummaryItem(
-                  icon: Icons.inventory_2,
+                  icon: Icons.inventory,
                   label: 'Items',
                   value: status.totalItems.toString(),
                   color: Theme.of(context).colorScheme.primary
                 ),
                 SummaryItem(
-                  icon: Icons.category,
+                  icon: Symbols.package_2,
                   label: 'Batches',
                   value: status.totalBatches.toString(),
                   color: Theme.of(context).colorScheme.primary
@@ -62,7 +63,8 @@ class StorageSummaryCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            /*
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -86,32 +88,7 @@ class StorageSummaryCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                NutrientChip(
-                  label: 'Carbs',
-                  value: status.totalNutrition['carbohydrates']!,
-                  color: Colors.orange,
-                ),
-                NutrientChip(
-                  label: 'Fats',
-                  value: status.totalNutrition['fats']!,
-                  color: Colors.yellow,
-                ),
-                NutrientChip(
-                  label: 'Protein',
-                  value: status.totalNutrition['protein']!,
-                  color: Colors.red,
-                ),
-                NutrientChip(
-                  label: 'Kcal',
-                  value: status.totalNutrition['kcal']!,
-                  color: Colors.deepOrange,
-                ),
-              ],
-            ),
+            */
           ],
         ),
       ),

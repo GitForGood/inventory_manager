@@ -690,10 +690,7 @@ class _IngredientSelectionDialogState extends State<_IngredientSelectionDialog> 
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: _createNewIngredient,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
-                    minimumSize: const Size(48, 48),
-                  ),
+                  style: Theme.of(context).elevatedButtonTheme.style,
                   child: const Icon(Icons.add),
                 ),
               ],
