@@ -4,6 +4,7 @@ import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/bloc/recipes/recipes_barrel.dart';
 import 'package:inventory_manager/bloc/quota/quota_barrel.dart';
+import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barrel.dart';
 import 'package:inventory_manager/repositories/recipe_repository.dart';
 import 'package:inventory_manager/repositories/settings_repository.dart';
 import 'package:inventory_manager/repositories/quota_repository.dart';
@@ -11,7 +12,7 @@ import 'package:inventory_manager/services/app_initialization.dart';
 import 'package:inventory_manager/themes/nixie_theme.dart';
 import 'package:inventory_manager/views/home_view.dart';
 import 'package:inventory_manager/views/recipes_view.dart';
-import 'package:inventory_manager/views/quota_view.dart';
+import 'package:inventory_manager/views/consumption_quota_view.dart';
 import 'package:inventory_manager/views/settings_view.dart';
 
 Future<void> main() async {
@@ -44,6 +45,10 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               QuotaBloc(repository: QuotaRepository())
                 ..add(const LoadQuotaSchedules()),
+        ),
+        BlocProvider(
+          create: (context) => ConsumptionQuotaBloc()
+                ..add(const LoadConsumptionQuotas()),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
@@ -83,7 +88,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     HomeView(),
     RecipesView(),
-    QuotaView(),
+    ConsumptionQuotaView(),
     SettingsView(),
   ];
 

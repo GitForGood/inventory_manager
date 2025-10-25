@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
+import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barrel.dart';
 import 'package:inventory_manager/models/food_item.dart';
 import 'package:inventory_manager/models/inventory_batch.dart';
 import 'package:inventory_manager/models/ingredient.dart';
@@ -222,11 +223,15 @@ class _BatchFormViewState extends State<BatchFormView> {
         count: count,
         initialCount: count,
         expirationDate: _expirationDate,
+        dateAdded: DateTime.now(),
       );
 
       // Add to inventory via BLoC
       if (mounted) {
         context.read<InventoryBloc>().add(AddInventoryBatch(batch));
+
+        // Generate consumption quotas for this batch
+        context.read<ConsumptionQuotaBloc>().add(GenerateQuotasForBatch(batch));
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

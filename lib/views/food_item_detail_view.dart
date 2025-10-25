@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
+import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barrel.dart';
 import 'package:inventory_manager/models/food_item_group.dart';
 import 'package:inventory_manager/models/inventory_batch.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -302,9 +303,13 @@ class FoodItemDetailView extends StatelessWidget {
                   count: count,
                   initialCount: count,
                   expirationDate: expirationDate,
+                  dateAdded: DateTime.now(),
                 );
 
                 context.read<InventoryBloc>().add(AddInventoryBatch(newBatch));
+
+                // Generate consumption quotas for this batch
+                context.read<ConsumptionQuotaBloc>().add(GenerateQuotasForBatch(newBatch));
 
                 Navigator.pop(dialogContext);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -441,6 +446,10 @@ class FoodItemDetailView extends StatelessWidget {
           TextButton(
             onPressed: () {
               context.read<InventoryBloc>().add(DeleteInventoryBatch(batchId));
+
+              // Delete quotas for this batch
+              context.read<ConsumptionQuotaBloc>().add(DeleteQuotasForBatch(batchId));
+
               Navigator.pop(dialogContext);
 
               // If this was the last batch, navigate back
@@ -494,6 +503,8 @@ class FoodItemDetailView extends StatelessWidget {
               // Delete all batches
               for (final batch in currentBatches) {
                 context.read<InventoryBloc>().add(DeleteInventoryBatch(batch.id));
+                // Delete quotas for this batch
+                context.read<ConsumptionQuotaBloc>().add(DeleteQuotasForBatch(batch.id));
               }
 
               Navigator.pop(dialogContext);

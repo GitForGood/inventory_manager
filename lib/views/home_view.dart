@@ -9,7 +9,7 @@ import 'package:inventory_manager/views/batch_form_view.dart';
 import 'package:inventory_manager/views/food_item_detail_view.dart';
 import 'package:inventory_manager/widgets/storage_summary_card.dart';
 import 'package:inventory_manager/models/food_item_group.dart';
-
+import 'package:material_symbols_icons/symbols.dart';
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
@@ -143,8 +143,8 @@ class HomeView extends StatelessWidget {
                               leading: CircleAvatar(
                                 backgroundColor: statusColor,
                                 child: Text(
-                                  group.batchCount.toString(),
-                                  style: const TextStyle(color: Colors.white),
+                                  group.totalCount.toString(),
+                                  style: TextStyle(color: Theme.of(context).primaryColor),
                                 ),
                               ),
                               title: Text(group.foodItem.name),
@@ -152,12 +152,17 @@ class HomeView extends StatelessWidget {
                                 'Closest expiry: ${_formatDate(group.closestExpirationDate)}\n'
                                 '${group.daysUntilClosestExpiration >= 0 ? "${group.daysUntilClosestExpiration} days remaining" : "Expired ${-group.daysUntilClosestExpiration} days ago"}',
                               ),
-                              trailing: Text(
-                                '${group.totalCount}',
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    group.batchCount.toString(),
+                                    style: Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Icon(Symbols.package_2),
+                                ],
+                              ), 
                               onTap: () {
                                 Navigator.push(
                                   context,

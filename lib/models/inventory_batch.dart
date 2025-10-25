@@ -74,19 +74,20 @@ class InventoryBatch {
         other.item == item &&
         other.count == count &&
         other.initialCount == initialCount &&
-        other.expirationDate == expirationDate;
+        other.expirationDate == expirationDate &&
+        other.dateAdded == dateAdded;
   }
 
   // HashCode for collections and comparisons
   @override
   int get hashCode {
-    return Object.hash(id, item, count, initialCount, expirationDate);
+    return Object.hash(id, item, count, initialCount, expirationDate, dateAdded);
   }
 
   // ToString for debugging
   @override
   String toString() {
-    return 'InventoryBatch(id: $id, item: ${item.name}, count: $count, initialCount: $initialCount'
-        'expires: ${expirationDate.toIso8601String()})';
+    return 'InventoryBatch(id: $id, item: ${item.name}, count: $count, initialCount: $initialCount, '
+        'added: ${dateAdded.toIso8601String()}, expires: ${expirationDate.toIso8601String()})';
   }
 }

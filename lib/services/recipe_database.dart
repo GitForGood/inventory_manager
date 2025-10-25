@@ -6,6 +6,7 @@ import 'package:inventory_manager/models/unit.dart';
 import 'package:inventory_manager/models/recipe_ingredient.dart';
 import 'package:inventory_manager/models/food_item.dart';
 import 'package:inventory_manager/models/inventory_batch.dart';
+import 'package:inventory_manager/models/consumption_quota.dart';
 
 class RecipeDatabase {
   static final RecipeDatabase instance = RecipeDatabase._init();
@@ -25,7 +26,7 @@ class RecipeDatabase {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -117,7 +118,23 @@ class RecipeDatabase {
         count INTEGER NOT NULL,
         initialCount INTEGER NOT NULL,
         expirationDate TEXT NOT NULL,
+        dateAdded TEXT NOT NULL,
         FOREIGN KEY (foodItemId) REFERENCES food_items (id) ON DELETE CASCADE
+      )
+    ''');
+
+    // Consumption quotas table
+    await db.execute('''
+      CREATE TABLE consumption_quotas (
+        id TEXT PRIMARY KEY,
+        batchId TEXT NOT NULL,
+        foodItemId TEXT NOT NULL,
+        foodItemName TEXT NOT NULL,
+        targetDate TEXT NOT NULL,
+        targetCount INTEGER NOT NULL,
+        consumedCount INTEGER NOT NULL DEFAULT 0,
+        lastConsumed TEXT,
+        FOREIGN KEY (batchId) REFERENCES inventory_batches (id) ON DELETE CASCADE
       )
     ''');
 
@@ -130,6 +147,9 @@ class RecipeDatabase {
     await db.execute('CREATE INDEX idx_food_item_ingredients_ingredient ON food_item_ingredients(ingredientId)');
     await db.execute('CREATE INDEX idx_inventory_batches_food_item ON inventory_batches(foodItemId)');
     await db.execute('CREATE INDEX idx_inventory_batches_expiration ON inventory_batches(expirationDate)');
+    await db.execute('CREATE INDEX idx_consumption_quotas_batch ON consumption_quotas(batchId)');
+    await db.execute('CREATE INDEX idx_consumption_quotas_food_item ON consumption_quotas(foodItemId)');
+    await db.execute('CREATE INDEX idx_consumption_quotas_target_date ON consumption_quotas(targetDate)');
 
     // Insert common units
     await _insertCommonUnits(db);
@@ -165,6 +185,49 @@ class RecipeDatabase {
       // Add indexes
       await db.execute('CREATE INDEX IF NOT EXISTS idx_inventory_batches_food_item ON inventory_batches(foodItemId)');
       await db.execute('CREATE INDEX IF NOT EXISTS idx_inventory_batches_expiration ON inventory_batches(expirationDate)');
+    }
+
+    if (oldVersion < 3) {
+      // Add dateAdded column to inventory_batches
+      // For existing batches, estimate dateAdded as 30 days before expiration
+      await db.execute('''
+        ALTER TABLE inventory_batches
+        ADD COLUMN dateAdded TEXT NOT NULL DEFAULT '${DateTime.now().toIso8601String()}'
+      ''');
+
+      // Update existing batches to have a reasonable dateAdded
+      // Set to 30 days before expiration date
+      final batches = await db.query('inventory_batches');
+      for (final batch in batches) {
+        final expirationDate = DateTime.parse(batch['expirationDate'] as String);
+        final estimatedDateAdded = expirationDate.subtract(const Duration(days: 30));
+        await db.update(
+          'inventory_batches',
+          {'dateAdded': estimatedDateAdded.toIso8601String()},
+          where: 'id = ?',
+          whereArgs: [batch['id']],
+        );
+      }
+
+      // Create consumption_quotas table
+      await db.execute('''
+        CREATE TABLE consumption_quotas (
+          id TEXT PRIMARY KEY,
+          batchId TEXT NOT NULL,
+          foodItemId TEXT NOT NULL,
+          foodItemName TEXT NOT NULL,
+          targetDate TEXT NOT NULL,
+          targetCount INTEGER NOT NULL,
+          consumedCount INTEGER NOT NULL DEFAULT 0,
+          lastConsumed TEXT,
+          FOREIGN KEY (batchId) REFERENCES inventory_batches (id) ON DELETE CASCADE
+        )
+      ''');
+
+      // Add indexes for consumption quotas
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_batch ON consumption_quotas(batchId)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_food_item ON consumption_quotas(foodItemId)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_target_date ON consumption_quotas(targetDate)');
     }
   }
 
@@ -649,6 +712,7 @@ class RecipeDatabase {
         'count': batch.count,
         'initialCount': batch.initialCount,
         'expirationDate': batch.expirationDate.toIso8601String(),
+        'dateAdded': batch.dateAdded.toIso8601String(),
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -676,6 +740,7 @@ class RecipeDatabase {
       count: map['count'] as int,
       initialCount: map['initialCount'] as int,
       expirationDate: DateTime.parse(map['expirationDate'] as String),
+      dateAdded: DateTime.parse(map['dateAdded'] as String),
     );
   }
 
@@ -710,6 +775,7 @@ class RecipeDatabase {
         'count': batch.count,
         'initialCount': batch.initialCount,
         'expirationDate': batch.expirationDate.toIso8601String(),
+        'dateAdded': batch.dateAdded.toIso8601String(),
       },
       where: 'id = ?',
       whereArgs: [batch.id],
@@ -722,6 +788,187 @@ class RecipeDatabase {
       'inventory_batches',
       where: 'id = ?',
       whereArgs: [id],
+    );
+  }
+
+  // ===== CONSUMPTION QUOTA OPERATIONS =====
+
+  /// Create a new consumption quota
+  Future<String> createConsumptionQuota(ConsumptionQuota quota) async {
+    final db = await database;
+
+    await db.insert(
+      'consumption_quotas',
+      quota.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    return quota.id;
+  }
+
+  /// Create multiple consumption quotas at once
+  Future<void> createConsumptionQuotas(List<ConsumptionQuota> quotas) async {
+    final db = await database;
+    final batch = db.batch();
+
+    for (final quota in quotas) {
+      batch.insert(
+        'consumption_quotas',
+        quota.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    await batch.commit(noResult: true);
+  }
+
+  /// Get a single consumption quota by ID
+  Future<ConsumptionQuota?> getConsumptionQuota(String id) async {
+    final db = await database;
+    final results = await db.query(
+      'consumption_quotas',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (results.isEmpty) return null;
+    return ConsumptionQuota.fromJson(results.first);
+  }
+
+  /// Get all consumption quotas
+  Future<List<ConsumptionQuota>> getAllConsumptionQuotas() async {
+    final db = await database;
+    final results = await db.query(
+      'consumption_quotas',
+      orderBy: 'targetDate ASC',
+    );
+
+    return results.map((map) => ConsumptionQuota.fromJson(map)).toList();
+  }
+
+  /// Get consumption quotas for a specific batch
+  Future<List<ConsumptionQuota>> getConsumptionQuotasForBatch(String batchId) async {
+    final db = await database;
+    final results = await db.query(
+      'consumption_quotas',
+      where: 'batchId = ?',
+      whereArgs: [batchId],
+      orderBy: 'targetDate ASC',
+    );
+
+    return results.map((map) => ConsumptionQuota.fromJson(map)).toList();
+  }
+
+  /// Get consumption quotas for a specific food item
+  Future<List<ConsumptionQuota>> getConsumptionQuotasForFoodItem(String foodItemId) async {
+    final db = await database;
+    final results = await db.query(
+      'consumption_quotas',
+      where: 'foodItemId = ?',
+      whereArgs: [foodItemId],
+      orderBy: 'targetDate ASC',
+    );
+
+    return results.map((map) => ConsumptionQuota.fromJson(map)).toList();
+  }
+
+  /// Get consumption quotas within a date range
+  Future<List<ConsumptionQuota>> getConsumptionQuotasByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final db = await database;
+    final results = await db.query(
+      'consumption_quotas',
+      where: 'targetDate >= ? AND targetDate <= ?',
+      whereArgs: [startDate.toIso8601String(), endDate.toIso8601String()],
+      orderBy: 'targetDate ASC',
+    );
+
+    return results.map((map) => ConsumptionQuota.fromJson(map)).toList();
+  }
+
+  /// Get active (incomplete) consumption quotas
+  Future<List<ConsumptionQuota>> getActiveConsumptionQuotas() async {
+    final db = await database;
+    final results = await db.rawQuery('''
+      SELECT * FROM consumption_quotas
+      WHERE consumedCount < targetCount
+      ORDER BY targetDate ASC
+    ''');
+
+    return results.map((map) => ConsumptionQuota.fromJson(map)).toList();
+  }
+
+  /// Get overdue consumption quotas
+  Future<List<ConsumptionQuota>> getOverdueConsumptionQuotas() async {
+    final db = await database;
+    final now = DateTime.now().toIso8601String();
+    final results = await db.rawQuery('''
+      SELECT * FROM consumption_quotas
+      WHERE targetDate < ? AND consumedCount < targetCount
+      ORDER BY targetDate ASC
+    ''', [now]);
+
+    return results.map((map) => ConsumptionQuota.fromJson(map)).toList();
+  }
+
+  /// Update a consumption quota
+  Future<int> updateConsumptionQuota(ConsumptionQuota quota) async {
+    final db = await database;
+
+    return await db.update(
+      'consumption_quotas',
+      quota.toJson(),
+      where: 'id = ?',
+      whereArgs: [quota.id],
+    );
+  }
+
+  /// Update multiple consumption quotas at once
+  Future<void> updateConsumptionQuotas(List<ConsumptionQuota> quotas) async {
+    final db = await database;
+    final batch = db.batch();
+
+    for (final quota in quotas) {
+      batch.update(
+        'consumption_quotas',
+        quota.toJson(),
+        where: 'id = ?',
+        whereArgs: [quota.id],
+      );
+    }
+
+    await batch.commit(noResult: true);
+  }
+
+  /// Delete a consumption quota
+  Future<int> deleteConsumptionQuota(String id) async {
+    final db = await database;
+    return await db.delete(
+      'consumption_quotas',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  /// Delete all consumption quotas for a specific batch
+  Future<int> deleteConsumptionQuotasForBatch(String batchId) async {
+    final db = await database;
+    return await db.delete(
+      'consumption_quotas',
+      where: 'batchId = ?',
+      whereArgs: [batchId],
+    );
+  }
+
+  /// Delete all consumption quotas for a specific food item
+  Future<int> deleteConsumptionQuotasForFoodItem(String foodItemId) async {
+    final db = await database;
+    return await db.delete(
+      'consumption_quotas',
+      where: 'foodItemId = ?',
+      whereArgs: [foodItemId],
     );
   }
 
