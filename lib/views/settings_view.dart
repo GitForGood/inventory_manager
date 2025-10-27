@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/models/quota_schedule.dart';
+import 'package:inventory_manager/services/recipe_database.dart';
+import 'package:inventory_manager/services/recipe_import_service.dart';
 import 'package:inventory_manager/views/notification_settings_view.dart';
 
 class SettingsView extends StatelessWidget {
@@ -137,6 +139,20 @@ class SettingsView extends StatelessWidget {
                       const SnackBar(content: Text('Import feature coming soon!')),
                     );
                   },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.restaurant_menu_outlined),
+                  title: const Text('Import Recipes'),
+                  subtitle: const Text('Load recipes from GitHub repository'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _showRecipeImportDialog(context),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete_sweep_outlined),
+                  title: const Text('Clear Database'),
+                  subtitle: const Text('Delete recipes, inventory, or all data'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _showClearDataDialog(context),
                 ),
                 const Divider(),
                 const Padding(
@@ -310,6 +326,307 @@ class SettingsView extends StatelessWidget {
               );
             },
             child: const Text('Reset', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showRecipeImportDialog(BuildContext context) {
+    final urlController = TextEditingController(
+      text: 'https://raw.githubusercontent.com/YOUR_USERNAME/inventory_manager/main/recipes.json',
+    );
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Import Recipes'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Enter the URL to your recipes JSON file:',
+              style: TextStyle(fontSize: 14),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: urlController,
+              decoration: const InputDecoration(
+                labelText: 'GitHub Raw URL',
+                hintText: 'https://raw.githubusercontent.com/...',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'This will add recipes from the JSON file to your local database.',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final url = urlController.text.trim();
+              if (url.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please enter a URL')),
+                );
+                return;
+              }
+
+              Navigator.pop(dialogContext);
+
+              // Show loading
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 16),
+                      Text('Importing recipes...'),
+                    ],
+                  ),
+                  duration: Duration(seconds: 30),
+                ),
+              );
+
+              try {
+                final importService = RecipeImportService();
+                final result = await importService.importRecipesFromUrl(url);
+
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                if (result.success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result.message),
+                      backgroundColor: Colors.green,
+                      duration: const Duration(seconds: 5),
+                    ),
+                  );
+
+                  if (result.hasErrors) {
+                    // Show detailed errors in a dialog
+                    _showImportErrorsDialog(context, result);
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result.message),
+                      backgroundColor: Colors.red,
+                      duration: const Duration(seconds: 5),
+                    ),
+                  );
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error importing recipes: $e'),
+                    backgroundColor: Colors.red,
+                    duration: const Duration(seconds: 5),
+                  ),
+                );
+              }
+            },
+            child: const Text('Import'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showImportErrorsDialog(BuildContext context, ImportResult result) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Import Warnings'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Some recipes failed to import:',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              ...result.errors.map((error) => Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Text('• $error', style: const TextStyle(fontSize: 12)),
+                  )),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showClearDataDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Clear Database'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Select what data to clear:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            ListTile(
+              leading: const Icon(Icons.restaurant_menu),
+              title: const Text('Clear Recipes'),
+              subtitle: const Text('Delete all saved recipes'),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _confirmClearData(
+                  context,
+                  'Clear All Recipes',
+                  'Are you sure you want to delete all recipes? This cannot be undone.',
+                  () async {
+                    await RecipeDatabase.instance.clearAllRecipes();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('All recipes cleared'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.inventory),
+              title: const Text('Clear Inventory'),
+              subtitle: const Text('Delete all batches and quotas'),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _confirmClearData(
+                  context,
+                  'Clear All Inventory',
+                  'Are you sure you want to delete all inventory batches and quotas? This cannot be undone.',
+                  () async {
+                    await RecipeDatabase.instance.clearAllInventory();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('All inventory cleared'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.event_busy),
+              title: const Text('Clear Quotas Only'),
+              subtitle: const Text('Delete all consumption quotas'),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _confirmClearData(
+                  context,
+                  'Clear All Quotas',
+                  'Are you sure you want to delete all consumption quotas? This cannot be undone.',
+                  () async {
+                    await RecipeDatabase.instance.clearAllQuotas();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('All quotas cleared'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.delete_forever, color: Colors.red),
+              title: const Text('Clear All Data', style: TextStyle(color: Colors.red)),
+              subtitle: const Text('Delete everything (recipes, inventory, food items)'),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _confirmClearData(
+                  context,
+                  'Clear ALL Data',
+                  'Are you sure you want to delete ALL data including recipes, inventory, food items, and quotas? This cannot be undone!',
+                  () async {
+                    await RecipeDatabase.instance.clearAllData();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('All data cleared'),
+                        backgroundColor: Colors.orange,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmClearData(
+    BuildContext context,
+    String title,
+    String message,
+    Future<void> Function() onConfirm,
+  ) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              try {
+                await onConfirm();
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error: $e'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

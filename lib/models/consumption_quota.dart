@@ -45,6 +45,11 @@ class ConsumptionQuota {
     return daysUntilDue >= 0 && daysUntilDue <= 2 && !isCompleted;
   }
 
+  // Check if quota should be hidden from main view (completed)
+  bool get shouldHideFromView {
+    return isCompleted;
+  }
+
   // CopyWith method for immutable updates
   ConsumptionQuota copyWith({
     String? id,

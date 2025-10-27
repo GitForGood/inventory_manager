@@ -26,13 +26,16 @@ class RecipeDatabase {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
   }
 
   Future<void> _createDB(Database db, int version) async {
+    await db.execute('''
+    DROP TABLE consumption_quotas
+    ''');
     // Recipes table
     await db.execute('''
       CREATE TABLE recipes (
@@ -220,11 +223,51 @@ class RecipeDatabase {
           targetCount INTEGER NOT NULL,
           consumedCount INTEGER NOT NULL DEFAULT 0,
           lastConsumed TEXT,
+          isSnoozed INT NOT NULL DEFAULT 0,
           FOREIGN KEY (batchId) REFERENCES inventory_batches (id) ON DELETE CASCADE
         )
       ''');
 
       // Add indexes for consumption quotas
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_batch ON consumption_quotas(batchId)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_food_item ON consumption_quotas(foodItemId)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_target_date ON consumption_quotas(targetDate)');
+    }
+
+    if (oldVersion < 4) {
+      // Remove isSnoozed column from consumption_quotas
+      // SQLite doesn't support DROP COLUMN directly, so we need to recreate the table
+
+      // 1. Create new table without isSnoozed
+      await db.execute('''
+        CREATE TABLE consumption_quotas_new (
+          id TEXT PRIMARY KEY,
+          batchId TEXT NOT NULL,
+          foodItemId TEXT NOT NULL,
+          foodItemName TEXT NOT NULL,
+          targetDate TEXT NOT NULL,
+          targetCount INTEGER NOT NULL,
+          consumedCount INTEGER NOT NULL DEFAULT 0,
+          lastConsumed TEXT,
+          FOREIGN KEY (batchId) REFERENCES inventory_batches (id) ON DELETE CASCADE
+        )
+      ''');
+
+      // 2. Copy data from old table (excluding isSnoozed and any snoozed quotas)
+      await db.execute('''
+        INSERT INTO consumption_quotas_new (id, batchId, foodItemId, foodItemName, targetDate, targetCount, consumedCount, lastConsumed)
+        SELECT id, batchId, foodItemId, foodItemName, targetDate, targetCount, consumedCount, lastConsumed
+        FROM consumption_quotas
+        WHERE isSnoozed = 0
+      ''');
+
+      // 3. Drop old table
+      await db.execute('DROP TABLE consumption_quotas');
+
+      // 4. Rename new table
+      await db.execute('ALTER TABLE consumption_quotas_new RENAME TO consumption_quotas');
+
+      // 5. Recreate indexes
       await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_batch ON consumption_quotas(batchId)');
       await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_food_item ON consumption_quotas(foodItemId)');
       await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_target_date ON consumption_quotas(targetDate)');
@@ -973,6 +1016,56 @@ class RecipeDatabase {
   }
 
   // ===== DATABASE MANAGEMENT =====
+
+  /// Clear all recipes and related data (ingredients references, steps)
+  /// This will delete all recipes but preserve ingredients and units
+  Future<void> clearAllRecipes() async {
+    final db = await database;
+    await db.delete('recipe_steps');
+    await db.delete('recipe_ingredients');
+    await db.delete('recipes');
+  }
+
+  /// Clear all inventory data (batches and quotas)
+  /// This will preserve food items but delete all batches and quotas
+  Future<void> clearAllInventory() async {
+    final db = await database;
+    await db.delete('consumption_quotas');
+    await db.delete('inventory_batches');
+  }
+
+  /// Clear all consumption quotas only
+  Future<void> clearAllQuotas() async {
+    final db = await database;
+    await db.delete('consumption_quotas');
+  }
+
+  /// Clear all food items and their inventory
+  /// This will cascade delete inventory batches and quotas
+  Future<void> clearAllFoodItems() async {
+    final db = await database;
+    // These will cascade due to foreign key constraints
+    await db.delete('food_items');
+  }
+
+  /// Clear ALL data from the database (complete reset)
+  /// This deletes everything: recipes, ingredients, units, food items, inventory, quotas
+  Future<void> clearAllData() async {
+    final db = await database;
+    // Delete in order to respect foreign key constraints
+    await db.delete('recipe_steps');
+    await db.delete('recipe_ingredients');
+    await db.delete('recipes');
+    await db.delete('consumption_quotas');
+    await db.delete('inventory_batches');
+    await db.delete('food_item_ingredients');
+    await db.delete('food_items');
+    await db.delete('ingredients');
+    await db.delete('units');
+
+    // Re-insert common units
+    await _insertCommonUnits(db);
+  }
 
   Future<void> close() async {
     final db = await database;

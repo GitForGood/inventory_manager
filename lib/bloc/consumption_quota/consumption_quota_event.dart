@@ -19,7 +19,7 @@ class LoadCurrentPeriodQuotas extends ConsumptionQuotaEvent {
 class LoadUpcomingQuotas extends ConsumptionQuotaEvent {
   final int numberOfPeriods;
 
-  const LoadUpcomingQuotas({this.numberOfPeriods = 3});
+  const LoadUpcomingQuotas({this.numberOfPeriods = 1});
 }
 
 /// Generate quotas for a new batch

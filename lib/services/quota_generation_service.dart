@@ -6,14 +6,32 @@ class QuotaGenerationService {
   /// Generates consumption quotas for the current period only
   ///
   /// Groups all batches by food item and creates one aggregated quota per item.
-  /// Each batch contributes a proportional amount based on its lifespan.
+  /// Each batch contributes a proportional amount based on its REMAINING lifespan
+  /// from now until expiration, ensuring quotas don't empty inventory too quickly.
+  ///
+  /// **Period Alignment**: Periods are aligned to calendar boundaries:
+  /// - Weekly: Monday to Sunday
+  /// - Monthly: 1st to last day of month
+  /// - Quarterly: Jan/Apr/Jul/Oct 1st to last day of quarter
+  ///
+  /// **Algorithm**:
+  /// 1. For batches expiring within this period: consume all remaining items
+  /// 2. For other batches: divide remaining items by remaining complete periods until expiration
+  /// 3. Periods are counted respecting calendar boundaries (e.g., monthly counts actual months)
+  /// 4. This ensures even distribution based on current inventory and time remaining
+  ///
+  /// **Example** (Monthly period, today is Oct 15):
+  /// - Period: Oct 1 - Oct 31
+  /// - Batch with 100 items expires Dec 20
+  /// - Remaining months: Oct, Nov, Dec = 3 months
+  /// - Quota for October: 100 / 3 = 34 items
   static List<ConsumptionQuota> generateQuotasForCurrentPeriod({
     required List<InventoryBatch> batches,
     required ConsumptionPeriod period,
   }) {
     final quotas = <ConsumptionQuota>[];
     final now = DateTime.now();
-    final periodEnd = now.add(Duration(days: period.daysInPeriod));
+    final periodEnd = period.getCurrentPeriodEnd();
 
     // Group batches by food item name
     final batchesByFoodItem = <String, List<InventoryBatch>>{};
@@ -38,22 +56,25 @@ class QuotaGenerationService {
       for (final batch in foodBatches) {
         foodItemId ??= batch.item.id;
 
-        // Calculate total lifespan of this batch (from dateAdded to expiration)
-        final totalLifespanDays = batch.expirationDate
-            .difference(batch.dateAdded)
-            .inDays;
-
-        // If batch expires within this period or already expired, consume all remaining
-        if (batch.expirationDate.isBefore(periodEnd) || totalLifespanDays <= 0) {
+        // If batch expires within this period or is already expired, consume all remaining
+        if (batch.expirationDate.isBefore(periodEnd) ||
+            batch.expirationDate.difference(now).inDays <= 0) {
           totalTargetCount += batch.count;
           continue;
         }
 
-        // Calculate how many periods fit in the total lifespan
-        final totalPeriods = totalLifespanDays / period.daysInPeriod;
+        // Calculate how many complete periods fit from now until expiration
+        // using the period-aware method that respects calendar boundaries
+        final remainingPeriods = period.getPeriodsCount(now, batch.expirationDate);
 
-        // Items per period for this batch (proportional)
-        final itemsPerPeriod = (batch.count / totalPeriods).ceil();
+        // If less than 1 period remaining, consume all
+        if (remainingPeriods < 1) {
+          totalTargetCount += batch.count;
+          continue;
+        }
+
+        // Items per period for this batch (proportional to remaining periods)
+        final itemsPerPeriod = (batch.count / remainingPeriods).ceil();
 
         totalTargetCount += itemsPerPeriod;
       }

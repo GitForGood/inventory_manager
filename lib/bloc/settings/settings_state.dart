@@ -42,3 +42,7 @@ class SettingsError extends SettingsState {
   @override
   List<Object?> get props => [message];
 }
+
+class DatabaseDeleting extends SettingsState{
+  const DatabaseDeleting();
+}

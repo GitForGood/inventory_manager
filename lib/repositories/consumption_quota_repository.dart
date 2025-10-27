@@ -111,23 +111,32 @@ class ConsumptionQuotaRepository {
   // ===== GROUPED OPERATIONS =====
 
   /// Get quotas grouped by food item name
+  /// Includes all quotas (completed quotas will be shown in collapsed state)
   Future<Map<String, List<ConsumptionQuota>>> getQuotasGroupedByFoodItem() async {
     final allQuotas = await getAllQuotas();
+
     final grouped = <String, List<ConsumptionQuota>>{};
 
     for (final quota in allQuotas) {
       grouped.putIfAbsent(quota.foodItemName, () => []).add(quota);
     }
 
-    // Sort each group by target date
+    // Sort each group: active first, then by target date
     for (final quotas in grouped.values) {
-      quotas.sort((a, b) => a.targetDate.compareTo(b.targetDate));
+      quotas.sort((a, b) {
+        // Active quotas come first
+        if (!a.shouldHideFromView && b.shouldHideFromView) return -1;
+        if (a.shouldHideFromView && !b.shouldHideFromView) return 1;
+        // Then sort by target date
+        return a.targetDate.compareTo(b.targetDate);
+      });
     }
 
     return grouped;
   }
 
   /// Get quotas for the current period
+  /// Includes all quotas (completed quotas will be shown in collapsed state)
   Future<Map<String, List<ConsumptionQuota>>> getCurrentPeriodQuotas() async {
     final period = await getPreferredPeriod();
     final now = DateTime.now();
@@ -145,6 +154,17 @@ class ConsumptionQuotaRepository {
     final grouped = <String, List<ConsumptionQuota>>{};
     for (final quota in quotas) {
       grouped.putIfAbsent(quota.foodItemName, () => []).add(quota);
+    }
+
+    // Sort each group: active first, then by target date
+    for (final quotasList in grouped.values) {
+      quotasList.sort((a, b) {
+        // Active quotas come first
+        if (!a.shouldHideFromView && b.shouldHideFromView) return -1;
+        if (a.shouldHideFromView && !b.shouldHideFromView) return 1;
+        // Then sort by target date
+        return a.targetDate.compareTo(b.targetDate);
+      });
     }
 
     return grouped;

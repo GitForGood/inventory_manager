@@ -1,0 +1,118 @@
+{
+  "recipes": [
+    {
+      "title": "Classic Spaghetti Carbonara",
+      "readyInMinutes": 20,
+      "servings": 4,
+      "imageUrl": "https://example.com/image.jpg",
+      "summary": "A traditional Italian pasta dish with eggs, cheese, and pancetta",
+      "isFavorite": false,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "instruction": "Bring a large pot of salted water to boil and cook spaghetti according to package directions"
+        },
+        {
+          "stepNumber": 2,
+          "instruction": "While pasta cooks, beat eggs with grated Parmesan cheese in a bowl"
+        },
+        {
+          "stepNumber": 3,
+          "instruction": "Cook pancetta in a large skillet until crispy"
+        },
+        {
+          "stepNumber": 4,
+          "instruction": "Drain pasta, reserving 1 cup of pasta water"
+        },
+        {
+          "stepNumber": 5,
+          "instruction": "Add hot pasta to skillet with pancetta, remove from heat"
+        },
+        {
+          "stepNumber": 6,
+          "instruction": "Quickly stir in egg mixture, adding pasta water as needed to create a creamy sauce"
+        },
+        {
+          "stepNumber": 7,
+          "instruction": "Season with black pepper and serve immediately"
+        }
+      ],
+      "ingredients": [
+        {
+          "name": "Spaghetti",
+          "amount": 400,
+          "unit": "g"
+        },
+        {
+          "name": "Eggs",
+          "amount": 4,
+          "unit": "piece"
+        },
+        {
+          "name": "Parmesan Cheese",
+          "amount": 100,
+          "unit": "g"
+        },
+        {
+          "name": "Pancetta",
+          "amount": 200,
+          "unit": "g"
+        },
+        {
+          "name": "Black Pepper",
+          "amount": 1,
+          "unit": "tsp"
+        }
+      ]
+    },
+    {
+      "title": "Simple Green Salad",
+      "readyInMinutes": 10,
+      "servings": 2,
+      "imageUrl": null,
+      "summary": "Fresh mixed greens with a simple vinaigrette",
+      "isFavorite": false,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "instruction": "Wash and dry mixed greens thoroughly"
+        },
+        {
+          "stepNumber": 2,
+          "instruction": "Whisk together olive oil, vinegar, salt, and pepper"
+        },
+        {
+          "stepNumber": 3,
+          "instruction": "Toss greens with dressing just before serving"
+        }
+      ],
+      "ingredients": [
+        {
+          "name": "Mixed Greens",
+          "amount": 200,
+          "unit": "g"
+        },
+        {
+          "name": "Olive Oil",
+          "amount": 3,
+          "unit": "tbsp"
+        },
+        {
+          "name": "Balsamic Vinegar",
+          "amount": 1,
+          "unit": "tbsp"
+        },
+        {
+          "name": "Salt",
+          "amount": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "name": "Black Pepper",
+          "amount": 0.25,
+          "unit": "tsp"
+        }
+      ]
+    }
+  ]
+}

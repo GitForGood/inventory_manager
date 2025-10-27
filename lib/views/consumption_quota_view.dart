@@ -3,11 +3,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barrel.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
-import 'package:inventory_manager/models/consumption_quota.dart';
-import 'package:intl/intl.dart';
+import 'package:inventory_manager/views/consumption_quota_card.dart';
 
-class ConsumptionQuotaView extends StatelessWidget {
+class ConsumptionQuotaView extends StatefulWidget {
   const ConsumptionQuotaView({super.key});
+
+  @override
+  State<ConsumptionQuotaView> createState() => _ConsumptionQuotaViewState();
+}
+
+class _ConsumptionQuotaViewState extends State<ConsumptionQuotaView> {
+  @override
+  void initState() {
+    super.initState();
+    // Load quotas when view is first created
+    Future.microtask(() {
+      if (mounted) {
+        context.read<ConsumptionQuotaBloc>().add(const LoadConsumptionQuotas());
+      }
+    });
+  }
 
   void _showRegenerateDialog(BuildContext context) {
     showDialog(
@@ -97,13 +112,7 @@ class ConsumptionQuotaView extends StatelessWidget {
         },
         child: BlocBuilder<ConsumptionQuotaBloc, ConsumptionQuotaState>(
           builder: (context, state) {
-          if (state is ConsumptionQuotaInitial) {
-            // Load current period quotas on first build
-            context.read<ConsumptionQuotaBloc>().add(const LoadCurrentPeriodQuotas());
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is ConsumptionQuotaLoading) {
+          if (state is ConsumptionQuotaInitial || state is ConsumptionQuotaLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -149,7 +158,7 @@ class ConsumptionQuotaView extends StatelessWidget {
                     Icon(
                       Icons.calendar_today,
                       size: 64,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -179,7 +188,7 @@ class ConsumptionQuotaView extends StatelessWidget {
                       final foodItemName = state.quotasByFoodItem.keys.elementAt(index);
                       final quotas = state.quotasByFoodItem[foodItemName]!;
 
-                      return _FoodItemQuotaCard(
+                      return FoodItemQuotaCard(
                         foodItemName: foodItemName,
                         quotas: quotas,
                       );
@@ -365,266 +374,6 @@ class _StatusChip extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _FoodItemQuotaCard extends StatelessWidget {
-  final String foodItemName;
-  final List<ConsumptionQuota> quotas;
-
-  const _FoodItemQuotaCard({
-    required this.foodItemName,
-    required this.quotas,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // With the new system, there should only be one quota per food item
-    // But we'll handle the edge case of multiple quotas gracefully
-    final quota = quotas.isNotEmpty ? quotas.first : null;
-
-    if (quota == null) return const SizedBox.shrink();
-
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final dateFormat = DateFormat('MMM dd, yyyy');
-    final progress = quota.progressPercentage / 100;
-
-    Color statusColor = colorScheme.onSurfaceVariant;
-    IconData statusIcon = Icons.circle_outlined;
-    String statusText = 'Pending';
-
-    if (quota.isCompleted) {
-      statusColor = const Color(0xFF66BB6A); // Success green
-      statusIcon = Icons.check_circle;
-      statusText = 'Completed';
-    } else if (quota.isOverdue) {
-      statusColor = colorScheme.error;
-      statusIcon = Icons.error;
-      statusText = 'Overdue';
-    } else if (quota.isDueSoon) {
-      statusColor = colorScheme.secondary;
-      statusIcon = Icons.warning;
-      statusText = 'Due Soon';
-    }
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.restaurant,
-                    color: colorScheme.primary,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        foodItemName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(Icons.calendar_today, size: 16, color: colorScheme.onSurfaceVariant),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Due: ${dateFormat.format(quota.targetDate)}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                if (!quota.isCompleted)
-                  IconButton(
-                    icon: const Icon(Icons.add_circle),
-                    color: colorScheme.primary,
-                    iconSize: 32,
-                    onPressed: () {
-                      _showIncrementDialog(context, quota);
-                    },
-                  ),
-                if (quota.isCompleted)
-                  Icon(Icons.check, size: 32, color: statusColor,),
-              ],
-            ),
-            if (!quota.isCompleted)
-              const SizedBox(height: 12),
-            // Progress
-            if (!quota.isCompleted)
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Progress',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            Text(
-                              '${quota.consumedCount}/${quota.targetCount} items',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: progress,
-                            minHeight: 8,
-                            backgroundColor: colorScheme.surfaceContainerHighest,
-                            valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showHideDialog(BuildContext context, ConsumptionQuota quota) {
-    
-  }
-  void _showIncrementDialog(BuildContext context, ConsumptionQuota quota) {
-    int incrementValue = 1;
-    final remainingCount = quota.remainingCount;
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text('Consume ${quota.foodItemName}'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('How many items did you consume?'),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove_circle_outline),
-                    onPressed: incrementValue > 1
-                        ? () {
-                            setState(() {
-                              incrementValue--;
-                            });
-                          }
-                        : null,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      incrementValue.toString(),
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add_circle_outline),
-                    onPressed: incrementValue < remainingCount
-                        ? () {
-                            setState(() {
-                              incrementValue++;
-                            });
-                          }
-                        : null,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Center(
-                child: Text(
-                  'Remaining: $remainingCount items',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                context.read<ConsumptionQuotaBloc>().add(
-                      CompleteQuota(
-                        quotaId: quota.id,
-                        itemCount: incrementValue,
-                      ),
-                    );
-                Navigator.pop(dialogContext);
-
-                // Show success feedback
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Consumed $incrementValue ${incrementValue == 1 ? 'item' : 'items'} from quota'),
-                    backgroundColor: const Color(0xFF66BB6A),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              },
-              child: const Text('Confirm'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
