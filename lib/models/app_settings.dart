@@ -1,42 +1,38 @@
-import 'package:flutter/material.dart';
+import 'package:inventory_manager/models/quota_schedule.dart';
 
 class AppSettings {
   final bool notificationsEnabled;
-  final ThemeMode themeMode;
+  final bool expirationNotificationsEnabled;
+  final bool quotaGenerationNotificationsEnabled;
+  final bool highContrast;
   final int expirationWarningDays;
-  final double dailyCalorieTarget;
-  final double dailyCarbohydratesTarget;
-  final double dailyFatsTarget;
-  final double dailyProteinTarget;
+  final SchedulePeriod preferredQuotaInterval;
 
   const AppSettings({
     this.notificationsEnabled = true,
-    this.themeMode = ThemeMode.dark,
+    this.expirationNotificationsEnabled = true,
+    this.quotaGenerationNotificationsEnabled = true,
+    this.highContrast = false,
     this.expirationWarningDays = 7,
-    this.dailyCalorieTarget = 2000.0,
-    this.dailyCarbohydratesTarget = 250.0,
-    this.dailyFatsTarget = 70.0,
-    this.dailyProteinTarget = 50.0,
+    this.preferredQuotaInterval = SchedulePeriod.weekly,
   });
 
   // CopyWith method for immutable updates
   AppSettings copyWith({
     bool? notificationsEnabled,
-    ThemeMode? themeMode,
+    bool? expirationNotificationsEnabled,
+    bool? quotaGenerationNotificationsEnabled,
+    bool? highContrast,
     int? expirationWarningDays,
-    double? dailyCalorieTarget,
-    double? dailyCarbohydratesTarget,
-    double? dailyFatsTarget,
-    double? dailyProteinTarget,
+    SchedulePeriod? preferredQuotaInterval,
   }) {
     return AppSettings(
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
-      themeMode: themeMode ?? this.themeMode,
+      expirationNotificationsEnabled: expirationNotificationsEnabled ?? this.expirationNotificationsEnabled,
+      quotaGenerationNotificationsEnabled: quotaGenerationNotificationsEnabled ?? this.quotaGenerationNotificationsEnabled,
+      highContrast: highContrast ?? this.highContrast,
       expirationWarningDays: expirationWarningDays ?? this.expirationWarningDays,
-      dailyCalorieTarget: dailyCalorieTarget ?? this.dailyCalorieTarget,
-      dailyCarbohydratesTarget: dailyCarbohydratesTarget ?? this.dailyCarbohydratesTarget,
-      dailyFatsTarget: dailyFatsTarget ?? this.dailyFatsTarget,
-      dailyProteinTarget: dailyProteinTarget ?? this.dailyProteinTarget,
+      preferredQuotaInterval: preferredQuotaInterval ?? this.preferredQuotaInterval,
     );
   }
 
@@ -46,12 +42,11 @@ class AppSettings {
     if (identical(this, other)) return true;
     return other is AppSettings &&
         other.notificationsEnabled == notificationsEnabled &&
-        other.themeMode == themeMode &&
+        other.expirationNotificationsEnabled == expirationNotificationsEnabled &&
+        other.quotaGenerationNotificationsEnabled == quotaGenerationNotificationsEnabled &&
+        other.highContrast == highContrast &&
         other.expirationWarningDays == expirationWarningDays &&
-        other.dailyCalorieTarget == dailyCalorieTarget &&
-        other.dailyCarbohydratesTarget == dailyCarbohydratesTarget &&
-        other.dailyFatsTarget == dailyFatsTarget &&
-        other.dailyProteinTarget == dailyProteinTarget;
+        other.preferredQuotaInterval == preferredQuotaInterval;
   }
 
   // HashCode for collections and comparisons
@@ -59,12 +54,11 @@ class AppSettings {
   int get hashCode {
     return Object.hash(
       notificationsEnabled,
-      themeMode,
+      expirationNotificationsEnabled,
+      quotaGenerationNotificationsEnabled,
+      highContrast,
       expirationWarningDays,
-      dailyCalorieTarget,
-      dailyCarbohydratesTarget,
-      dailyFatsTarget,
-      dailyProteinTarget,
+      preferredQuotaInterval,
     );
   }
 
@@ -73,24 +67,22 @@ class AppSettings {
   String toString() {
     return 'AppSettings('
            'notifications: $notificationsEnabled, '
-           'theme: $themeMode, '
+           'expirationNotifications: $expirationNotificationsEnabled, '
+           'quotaGenerationNotifications: $quotaGenerationNotificationsEnabled, '
+           'highContrast: $highContrast, '
            'warningDays: $expirationWarningDays, '
-           'calories: $dailyCalorieTarget, '
-           'carbs: $dailyCarbohydratesTarget, '
-           'fats: $dailyFatsTarget, '
-           'protein: $dailyProteinTarget)';
+           'quotaInterval: $preferredQuotaInterval)';
   }
 
   // Convert to JSON for storage
   Map<String, dynamic> toJson() {
     return {
       'notificationsEnabled': notificationsEnabled,
-      'themeMode': themeMode.index,
+      'expirationNotificationsEnabled': expirationNotificationsEnabled,
+      'quotaGenerationNotificationsEnabled': quotaGenerationNotificationsEnabled,
+      'highContrast': highContrast,
       'expirationWarningDays': expirationWarningDays,
-      'dailyCalorieTarget': dailyCalorieTarget,
-      'dailyCarbohydratesTarget': dailyCarbohydratesTarget,
-      'dailyFatsTarget': dailyFatsTarget,
-      'dailyProteinTarget': dailyProteinTarget,
+      'preferredQuotaInterval': preferredQuotaInterval.index,
     };
   }
 
@@ -98,12 +90,11 @@ class AppSettings {
   factory AppSettings.fromJson(Map<String, dynamic> json) {
     return AppSettings(
       notificationsEnabled: json['notificationsEnabled'] as bool? ?? true,
-      themeMode: ThemeMode.values[json['themeMode'] as int? ?? ThemeMode.dark.index],
+      expirationNotificationsEnabled: json['expirationNotificationsEnabled'] as bool? ?? true,
+      quotaGenerationNotificationsEnabled: json['quotaGenerationNotificationsEnabled'] as bool? ?? true,
+      highContrast: json['highContrast'] as bool? ?? false,
       expirationWarningDays: json['expirationWarningDays'] as int? ?? 7,
-      dailyCalorieTarget: (json['dailyCalorieTarget'] as num?)?.toDouble() ?? 2000.0,
-      dailyCarbohydratesTarget: (json['dailyCarbohydratesTarget'] as num?)?.toDouble() ?? 250.0,
-      dailyFatsTarget: (json['dailyFatsTarget'] as num?)?.toDouble() ?? 70.0,
-      dailyProteinTarget: (json['dailyProteinTarget'] as num?)?.toDouble() ?? 50.0,
+      preferredQuotaInterval: SchedulePeriod.values[json['preferredQuotaInterval'] as int? ?? SchedulePeriod.weekly.index],
     );
   }
 }

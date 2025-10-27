@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
+import 'package:inventory_manager/models/quota_schedule.dart';
+import 'package:inventory_manager/views/notification_settings_view.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -48,28 +50,28 @@ class SettingsView extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.notifications_outlined),
                   title: const Text('Notifications'),
-                  subtitle: const Text('Expiration reminders'),
-                  trailing: Switch(
-                    value: settings.notificationsEnabled,
-                    onChanged: (value) {
-                      context.read<SettingsBloc>().add(
-                            ToggleNotifications(value),
-                          );
-                    },
-                  ),
+                  subtitle: const Text('Manage notification preferences'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _showNotificationSettings(context),
                 ),
                 ListTile(
                   leading: const Icon(Icons.dark_mode_outlined),
-                  title: const Text('Theme Mode'),
-                  subtitle: Text(_getThemeModeName(settings.themeMode)),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showThemeDialog(context, settings.themeMode),
+                  title: const Text('High Contrast Mode'),
+                  subtitle: const Text('Increase contrast for better visibility'),
+                  trailing: Switch(
+                    value: settings.highContrast,
+                    onChanged: (value) {
+                      context.read<SettingsBloc>().add(
+                            ChangeThemeMode(value),
+                          );
+                    },
+                  ),
                 ),
                 const Divider(),
                 const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Text(
-                    'Nutritional Goals',
+                    'Quota Settings',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -77,13 +79,14 @@ class SettingsView extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.track_changes),
-                  title: const Text('Daily Targets'),
-                  subtitle: Text(
-                    'Calories: ${settings.dailyCalorieTarget.toInt()} kcal',
-                  ),
+                  leading: const Icon(Icons.schedule_outlined),
+                  title: const Text('Preferred Interval'),
+                  subtitle: Text(_getIntervalName(settings.preferredQuotaInterval)),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showDailyTargetsDialog(context, settings),
+                  onTap: () => _showQuotaIntervalDialog(
+                    context,
+                    settings.preferredQuotaInterval,
+                  ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.warning_amber_outlined),
@@ -172,64 +175,6 @@ class SettingsView extends StatelessWidget {
     );
   }
 
-  String _getThemeModeName(ThemeMode mode) {
-    switch (mode) {
-      case ThemeMode.light:
-        return 'Light';
-      case ThemeMode.dark:
-        return 'Dark';
-      case ThemeMode.system:
-        return 'System Default';
-    }
-  }
-
-  void _showThemeDialog(BuildContext context, ThemeMode currentMode) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Select Theme'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<ThemeMode>(
-              title: const Text('Light'),
-              value: ThemeMode.light,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  context.read<SettingsBloc>().add(ChangeThemeMode(value));
-                  Navigator.pop(dialogContext);
-                }
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: const Text('Dark'),
-              value: ThemeMode.dark,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  context.read<SettingsBloc>().add(ChangeThemeMode(value));
-                  Navigator.pop(dialogContext);
-                }
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: const Text('System Default'),
-              value: ThemeMode.system,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  context.read<SettingsBloc>().add(ChangeThemeMode(value));
-                  Navigator.pop(dialogContext);
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showExpirationWarningDialog(BuildContext context, int currentDays) {
     final controller = TextEditingController(text: currentDays.toString());
 
@@ -267,91 +212,78 @@ class SettingsView extends StatelessWidget {
     );
   }
 
-  void _showDailyTargetsDialog(BuildContext context, settings) {
-    final caloriesController = TextEditingController(
-      text: settings.dailyCalorieTarget.toInt().toString(),
-    );
-    final carbsController = TextEditingController(
-      text: settings.dailyCarbohydratesTarget.toInt().toString(),
-    );
-    final fatsController = TextEditingController(
-      text: settings.dailyFatsTarget.toInt().toString(),
-    );
-    final proteinController = TextEditingController(
-      text: settings.dailyProteinTarget.toInt().toString(),
-    );
+  String _getIntervalName(SchedulePeriod period) {
+    switch (period) {
+      case SchedulePeriod.weekly:
+        return 'Weekly';
+      case SchedulePeriod.monthly:
+        return 'Monthly';
+      case SchedulePeriod.quarterly:
+        return 'Quarterly';
+    }
+  }
 
+  void _showNotificationSettings(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NotificationSettingsView(),
+      ),
+    );
+  }
+
+  void _showQuotaIntervalDialog(BuildContext context, SchedulePeriod currentPeriod) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Daily Nutritional Targets'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: caloriesController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Calories',
-                  suffixText: 'kcal',
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: carbsController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Carbohydrates',
-                  suffixText: 'g',
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: fatsController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Fats',
-                  suffixText: 'g',
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: proteinController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Protein',
-                  suffixText: 'g',
-                ),
-              ),
-            ],
-          ),
+        title: const Text('Preferred Quota Interval'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<SchedulePeriod>(
+              title: const Text('Weekly'),
+              subtitle: const Text('Reset every 7 days'),
+              value: SchedulePeriod.weekly,
+              groupValue: currentPeriod,
+              onChanged: (value) {
+                if (value != null) {
+                  context.read<SettingsBloc>().add(
+                        UpdatePreferredQuotaInterval(value.index),
+                      );
+                  Navigator.pop(dialogContext);
+                }
+              },
+            ),
+            RadioListTile<SchedulePeriod>(
+              title: const Text('Monthly'),
+              subtitle: const Text('Reset every month'),
+              value: SchedulePeriod.monthly,
+              groupValue: currentPeriod,
+              onChanged: (value) {
+                if (value != null) {
+                  context.read<SettingsBloc>().add(
+                        UpdatePreferredQuotaInterval(value.index),
+                      );
+                  Navigator.pop(dialogContext);
+                }
+              },
+            ),
+            RadioListTile<SchedulePeriod>(
+              title: const Text('Quarterly'),
+              subtitle: const Text('Reset every 3 months'),
+              value: SchedulePeriod.quarterly,
+              groupValue: currentPeriod,
+              onChanged: (value) {
+                if (value != null) {
+                  context.read<SettingsBloc>().add(
+                        UpdatePreferredQuotaInterval(value.index),
+                      );
+                  Navigator.pop(dialogContext);
+                }
+              },
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              final calories = double.tryParse(caloriesController.text);
-              final carbs = double.tryParse(carbsController.text);
-              final fats = double.tryParse(fatsController.text);
-              final protein = double.tryParse(proteinController.text);
-
-              context.read<SettingsBloc>().add(
-                    UpdateDailyTargets(
-                      calories: calories,
-                      carbohydrates: carbs,
-                      fats: fats,
-                      protein: protein,
-                    ),
-                  );
-              Navigator.pop(dialogContext);
-            },
-            child: const Text('Save'),
-          ),
-        ],
       ),
     );
   }

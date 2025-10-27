@@ -99,51 +99,6 @@ class FoodItemDetailView extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
-
-          /*/ Nutrition Card
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Total Nutrition',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _NutritionItem(
-                        label: 'Calories',
-                        value: nutrition['kcal']!.toStringAsFixed(0),
-                        unit: 'kcal',
-                      ),
-                      _NutritionItem(
-                        label: 'Carbs',
-                        value: nutrition['carbohydrates']!.toStringAsFixed(1),
-                        unit: 'g',
-                      ),
-                      _NutritionItem(
-                        label: 'Fats',
-                        value: nutrition['fats']!.toStringAsFixed(1),
-                        unit: 'g',
-                      ),
-                      _NutritionItem(
-                        label: 'Protein',
-                        value: nutrition['protein']!.toStringAsFixed(1),
-                        unit: 'g',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          */
-
           // Batches Section
           Padding(
             padding: EdgeInsets.all(16),
@@ -189,8 +144,8 @@ class FoodItemDetailView extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
-                  'Expires: ${_formatDate(batch.expirationDate)}\n'
-                  '${daysUntilExpiration >= 0 ? "$daysUntilExpiration days remaining" : "Expired ${-daysUntilExpiration} days ago"}',
+                  'Expires: ${_formatDate(batch.expirationDate)}'
+                  //'${daysUntilExpiration >= 0 ? "$daysUntilExpiration days remaining" : "Expired ${-daysUntilExpiration} days ago"}',
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,

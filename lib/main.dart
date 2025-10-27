@@ -38,13 +38,13 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-              RecipesBloc(repository: RecipeRepository())
-                ..add(const LoadFavorites()),
+              QuotaBloc(repository: QuotaRepository())
+                ..add(const LoadQuotaSchedules()),
         ),
         BlocProvider(
           create: (context) =>
-              QuotaBloc(repository: QuotaRepository())
-                ..add(const LoadQuotaSchedules()),
+              RecipesBloc(repository: RecipeRepository())
+                ..add(const LoadFavorites()),
         ),
         BlocProvider(
           create: (context) => ConsumptionQuotaBloc()
@@ -53,19 +53,20 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
-          // Default to dark mode
-          ThemeMode themeMode = ThemeMode.dark;
+          // Default to regular dark theme
+          ThemeData currentTheme = NixieTubeTheme.darkTheme;
 
-          // Update theme mode if settings are loaded
+          // Update theme based on high contrast setting if settings are loaded
           if (state is SettingsLoaded) {
-            themeMode = state.settings.themeMode;
+            currentTheme = state.settings.highContrast
+                ? NixieTubeTheme.highContrastDarkTheme
+                : NixieTubeTheme.darkTheme;
           }
 
           return MaterialApp(
             title: 'Inventory Manager',
-            theme: NixieTubeTheme.darkTheme,
-            highContrastTheme: NixieTubeTheme.highContrastDarkTheme,
-            themeMode: themeMode,
+            theme: currentTheme,
+            themeMode: ThemeMode.dark,
             home: const MainNavigationScreen(),
             debugShowCheckedModeBanner: false,
           );
@@ -87,8 +88,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<Widget> _screens = const [
     HomeView(),
-    RecipesView(),
     ConsumptionQuotaView(),
+    RecipesView(),
     SettingsView(),
   ];
 
@@ -99,14 +100,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       label: 'Inventory',
     ),
     NavigationDestination(
-      icon: Icon(Icons.restaurant_menu_outlined),
-      selectedIcon: Icon(Icons.restaurant_menu),
-      label: 'Recipes',
-    ),
-    NavigationDestination(
       icon: Icon(Icons.track_changes_outlined),
       selectedIcon: Icon(Icons.track_changes),
       label: 'Quota',
+    ),
+    NavigationDestination(
+      icon: Icon(Icons.restaurant_menu_outlined),
+      selectedIcon: Icon(Icons.restaurant_menu),
+      label: 'Recipes',
     ),
     NavigationDestination(
       icon: Icon(Icons.settings_outlined),

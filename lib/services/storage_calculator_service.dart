@@ -60,42 +60,18 @@ class StorageCalculatorService {
   // Get storage status summary
   static StorageStatus getStorageStatus({
     required List<InventoryBatch> batches,
-    required double dailyCalorieTarget,
-    required double dailyCarbohydratesTarget,
-    required double dailyFatsTarget,
-    required double dailyProteinTarget,
   }) {
     final totalNutrition = calculateTotalNutrition(batches);
-    final daysOfStorage = calculateDaysOfStorage(
-      totalNutrition: totalNutrition,
-      dailyCalorieTarget: dailyCalorieTarget,
-      dailyCarbohydratesTarget: dailyCarbohydratesTarget,
-      dailyFatsTarget: dailyFatsTarget,
-      dailyProteinTarget: dailyProteinTarget,
-    );
 
     return StorageStatus(
       totalItems: batches.fold(0, (sum, batch) => sum + batch.count),
       totalBatches: batches.length,
       totalNutrition: totalNutrition,
-      estimatedDays: daysOfStorage['minDays']!,
-      limitingFactor: _getLimitingFactor(daysOfStorage),
+      estimatedDays: 0,
+      limitingFactor: '',
     );
   }
 
-  static String _getLimitingFactor(Map<String, double> daysOfStorage) {
-    final minDays = daysOfStorage['minDays']!;
-
-    if (daysOfStorage['daysFromCalories'] == minDays) {
-      return 'Calories';
-    } else if (daysOfStorage['daysFromCarbs'] == minDays) {
-      return 'Carbohydrates';
-    } else if (daysOfStorage['daysFromFats'] == minDays) {
-      return 'Fats';
-    } else {
-      return 'Protein';
-    }
-  }
 }
 
 class StorageStatus {

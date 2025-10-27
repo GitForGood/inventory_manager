@@ -19,15 +19,81 @@ class HomeView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Inventory'),
         actions: [
-          IconButton(
+          PopupMenuButton<InventoryFilter>(
             icon: const Icon(Icons.filter_list),
-            onPressed: () => _showFilterMenu(context),
             tooltip: 'Filter',
+            offset: const Offset(0, 48),
+            onSelected: (InventoryFilter filter) {
+              context.read<InventoryBloc>().add(FilterInventory(filter));
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: InventoryFilter.all,
+                child: ListTile(
+                  leading: Icon(Icons.all_inclusive),
+                  title: Text('All Items'),
+                ),
+              ),
+              PopupMenuItem(
+                value: InventoryFilter.fresh,
+                child: ListTile(
+                  leading: Icon(Icons.check_circle, color: Colors.green),
+                  title: Text('Fresh Items'),
+                ),
+              ),
+              PopupMenuItem(
+                value: InventoryFilter.expiringSoon,
+                child: ListTile(
+                  leading: Icon(Icons.warning, color: Colors.orange),
+                  title: Text('Expiring Soon'),
+                ),
+              ),
+              PopupMenuItem(
+                value: InventoryFilter.expired,
+                child: ListTile(
+                  leading: Icon(Icons.error, color: Colors.red),
+                  title: Text('Expired'),
+                ),
+              ),
+            ],
           ),
-          IconButton(
+          PopupMenuButton<InventorySortCriteria>(
             icon: const Icon(Icons.sort),
-            onPressed: () => _showSortMenu(context),
             tooltip: 'Sort',
+            offset: const Offset(0, 48),
+            onSelected: (InventorySortCriteria criteria) {
+              context.read<InventoryBloc>().add(SortInventory(criteria));
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: InventorySortCriteria.nameAscending,
+                child: ListTile(
+                  leading: Icon(Icons.sort_by_alpha),
+                  title: Text('Name (A-Z)'),
+                ),
+              ),
+              PopupMenuItem(
+                value: InventorySortCriteria.nameDescending,
+                child: ListTile(
+                  leading: Icon(Icons.sort_by_alpha),
+                  title: Text('Name (Z-A)'),
+                ),
+              ),
+              PopupMenuItem(
+                value: InventorySortCriteria.expirationDateAscending,
+                child: ListTile(
+                  leading: Icon(Icons.date_range),
+                  title: Text('Expiration (Earliest First)'),
+                ),
+              ),
+              PopupMenuItem(
+                value: InventorySortCriteria.expirationDateDescending,
+                child: ListTile(
+                  leading: Icon(Icons.date_range),
+                  title: Text('Expiration (Latest First)'),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -70,13 +136,6 @@ class HomeView extends StatelessWidget {
                 if (settingsState is SettingsLoaded && batches.isNotEmpty) {
                   storageStatus = StorageCalculatorService.getStorageStatus(
                     batches: batches,
-                    dailyCalorieTarget:
-                        settingsState.settings.dailyCalorieTarget,
-                    dailyCarbohydratesTarget:
-                        settingsState.settings.dailyCarbohydratesTarget,
-                    dailyFatsTarget: settingsState.settings.dailyFatsTarget,
-                    dailyProteinTarget:
-                        settingsState.settings.dailyProteinTarget,
                   );
                 }
 
@@ -149,8 +208,8 @@ class HomeView extends StatelessWidget {
                               ),
                               title: Text(group.foodItem.name),
                               subtitle: Text(
-                                'Closest expiry: ${_formatDate(group.closestExpirationDate)}\n'
-                                '${group.daysUntilClosestExpiration >= 0 ? "${group.daysUntilClosestExpiration} days remaining" : "Expired ${-group.daysUntilClosestExpiration} days ago"}',
+                                //'Oldest batch expiry: ${_formatDate(group.closestExpirationDate)}\n'
+                                group.daysUntilClosestExpiration >= 0 ? "${group.daysUntilClosestExpiration} days remaining" : "Expired ${-group.daysUntilClosestExpiration} days ago",
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -231,130 +290,6 @@ class HomeView extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-  }
-
-  void _showFilterMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext sheetContext) {
-        return BlocProvider.value(
-          value: context.read<InventoryBloc>(),
-          child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.all_inclusive),
-                  title: const Text('All Items'),
-                  onTap: () {
-                    context.read<InventoryBloc>().add(
-                      const FilterInventory(InventoryFilter.all),
-                    );
-                    Navigator.pop(sheetContext);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.check_circle, color: Colors.green),
-                  title: const Text('Fresh Items'),
-                  onTap: () {
-                    context.read<InventoryBloc>().add(
-                      const FilterInventory(InventoryFilter.fresh),
-                    );
-                    Navigator.pop(sheetContext);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.warning, color: Colors.orange),
-                  title: const Text('Expiring Soon'),
-                  onTap: () {
-                    context.read<InventoryBloc>().add(
-                      const FilterInventory(InventoryFilter.expiringSoon),
-                    );
-                    Navigator.pop(sheetContext);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.error, color: Colors.red),
-                  title: const Text('Expired'),
-                  onTap: () {
-                    context.read<InventoryBloc>().add(
-                      const FilterInventory(InventoryFilter.expired),
-                    );
-                    Navigator.pop(sheetContext);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showSortMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext sheetContext) {
-        return BlocProvider.value(
-          value: context.read<InventoryBloc>(),
-          child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.sort_by_alpha),
-                  title: const Text('Name (A-Z)'),
-                  onTap: () {
-                    context.read<InventoryBloc>().add(
-                      const SortInventory(InventorySortCriteria.nameAscending),
-                    );
-                    Navigator.pop(sheetContext);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.sort_by_alpha),
-                  title: const Text('Name (Z-A)'),
-                  onTap: () {
-                    context.read<InventoryBloc>().add(
-                      const SortInventory(InventorySortCriteria.nameDescending),
-                    );
-                    Navigator.pop(sheetContext);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.date_range),
-                  title: const Text('Expiration (Earliest First)'),
-                  onTap: () {
-                    context.read<InventoryBloc>().add(
-                      const SortInventory(
-                        InventorySortCriteria.expirationDateAscending,
-                      ),
-                    );
-                    Navigator.pop(sheetContext);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.date_range),
-                  title: const Text('Expiration (Latest First)'),
-                  onTap: () {
-                    context.read<InventoryBloc>().add(
-                      const SortInventory(
-                        InventorySortCriteria.expirationDateDescending,
-                      ),
-                    );
-                    Navigator.pop(sheetContext);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 

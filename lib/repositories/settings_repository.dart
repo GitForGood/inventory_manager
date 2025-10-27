@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:inventory_manager/models/app_settings.dart';
+import 'package:inventory_manager/models/quota_schedule.dart';
 
 class SettingsRepository {
   static const String _settingsKey = 'app_settings';
@@ -51,13 +52,9 @@ class SettingsRepository {
     await saveSettings(settings.copyWith(notificationsEnabled: enabled));
   }
 
-  Future<void> updateThemeMode(int themeModeIndex) async {
+  Future<void> updateHighContrast(bool enabled) async {
     final settings = await loadSettings();
-    await saveSettings(settings.copyWith(
-      themeMode: themeModeIndex >= 0 && themeModeIndex < 3
-          ? [null, null, null][themeModeIndex] // Will be replaced by enum
-          : settings.themeMode,
-    ));
+    await saveSettings(settings.copyWith(highContrast: enabled));
   }
 
   Future<void> updateExpirationWarningDays(int days) async {
@@ -65,18 +62,22 @@ class SettingsRepository {
     await saveSettings(settings.copyWith(expirationWarningDays: days));
   }
 
-  Future<void> updateDailyTargets({
-    double? calories,
-    double? carbohydrates,
-    double? fats,
-    double? protein,
-  }) async {
+  Future<void> updateExpirationNotifications(bool enabled) async {
+    final settings = await loadSettings();
+    await saveSettings(settings.copyWith(expirationNotificationsEnabled: enabled));
+  }
+
+  Future<void> updateQuotaGenerationNotifications(bool enabled) async {
+    final settings = await loadSettings();
+    await saveSettings(settings.copyWith(quotaGenerationNotificationsEnabled: enabled));
+  }
+
+  Future<void> updatePreferredQuotaInterval(int intervalIndex) async {
     final settings = await loadSettings();
     await saveSettings(settings.copyWith(
-      dailyCalorieTarget: calories,
-      dailyCarbohydratesTarget: carbohydrates,
-      dailyFatsTarget: fats,
-      dailyProteinTarget: protein,
+      preferredQuotaInterval: intervalIndex >= 0 && intervalIndex < 3
+          ? [SchedulePeriod.weekly, SchedulePeriod.monthly, SchedulePeriod.quarterly][intervalIndex]
+          : settings.preferredQuotaInterval,
     ));
   }
 }

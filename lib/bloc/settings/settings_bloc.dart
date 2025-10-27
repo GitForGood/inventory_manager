@@ -3,6 +3,7 @@ import 'package:inventory_manager/bloc/settings/settings_event.dart';
 import 'package:inventory_manager/bloc/settings/settings_state.dart';
 import 'package:inventory_manager/repositories/settings_repository.dart';
 import 'package:inventory_manager/models/app_settings.dart';
+import 'package:inventory_manager/models/quota_schedule.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SettingsRepository repository;
@@ -12,7 +13,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<ToggleNotifications>(_onToggleNotifications);
     on<ChangeThemeMode>(_onChangeThemeMode);
     on<UpdateExpirationWarningDays>(_onUpdateExpirationWarningDays);
-    on<UpdateDailyTargets>(_onUpdateDailyTargets);
+    on<UpdateExpirationNotifications>(_onUpdateExpirationNotifications);
+    on<UpdateQuotaGenerationNotifications>(_onUpdateQuotaGenerationNotifications);
+    on<UpdatePreferredQuotaInterval>(_onUpdatePreferredQuotaInterval);
     on<ResetSettings>(_onResetSettings);
   }
 
@@ -49,7 +52,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 
-  // Change theme mode
+  // Change high contrast mode
   Future<void> _onChangeThemeMode(
     ChangeThemeMode event,
     Emitter<SettingsState> emit,
@@ -58,7 +61,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final currentState = state as SettingsLoaded;
       try {
         final updatedSettings = currentState.settings.copyWith(
-          themeMode: event.themeMode,
+          highContrast: event.highContrast,
         );
         await repository.saveSettings(updatedSettings);
         emit(SettingsLoaded(updatedSettings));
@@ -87,24 +90,61 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 
-  // Update daily targets
-  Future<void> _onUpdateDailyTargets(
-    UpdateDailyTargets event,
+  // Update expiration notifications
+  Future<void> _onUpdateExpirationNotifications(
+    UpdateExpirationNotifications event,
     Emitter<SettingsState> emit,
   ) async {
     if (state is SettingsLoaded) {
       final currentState = state as SettingsLoaded;
       try {
         final updatedSettings = currentState.settings.copyWith(
-          dailyCalorieTarget: event.calories,
-          dailyCarbohydratesTarget: event.carbohydrates,
-          dailyFatsTarget: event.fats,
-          dailyProteinTarget: event.protein,
+          expirationNotificationsEnabled: event.enabled,
         );
         await repository.saveSettings(updatedSettings);
         emit(SettingsLoaded(updatedSettings));
       } catch (e) {
-        emit(SettingsError('Failed to update daily targets: $e'));
+        emit(SettingsError('Failed to update expiration notifications: $e'));
+      }
+    }
+  }
+
+  // Update quota generation notifications
+  Future<void> _onUpdateQuotaGenerationNotifications(
+    UpdateQuotaGenerationNotifications event,
+    Emitter<SettingsState> emit,
+  ) async {
+    if (state is SettingsLoaded) {
+      final currentState = state as SettingsLoaded;
+      try {
+        final updatedSettings = currentState.settings.copyWith(
+          quotaGenerationNotificationsEnabled: event.enabled,
+        );
+        await repository.saveSettings(updatedSettings);
+        emit(SettingsLoaded(updatedSettings));
+      } catch (e) {
+        emit(SettingsError('Failed to update quota generation notifications: $e'));
+      }
+    }
+  }
+
+  // Update preferred quota interval
+  Future<void> _onUpdatePreferredQuotaInterval(
+    UpdatePreferredQuotaInterval event,
+    Emitter<SettingsState> emit,
+  ) async {
+    if (state is SettingsLoaded) {
+      final currentState = state as SettingsLoaded;
+      try {
+        final updatedSettings = currentState.settings.copyWith(
+          preferredQuotaInterval: event.intervalIndex >= 0 && event.intervalIndex < 3
+              ? [SchedulePeriod.weekly, SchedulePeriod.monthly, SchedulePeriod.quarterly][event.intervalIndex]
+              : currentState.settings.preferredQuotaInterval,
+        );
+        await repository.saveSettings(updatedSettings);
+        emit(SettingsLoaded(updatedSettings));
+      } catch (e) {
+        emit(SettingsError('Failed to update quota interval: $e'));
       }
     }
   }

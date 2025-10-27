@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 abstract class SettingsEvent extends Equatable {
   const SettingsEvent();
@@ -23,14 +22,14 @@ class ToggleNotifications extends SettingsEvent {
   List<Object?> get props => [enabled];
 }
 
-// Change theme mode
+// Toggle high contrast mode
 class ChangeThemeMode extends SettingsEvent {
-  final ThemeMode themeMode;
+  final bool highContrast;
 
-  const ChangeThemeMode(this.themeMode);
+  const ChangeThemeMode(this.highContrast);
 
   @override
-  List<Object?> get props => [themeMode];
+  List<Object?> get props => [highContrast];
 }
 
 // Update expiration warning days
@@ -43,22 +42,34 @@ class UpdateExpirationWarningDays extends SettingsEvent {
   List<Object?> get props => [days];
 }
 
-// Update daily nutritional targets
-class UpdateDailyTargets extends SettingsEvent {
-  final double? calories;
-  final double? carbohydrates;
-  final double? fats;
-  final double? protein;
+// Update expiration notifications
+class UpdateExpirationNotifications extends SettingsEvent {
+  final bool enabled;
 
-  const UpdateDailyTargets({
-    this.calories,
-    this.carbohydrates,
-    this.fats,
-    this.protein,
-  });
+  const UpdateExpirationNotifications(this.enabled);
 
   @override
-  List<Object?> get props => [calories, carbohydrates, fats, protein];
+  List<Object?> get props => [enabled];
+}
+
+// Update quota generation notifications
+class UpdateQuotaGenerationNotifications extends SettingsEvent {
+  final bool enabled;
+
+  const UpdateQuotaGenerationNotifications(this.enabled);
+
+  @override
+  List<Object?> get props => [enabled];
+}
+
+// Update preferred quota interval
+class UpdatePreferredQuotaInterval extends SettingsEvent {
+  final int intervalIndex;
+
+  const UpdatePreferredQuotaInterval(this.intervalIndex);
+
+  @override
+  List<Object?> get props => [intervalIndex];
 }
 
 // Reset all settings to defaults

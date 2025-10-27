@@ -15,8 +15,7 @@ class ConsumptionQuotaView extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         title: const Text('Regenerate All Quotas?'),
         content: const Text(
-          'This will delete all existing quotas and regenerate them from your current batches. '
-          'Only the next 4 periods will be generated.\n\n'
+          'This will delete all existing quotas and regenerate them from your current batches. \n\n'
           'Any consumption progress will be lost. Continue?',
         ),
         actions: [
@@ -262,29 +261,19 @@ class _ProgressOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final onPrimaryColor = colorScheme.onPrimary;
 
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            colorScheme.primary,
-            colorScheme.primary.withValues(alpha: 0.7),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
+    return Card(
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(16),
+        child: Column(
+          children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Overall Progress',
                 style: TextStyle(
-                  color: onPrimaryColor,
+                  color: colorScheme.primary,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -292,7 +281,7 @@ class _ProgressOverview extends StatelessWidget {
               Text(
                 '${state.overallProgress.toStringAsFixed(0)}%',
                 style: TextStyle(
-                  color: onPrimaryColor,
+                  color: colorScheme.primary,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -305,8 +294,8 @@ class _ProgressOverview extends StatelessWidget {
             child: LinearProgressIndicator(
               value: state.overallProgress / 100,
               minHeight: 8,
-              backgroundColor: onPrimaryColor.withValues(alpha: 0.3),
-              valueColor: AlwaysStoppedAnimation<Color>(onPrimaryColor),
+              backgroundColor: colorScheme.primary.withValues(alpha: 0.3),
+              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
             ),
           ),
           const SizedBox(height: 16),
@@ -334,6 +323,7 @@ class _ProgressOverview extends StatelessWidget {
             ],
           ),
         ],
+        ),
       ),
     );
   }
@@ -354,7 +344,6 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onPrimaryColor = Theme.of(context).colorScheme.onPrimary;
 
     return Column(
       children: [
@@ -363,7 +352,7 @@ class _StatusChip extends StatelessWidget {
         Text(
           count.toString(),
           style: TextStyle(
-            color: onPrimaryColor,
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -371,7 +360,7 @@ class _StatusChip extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: onPrimaryColor.withValues(alpha: 0.9),
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 11,
           ),
         ),
@@ -402,7 +391,7 @@ class _FoodItemQuotaCard extends StatelessWidget {
     final dateFormat = DateFormat('MMM dd, yyyy');
     final progress = quota.progressPercentage / 100;
 
-    Color statusColor = colorScheme.onSurface.withValues(alpha: 0.5);
+    Color statusColor = colorScheme.onSurfaceVariant;
     IconData statusIcon = Icons.circle_outlined;
     String statusText = 'Pending';
 
@@ -457,14 +446,13 @@ class _FoodItemQuotaCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(statusIcon, color: statusColor, size: 16),
-                          const SizedBox(width: 4),
+                          Icon(Icons.calendar_today, size: 16, color: colorScheme.onSurfaceVariant),
+                          const SizedBox(width: 8),
                           Text(
-                            statusText,
+                            'Due: ${dateFormat.format(quota.targetDate)}',
                             style: TextStyle(
-                              fontSize: 12,
-                              color: statusColor,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -481,74 +469,64 @@ class _FoodItemQuotaCard extends StatelessWidget {
                       _showIncrementDialog(context, quota);
                     },
                   ),
+                if (quota.isCompleted)
+                  Icon(Icons.check, size: 32, color: statusColor,),
               ],
             ),
-            const SizedBox(height: 16),
-
-            // Target date
-            Row(
-              children: [
-                Icon(Icons.calendar_today, size: 16, color: colorScheme.onSurface.withValues(alpha: 0.6)),
-                const SizedBox(width: 8),
-                Text(
-                  'Due: ${dateFormat.format(quota.targetDate)}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: colorScheme.onSurface.withValues(alpha: 0.8),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-
+            if (!quota.isCompleted)
+              const SizedBox(height: 12),
             // Progress
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Progress',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: colorScheme.onSurface.withValues(alpha: 0.6),
+            if (!quota.isCompleted)
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Progress',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: colorScheme.onSurfaceVariant,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '${quota.consumedCount}/${quota.targetCount} items',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onSurface,
+                            Text(
+                              '${quota.consumedCount}/${quota.targetCount} items',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurface,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: LinearProgressIndicator(
-                          value: progress,
-                          minHeight: 8,
-                          backgroundColor: colorScheme.surfaceContainerHighest,
-                          valueColor: AlwaysStoppedAnimation<Color>(statusColor),
+                          ],
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: progress,
+                            minHeight: 8,
+                            backgroundColor: colorScheme.surfaceContainerHighest,
+                            valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
       ),
     );
   }
 
+  void _showHideDialog(BuildContext context, ConsumptionQuota quota) {
+    
+  }
   void _showIncrementDialog(BuildContext context, ConsumptionQuota quota) {
     int incrementValue = 1;
     final remainingCount = quota.remainingCount;

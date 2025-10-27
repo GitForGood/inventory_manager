@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_manager/services/storage_calculator_service.dart';
-import 'package:inventory_manager/widgets/summary_item.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class StorageSummaryCard extends StatelessWidget {
@@ -55,11 +54,7 @@ class StorageSummaryCard extends StatelessWidget {
                   icon: Icons.calendar_today,
                   label: 'Days',
                   value: status.estimatedDays.toStringAsFixed(1),
-                  color: Theme.of(context).colorScheme.primary /*status.estimatedDays < 7
-                      ? Colors.red
-                      : status.estimatedDays < 14
-                      ? Colors.orange
-                      : Colors.green,*/
+                  color: Theme.of(context).colorScheme.primary
                 ),
               ],
             ),
@@ -92,6 +87,38 @@ class StorageSummaryCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class SummaryItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+
+  const SummaryItem({super.key, 
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 32),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        Text(label, style: Theme.of(context).textTheme.bodySmall),
+      ],
     );
   }
 }
