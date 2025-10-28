@@ -77,7 +77,8 @@ class AppSettings {
            'quotaGenerationNotifications: $quotaGenerationNotificationsEnabled, '
            'highContrast: $highContrast, '
            'warningDays: $expirationWarningDays, '
-           'quotaInterval: $preferredQuotaInterval)';
+           'quotaInterval: $preferredQuotaInterval, '
+           'calorieTarget: $inventoryCalorieTarget)';
   }
 
   // Convert to JSON for storage
@@ -89,6 +90,7 @@ class AppSettings {
       'highContrast': highContrast,
       'expirationWarningDays': expirationWarningDays,
       'preferredQuotaInterval': preferredQuotaInterval.index,
+      'inventoryCalorieTarget': inventoryCalorieTarget,
     };
   }
 
@@ -101,6 +103,7 @@ class AppSettings {
       highContrast: json['highContrast'] as bool? ?? false,
       expirationWarningDays: json['expirationWarningDays'] as int? ?? 7,
       preferredQuotaInterval: ConsumptionPeriod.values[json['preferredQuotaInterval'] as int? ?? ConsumptionPeriod.weekly.index],
+      inventoryCalorieTarget: json['inventoryCalorieTarget'] as int?,
     );
   }
 }

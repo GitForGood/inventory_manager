@@ -16,6 +16,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<UpdateExpirationNotifications>(_onUpdateExpirationNotifications);
     on<UpdateQuotaGenerationNotifications>(_onUpdateQuotaGenerationNotifications);
     on<UpdatePreferredQuotaInterval>(_onUpdatePreferredQuotaInterval);
+    on<UpdateInventoryCalorieTarget>(_onUpdateInventoryCalorieTarget);
     on<ResetSettings>(_onResetSettings);
   }
 
@@ -145,6 +146,25 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         emit(SettingsLoaded(updatedSettings));
       } catch (e) {
         emit(SettingsError('Failed to update quota interval: $e'));
+      }
+    }
+  }
+
+  // Update inventory calorie target
+  Future<void> _onUpdateInventoryCalorieTarget(
+    UpdateInventoryCalorieTarget event,
+    Emitter<SettingsState> emit,
+  ) async {
+    if (state is SettingsLoaded) {
+      final currentState = state as SettingsLoaded;
+      try {
+        final updatedSettings = currentState.settings.copyWith(
+          inventoryCalorieTarget: event.calorieTarget,
+        );
+        await repository.saveSettings(updatedSettings);
+        emit(SettingsLoaded(updatedSettings));
+      } catch (e) {
+        emit(SettingsError('Failed to update calorie target: $e'));
       }
     }
   }

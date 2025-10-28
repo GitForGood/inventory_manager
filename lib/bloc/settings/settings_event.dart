@@ -72,6 +72,16 @@ class UpdatePreferredQuotaInterval extends SettingsEvent {
   List<Object?> get props => [intervalIndex];
 }
 
+// Update inventory calorie target
+class UpdateInventoryCalorieTarget extends SettingsEvent {
+  final int? calorieTarget;
+
+  const UpdateInventoryCalorieTarget(this.calorieTarget);
+
+  @override
+  List<Object?> get props => [calorieTarget];
+}
+
 // Reset all settings to defaults
 class ResetSettings extends SettingsEvent {
   const ResetSettings();

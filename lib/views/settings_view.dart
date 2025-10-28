@@ -4,6 +4,7 @@ import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/services/recipe_database.dart';
 import 'package:inventory_manager/services/recipe_import_service.dart';
+import 'package:inventory_manager/views/calorie_target_bottom_sheet.dart';
 import 'package:inventory_manager/views/notification_settings_view.dart';
 
 class SettingsView extends StatelessWidget {
@@ -99,6 +100,33 @@ class SettingsView extends StatelessWidget {
                     context,
                     settings.expirationWarningDays,
                   ),
+                ),
+                const Divider(),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Inventory Goals',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.local_fire_department,
+                    color: settings.inventoryCalorieTarget != null
+                        ? Colors.orange
+                        : null,
+                  ),
+                  title: const Text('Calorie Target'),
+                  subtitle: Text(
+                    settings.inventoryCalorieTarget != null
+                        ? '${_formatNumber(settings.inventoryCalorieTarget!)} kcal'
+                        : 'Not set',
+                  ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _showCalorieTargetSheet(context, settings.inventoryCalorieTarget),
                 ),
                 const Divider(),
                 const Padding(
@@ -630,6 +658,23 @@ class SettingsView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showCalorieTargetSheet(BuildContext context, int? currentTarget) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => CalorieTargetBottomSheet(
+        currentTarget: currentTarget,
+      ),
+    );
+  }
+
+  String _formatNumber(int number) {
+    return number.toString().replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
     );
   }
 }
