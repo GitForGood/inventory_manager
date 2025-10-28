@@ -1,4 +1,4 @@
-import 'package:inventory_manager/models/quota_schedule.dart';
+import 'package:inventory_manager/models/consumption_period.dart';
 
 class AppSettings {
   final bool notificationsEnabled;
@@ -6,7 +6,8 @@ class AppSettings {
   final bool quotaGenerationNotificationsEnabled;
   final bool highContrast;
   final int expirationWarningDays;
-  final SchedulePeriod preferredQuotaInterval;
+  final ConsumptionPeriod preferredQuotaInterval;
+  final int? inventoryCalorieTarget; // Target calories for total inventory
 
   const AppSettings({
     this.notificationsEnabled = true,
@@ -14,7 +15,8 @@ class AppSettings {
     this.quotaGenerationNotificationsEnabled = true,
     this.highContrast = false,
     this.expirationWarningDays = 7,
-    this.preferredQuotaInterval = SchedulePeriod.weekly,
+    this.preferredQuotaInterval = ConsumptionPeriod.weekly,
+    this.inventoryCalorieTarget,
   });
 
   // CopyWith method for immutable updates
@@ -24,7 +26,8 @@ class AppSettings {
     bool? quotaGenerationNotificationsEnabled,
     bool? highContrast,
     int? expirationWarningDays,
-    SchedulePeriod? preferredQuotaInterval,
+    ConsumptionPeriod? preferredQuotaInterval,
+    int? inventoryCalorieTarget,
   }) {
     return AppSettings(
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
@@ -33,6 +36,7 @@ class AppSettings {
       highContrast: highContrast ?? this.highContrast,
       expirationWarningDays: expirationWarningDays ?? this.expirationWarningDays,
       preferredQuotaInterval: preferredQuotaInterval ?? this.preferredQuotaInterval,
+      inventoryCalorieTarget: inventoryCalorieTarget ?? this.inventoryCalorieTarget,
     );
   }
 
@@ -46,7 +50,8 @@ class AppSettings {
         other.quotaGenerationNotificationsEnabled == quotaGenerationNotificationsEnabled &&
         other.highContrast == highContrast &&
         other.expirationWarningDays == expirationWarningDays &&
-        other.preferredQuotaInterval == preferredQuotaInterval;
+        other.preferredQuotaInterval == preferredQuotaInterval &&
+        other.inventoryCalorieTarget == inventoryCalorieTarget;
   }
 
   // HashCode for collections and comparisons
@@ -59,6 +64,7 @@ class AppSettings {
       highContrast,
       expirationWarningDays,
       preferredQuotaInterval,
+      inventoryCalorieTarget,
     );
   }
 
@@ -94,7 +100,7 @@ class AppSettings {
       quotaGenerationNotificationsEnabled: json['quotaGenerationNotificationsEnabled'] as bool? ?? true,
       highContrast: json['highContrast'] as bool? ?? false,
       expirationWarningDays: json['expirationWarningDays'] as int? ?? 7,
-      preferredQuotaInterval: SchedulePeriod.values[json['preferredQuotaInterval'] as int? ?? SchedulePeriod.weekly.index],
+      preferredQuotaInterval: ConsumptionPeriod.values[json['preferredQuotaInterval'] as int? ?? ConsumptionPeriod.weekly.index],
     );
   }
 }

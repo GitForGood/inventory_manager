@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:inventory_manager/models/app_settings.dart';
-import 'package:inventory_manager/models/quota_schedule.dart';
+import 'package:inventory_manager/models/consumption_period.dart';
 
 class SettingsRepository {
   static const String _settingsKey = 'app_settings';
@@ -76,7 +76,7 @@ class SettingsRepository {
     final settings = await loadSettings();
     await saveSettings(settings.copyWith(
       preferredQuotaInterval: intervalIndex >= 0 && intervalIndex < 3
-          ? [SchedulePeriod.weekly, SchedulePeriod.monthly, SchedulePeriod.quarterly][intervalIndex]
+          ? [ConsumptionPeriod.weekly, ConsumptionPeriod.monthly, ConsumptionPeriod.quarterly][intervalIndex]
           : settings.preferredQuotaInterval,
     ));
   }

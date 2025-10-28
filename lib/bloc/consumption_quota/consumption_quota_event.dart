@@ -15,13 +15,6 @@ class LoadCurrentPeriodQuotas extends ConsumptionQuotaEvent {
   const LoadCurrentPeriodQuotas();
 }
 
-/// Load quotas for upcoming periods
-class LoadUpcomingQuotas extends ConsumptionQuotaEvent {
-  final int numberOfPeriods;
-
-  const LoadUpcomingQuotas({this.numberOfPeriods = 1});
-}
-
 /// Generate quotas for a new batch
 class GenerateQuotasForBatch extends ConsumptionQuotaEvent {
   final InventoryBatch batch;

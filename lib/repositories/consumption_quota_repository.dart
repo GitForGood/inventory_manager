@@ -170,37 +170,6 @@ class ConsumptionQuotaRepository {
     return grouped;
   }
 
-  /// Get quotas for upcoming periods
-  Future<Map<String, List<ConsumptionQuota>>> getUpcomingPeriodsQuotas({
-    int numberOfPeriods = 3,
-  }) async {
-    final period = await getPreferredPeriod();
-    final now = DateTime.now();
-
-    // Calculate the range covering the upcoming periods
-    final periodStart = _getPeriodStart(now, period);
-    final periodEnd = _getPeriodEnd(periodStart, period)
-        .add(Duration(days: period.daysInPeriod * (numberOfPeriods - 1)));
-
-    final quotas = await getQuotasByDateRange(
-      startDate: periodStart,
-      endDate: periodEnd,
-    );
-
-    // Group by food item
-    final grouped = <String, List<ConsumptionQuota>>{};
-    for (final quota in quotas) {
-      grouped.putIfAbsent(quota.foodItemName, () => []).add(quota);
-    }
-
-    // Sort each group by target date
-    for (final quotas in grouped.values) {
-      quotas.sort((a, b) => a.targetDate.compareTo(b.targetDate));
-    }
-
-    return grouped;
-  }
-
   // ===== HELPER METHODS =====
 
   DateTime _getPeriodStart(DateTime date, ConsumptionPeriod period) {

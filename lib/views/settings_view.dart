@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
-import 'package:inventory_manager/models/quota_schedule.dart';
+import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/services/recipe_database.dart';
 import 'package:inventory_manager/services/recipe_import_service.dart';
 import 'package:inventory_manager/views/notification_settings_view.dart';
@@ -228,13 +228,13 @@ class SettingsView extends StatelessWidget {
     );
   }
 
-  String _getIntervalName(SchedulePeriod period) {
+  String _getIntervalName(ConsumptionPeriod period) {
     switch (period) {
-      case SchedulePeriod.weekly:
+      case ConsumptionPeriod.weekly:
         return 'Weekly';
-      case SchedulePeriod.monthly:
+      case ConsumptionPeriod.monthly:
         return 'Monthly';
-      case SchedulePeriod.quarterly:
+      case ConsumptionPeriod.quarterly:
         return 'Quarterly';
     }
   }
@@ -248,7 +248,7 @@ class SettingsView extends StatelessWidget {
     );
   }
 
-  void _showQuotaIntervalDialog(BuildContext context, SchedulePeriod currentPeriod) {
+  void _showQuotaIntervalDialog(BuildContext context, ConsumptionPeriod currentPeriod) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -256,10 +256,10 @@ class SettingsView extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            RadioListTile<SchedulePeriod>(
+            RadioListTile<ConsumptionPeriod>(
               title: const Text('Weekly'),
               subtitle: const Text('Reset every 7 days'),
-              value: SchedulePeriod.weekly,
+              value: ConsumptionPeriod.weekly,
               groupValue: currentPeriod,
               onChanged: (value) {
                 if (value != null) {
@@ -270,10 +270,10 @@ class SettingsView extends StatelessWidget {
                 }
               },
             ),
-            RadioListTile<SchedulePeriod>(
+            RadioListTile<ConsumptionPeriod>(
               title: const Text('Monthly'),
               subtitle: const Text('Reset every month'),
-              value: SchedulePeriod.monthly,
+              value: ConsumptionPeriod.monthly,
               groupValue: currentPeriod,
               onChanged: (value) {
                 if (value != null) {
@@ -284,10 +284,10 @@ class SettingsView extends StatelessWidget {
                 }
               },
             ),
-            RadioListTile<SchedulePeriod>(
+            RadioListTile<ConsumptionPeriod>(
               title: const Text('Quarterly'),
               subtitle: const Text('Reset every 3 months'),
-              value: SchedulePeriod.quarterly,
+              value: ConsumptionPeriod.quarterly,
               groupValue: currentPeriod,
               onChanged: (value) {
                 if (value != null) {
@@ -334,7 +334,7 @@ class SettingsView extends StatelessWidget {
 
   void _showRecipeImportDialog(BuildContext context) {
     final urlController = TextEditingController(
-      text: 'https://raw.githubusercontent.com/YOUR_USERNAME/inventory_manager/main/recipes.json',
+      text: 'https://raw.githubusercontent.com/GitForGood/inventory_manager/main/data/recipes.json',
     );
 
     showDialog(

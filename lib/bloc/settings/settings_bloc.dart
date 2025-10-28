@@ -3,7 +3,7 @@ import 'package:inventory_manager/bloc/settings/settings_event.dart';
 import 'package:inventory_manager/bloc/settings/settings_state.dart';
 import 'package:inventory_manager/repositories/settings_repository.dart';
 import 'package:inventory_manager/models/app_settings.dart';
-import 'package:inventory_manager/models/quota_schedule.dart';
+import 'package:inventory_manager/models/consumption_period.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SettingsRepository repository;
@@ -138,7 +138,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       try {
         final updatedSettings = currentState.settings.copyWith(
           preferredQuotaInterval: event.intervalIndex >= 0 && event.intervalIndex < 3
-              ? [SchedulePeriod.weekly, SchedulePeriod.monthly, SchedulePeriod.quarterly][event.intervalIndex]
+              ? [ConsumptionPeriod.weekly, ConsumptionPeriod.monthly, ConsumptionPeriod.quarterly][event.intervalIndex]
               : currentState.settings.preferredQuotaInterval,
         );
         await repository.saveSettings(updatedSettings);

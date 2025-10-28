@@ -15,18 +15,6 @@ extension ConsumptionPeriodExtension on ConsumptionPeriod {
         return 'Quarterly';
     }
   }
-
-  int get daysInPeriod {
-    switch (this) {
-      case ConsumptionPeriod.weekly:
-        return 7;
-      case ConsumptionPeriod.monthly:
-        return 30;
-      case ConsumptionPeriod.quarterly:
-        return 90;
-    }
-  }
-
   /// Gets the start date of the current period aligned to calendar boundaries
   ///
   /// **Weekly**: Most recent Monday (start of ISO week)

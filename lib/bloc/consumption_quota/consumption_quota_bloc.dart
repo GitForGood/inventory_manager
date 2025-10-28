@@ -14,7 +14,6 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
   ConsumptionQuotaBloc() : super(const ConsumptionQuotaInitial()) {
     on<LoadConsumptionQuotas>(_onLoadConsumptionQuotas);
     on<LoadCurrentPeriodQuotas>(_onLoadCurrentPeriodQuotas);
-    on<LoadUpcomingQuotas>(_onLoadUpcomingQuotas);
     on<GenerateQuotasForBatch>(_onGenerateQuotasForBatch);
     on<CompleteQuota>(_onCompleteQuota);
     on<ChangePreferredPeriod>(_onChangePreferredPeriod);
@@ -63,29 +62,7 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
       emit(ConsumptionQuotaError('Failed to load current period quotas: $e'));
     }
   }
-
-  // Load quotas for upcoming periods
-  Future<void> _onLoadUpcomingQuotas(
-    LoadUpcomingQuotas event,
-    Emitter<ConsumptionQuotaState> emit,
-  ) async {
-    emit(const ConsumptionQuotaLoading());
-    try {
-      final period = await _repository.getPreferredPeriod();
-      final quotasByFoodItem = await _repository.getUpcomingPeriodsQuotas(
-        numberOfPeriods: event.numberOfPeriods,
-      );
-
-      emit(ConsumptionQuotaLoaded(
-        quotasByFoodItem: quotasByFoodItem,
-        selectedPeriod: period,
-        lastUpdated: DateTime.now(),
-      ));
-    } catch (e) {
-      emit(ConsumptionQuotaError('Failed to load upcoming quotas: $e'));
-    }
-  }
-
+  
   // Generate quotas for a new batch - triggers full regeneration
   Future<void> _onGenerateQuotasForBatch(
     GenerateQuotasForBatch event,
