@@ -63,6 +63,7 @@ class _CalorieTargetBottomSheetState extends State<CalorieTargetBottomSheet> {
 
   void _saveTarget(BuildContext context) {
     final int? target;
+    final colorScheme = Theme.of(context).colorScheme;
 
     if (_isCalculatorMode) {
       target = _calculatedTarget;
@@ -76,26 +77,23 @@ class _CalorieTargetBottomSheetState extends State<CalorieTargetBottomSheet> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Calorie target set to ${_formatNumber(target)} kcal'),
-          backgroundColor: Colors.green,
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please enter a valid calorie target'),
-          backgroundColor: Colors.orange,
         ),
       );
     }
   }
 
   void _clearTarget(BuildContext context) {
-    context.read<SettingsBloc>().add(const UpdateInventoryCalorieTarget(null));
+    context.read<SettingsBloc>().add(const UpdateInventoryCalorieTarget(0));
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Calorie target cleared'),
-        backgroundColor: Colors.blue,
       ),
     );
   }
@@ -283,14 +281,14 @@ class _CalorieTargetBottomSheetState extends State<CalorieTargetBottomSheet> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
+                      color: colorScheme.secondaryContainer,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [
                         Icon(
                           Icons.calculate,
-                          color: colorScheme.onPrimaryContainer,
+                          color: colorScheme.onSecondaryContainer,
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -300,13 +298,13 @@ class _CalorieTargetBottomSheetState extends State<CalorieTargetBottomSheet> {
                               Text(
                                 'Calculated Target',
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: colorScheme.onPrimaryContainer,
+                                  color: colorScheme.onSecondaryContainer,
                                 ),
                               ),
                               Text(
                                 '${_formatNumber(_calculatedTarget!)} kcal',
                                 style: theme.textTheme.headlineSmall?.copyWith(
-                                  color: colorScheme.onPrimaryContainer,
+                                  color: colorScheme.onSecondaryContainer,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:inventory_manager/services/open_food_facts_service.dart';
-import 'package:inventory_manager/views/batch_form_view.dart';
+import 'package:inventory_manager/widgets/batch_form_view.dart';
 
 /// View for scanning barcodes using device camera
 class BarcodeScannerView extends StatefulWidget {
@@ -45,7 +46,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     });
 
     // Vibrate or provide feedback (optional)
-    // HapticFeedback.vibrate();
+    HapticFeedback.vibrate();
 
     // Show loading dialog
     if (mounted) {

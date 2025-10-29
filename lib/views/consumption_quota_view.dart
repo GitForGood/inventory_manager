@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barrel.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
-import 'package:inventory_manager/views/consumption_quota_card.dart';
+import 'package:inventory_manager/widgets/consumption_quota_card.dart';
 
 class ConsumptionQuotaView extends StatefulWidget {
   const ConsumptionQuotaView({super.key});
@@ -282,7 +282,7 @@ class _ProgressOverview extends StatelessWidget {
               Text(
                 'Overall Progress',
                 style: TextStyle(
-                  color: colorScheme.primary,
+                  color: colorScheme.secondary,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -290,7 +290,7 @@ class _ProgressOverview extends StatelessWidget {
               Text(
                 '${state.overallProgress.toStringAsFixed(0)}%',
                 style: TextStyle(
-                  color: colorScheme.primary,
+                  color: colorScheme.secondary,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -303,8 +303,8 @@ class _ProgressOverview extends StatelessWidget {
             child: LinearProgressIndicator(
               value: state.overallProgress / 100,
               minHeight: 8,
-              backgroundColor: colorScheme.primary.withValues(alpha: 0.3),
-              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+              backgroundColor: colorScheme.secondary.withValues(alpha: 0.3),
+              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.secondary),
             ),
           ),
           const SizedBox(height: 16),

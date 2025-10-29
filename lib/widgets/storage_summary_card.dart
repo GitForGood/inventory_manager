@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/services/storage_calculator_service.dart';
-import 'package:inventory_manager/views/calorie_target_bottom_sheet.dart';
+import 'package:inventory_manager/widgets/calorie_target_bottom_sheet.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class StorageSummaryCard extends StatelessWidget {
@@ -40,7 +40,7 @@ class StorageSummaryCard extends StatelessWidget {
         return Card(
           margin: const EdgeInsets.all(16),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -48,7 +48,7 @@ class StorageSummaryCard extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.analytics_outlined,
-                      color: theme.colorScheme.primary,
+                      color: theme.colorScheme.secondary,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -58,21 +58,6 @@ class StorageSummaryCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    // Calorie target button
-                    IconButton(
-                      icon: Icon(
-                        calorieTarget != null
-                            ? Icons.local_fire_department
-                            : Icons.local_fire_department_outlined,
-                        color: calorieTarget != null
-                            ? Colors.orange
-                            : theme.colorScheme.onSurfaceVariant,
-                      ),
-                      tooltip: calorieTarget != null
-                          ? 'Edit calorie target'
-                          : 'Set calorie target',
-                      onPressed: () => _showCalorieTargetSheet(context, calorieTarget),
                     ),
                   ],
                 ),
@@ -85,19 +70,19 @@ class StorageSummaryCard extends StatelessWidget {
                       icon: Icons.inventory,
                       label: 'Items',
                       value: status.totalItems.toString(),
-                      color: Theme.of(context).colorScheme.primary
+                      color: Theme.of(context).colorScheme.secondary
                     ),
                     SummaryItem(
                       icon: Symbols.package_2,
                       label: 'Batches',
                       value: status.totalBatches.toString(),
-                      color: Theme.of(context).colorScheme.primary
+                      color: Theme.of(context).colorScheme.secondary
                     ),
                     SummaryItem(
                       icon: Icons.calendar_today,
                       label: 'Days',
                       value: status.estimatedDays.toStringAsFixed(1),
-                      color: Theme.of(context).colorScheme.primary
+                      color: Theme.of(context).colorScheme.secondary
                     ),
                   ],
                 ),
@@ -114,33 +99,23 @@ class StorageSummaryCard extends StatelessWidget {
                     (status.totalNutrition['kcal'] ?? 0).toInt(),
                   ),
                 ],
-
-                const SizedBox(height: 8),
-                /*
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        size: 20,
-                        color: theme.colorScheme.primary,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Limited by ${status.limitingFactor} (~${status.estimatedDays.toStringAsFixed(1)} days)',
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                */
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton.icon(
+                      onPressed: () => _showCalorieTargetSheet(context, calorieTarget),
+                      icon: Icon(
+                        calorieTarget != null
+                            ? Icons.local_fire_department
+                            : Icons.local_fire_department_outlined,
+                        color: calorieTarget != null
+                            ? Theme.of(context).colorScheme.primary
+                            : theme.colorScheme.onSurfaceVariant,
+                      ), 
+                      label: Text('Set calorie target', style: Theme.of(context).textTheme.titleSmall,),
+                    )
+                  ],
+                )
               ],
             ),
           ),
@@ -167,7 +142,7 @@ class StorageSummaryCard extends StatelessWidget {
             Icon(
               Icons.local_fire_department,
               size: 20,
-              color: Colors.orange,
+              color: Theme.of(context).colorScheme.secondary,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -182,7 +157,7 @@ class StorageSummaryCard extends StatelessWidget {
               '$percentage%',
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isComplete ? Colors.green : theme.colorScheme.primary,
+                color: isComplete ? Colors.green : Theme.of(context).colorScheme.secondary,
               ),
             ),
           ],
@@ -195,7 +170,7 @@ class StorageSummaryCard extends StatelessWidget {
             minHeight: 8,
             backgroundColor: theme.colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(
-              isComplete ? Colors.green : theme.colorScheme.primary,
+              isComplete ? Colors.green : Theme.of(context).colorScheme.secondary,
             ),
           ),
         ),

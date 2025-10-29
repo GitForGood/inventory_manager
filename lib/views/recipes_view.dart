@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/recipes/recipes_barrel.dart';
 import 'package:inventory_manager/models/recipe.dart';
-import 'package:inventory_manager/views/recipe_form_view.dart';
+import 'package:inventory_manager/widgets/recipe_form_view.dart';
 
 class RecipesView extends StatefulWidget {
   const RecipesView({super.key});

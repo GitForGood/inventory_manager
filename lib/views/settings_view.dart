@@ -4,8 +4,8 @@ import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/services/recipe_database.dart';
 import 'package:inventory_manager/services/recipe_import_service.dart';
-import 'package:inventory_manager/views/calorie_target_bottom_sheet.dart';
-import 'package:inventory_manager/views/notification_settings_view.dart';
+import 'package:inventory_manager/widgets/calorie_target_bottom_sheet.dart';
+import 'package:inventory_manager/widgets/notification_settings_view.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});

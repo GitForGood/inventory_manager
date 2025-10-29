@@ -5,7 +5,7 @@ import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/services/storage_calculator_service.dart';
 import 'package:inventory_manager/views/barcode_scanner_view.dart';
-import 'package:inventory_manager/views/batch_form_view.dart';
+import 'package:inventory_manager/widgets/batch_form_view.dart';
 import 'package:inventory_manager/views/food_item_detail_view.dart';
 import 'package:inventory_manager/widgets/storage_summary_card.dart';
 import 'package:inventory_manager/models/food_item_group.dart';
@@ -280,7 +280,7 @@ class HomeView extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const BatchFormView(
+                  builder: (context) => BatchFormView(
                     barcode: null,
                     productData: null,
                   ),
