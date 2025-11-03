@@ -1,10 +1,10 @@
 {
-    "recipces":[
+    "recipces": [
         {
             "title": "Ture's Red lentil soup",
             "servings": 4,
             "readyInMinutes": 30,
-            "ingredients" : [
+            "ingredients": [
                 {
                     "ingredient": "dried red lentils",
                     "amount": 200,
@@ -57,7 +57,7 @@
                 }
             ],
             "summary": "A creamy and smooth vegetable soup with a tangy twist",
-            "instructions":  [
+            "instructions": [
                 "Pre-soak the red lentils if necessary based on packaging recommendation",
                 "Peel and chop up carrots into equal size pieces roughly same height as width.",
                 "Rougly chop the garlic, onion, and red chili.",
@@ -109,9 +109,8 @@
                     "amount": 2
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.5,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
                 },
                 {
                     "ingredient": "olive oil",
@@ -120,8 +119,8 @@
                 },
                 {
                     "ingredient": "dried oregano",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "bay leaf",
@@ -132,6 +131,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
                 }
             ],
             "summary": "Traditional Italian bean and pasta soup, hearty and comforting",
@@ -182,13 +186,13 @@
                 },
                 {
                     "ingredient": "curry powder",
-                    "amount": 2,
-                    "unit": "tbsp"
+                    "amount": 30,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cooking oil",
@@ -212,7 +216,8 @@
                 "Add chickpeas and coconut milk, simmer for 15 minutes.",
                 "Season with salt to taste.",
                 "Garnish with fresh cilantro and serve with rice."
-            ]
+            ],
+            "notes": "Cilantro: Can substitute with parsley if unavailable"
         },
         {
             "title": "Spaghetti Aglio e Olio",
@@ -235,13 +240,13 @@
                 },
                 {
                     "ingredient": "red pepper flakes",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "dried parsley",
-                    "amount": 2,
-                    "unit": "tbsp"
+                    "amount": 30,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -253,7 +258,7 @@
                 "Meanwhile, thinly slice garlic cloves.",
                 "Heat olive oil in large pan over medium-low heat.",
                 "Add garlic and red pepper flakes, cook until garlic is golden.",
-                "Reserve 1 cup pasta water, then drain pasta.",
+                "Reserve 240 ml pasta water, then drain pasta.",
                 "Add pasta to garlic oil, toss with some pasta water.",
                 "Add parsley, season with salt.",
                 "Serve immediately."
@@ -286,19 +291,18 @@
                     "amount": 2
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.5,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 2,
-                    "unit": "tsp"
+                    "amount": 10,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "paprika",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "bay leaf",
@@ -314,6 +318,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
                 }
             ],
             "summary": "Rich and hearty Latin-inspired black bean soup",
@@ -354,8 +363,8 @@
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 2,
-                    "unit": "tsp"
+                    "amount": 10,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "water",
@@ -393,7 +402,7 @@
                 },
                 {
                     "ingredient": "canned crushed tomatoes",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -406,13 +415,13 @@
                 },
                 {
                     "ingredient": "dried basil",
-                    "amount": 2,
-                    "unit": "tsp"
+                    "amount": 10,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "dried oregano",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -421,8 +430,8 @@
                 },
                 {
                     "ingredient": "sugar",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -470,9 +479,8 @@
                     "amount": 3
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 2,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 4
                 },
                 {
                     "ingredient": "bay leaf",
@@ -480,8 +488,8 @@
                 },
                 {
                     "ingredient": "dried thyme",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -493,6 +501,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 2,
+                    "unit": "l"
                 }
             ],
             "summary": "Thick and comforting split pea soup",
@@ -595,8 +608,8 @@
                 },
                 {
                     "ingredient": "rosemary",
-                    "amount": 2,
-                    "unit": "tsp"
+                    "amount": 10,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -604,9 +617,8 @@
                     "unit": "ml"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 500,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "salt"
@@ -616,6 +628,11 @@
                 },
                 {
                     "ingredient": "red pepper flakes"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
                 }
             ],
             "summary": "Roman-style chickpea and pasta stew",
@@ -661,8 +678,8 @@
                 },
                 {
                     "ingredient": "mustard powder",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "apple cider vinegar",
@@ -670,15 +687,19 @@
                     "unit": "ml"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 500,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "salt"
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
                 }
             ],
             "summary": "Sweet and savory homemade baked beans",
@@ -691,7 +712,8 @@
                 "Add water if beans become too dry.",
                 "Season with salt and pepper.",
                 "Serve hot or cold."
-            ]
+            ],
+            "notes": "Molasses: Use dark syrup (mörk sirap) or honey as substitute"
         },
         {
             "title": "Lentil Bolognese",
@@ -710,7 +732,7 @@
                 },
                 {
                     "ingredient": "canned crushed tomatoes",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -736,13 +758,13 @@
                 },
                 {
                     "ingredient": "dried oregano",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "dried basil",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -789,9 +811,8 @@
                     "amount": 2
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 600,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "butter",
@@ -804,14 +825,19 @@
                 },
                 {
                     "ingredient": "dried thyme",
-                    "amount": 0.5,
-                    "unit": "tsp"
+                    "amount": 2.5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 600,
+                    "unit": "ml"
                 }
             ],
             "summary": "Fluffy and flavorful rice side dish",
@@ -869,19 +895,18 @@
                     "amount": 3
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.5,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
                 },
                 {
                     "ingredient": "dried basil",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "dried oregano",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -893,6 +918,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
                 }
             ],
             "summary": "Italian vegetable soup with beans and pasta",
@@ -940,9 +970,8 @@
                     "amount": 4
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
                 },
                 {
                     "ingredient": "bay leaf",
@@ -950,18 +979,18 @@
                 },
                 {
                     "ingredient": "dried thyme",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "paprika",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cayenne pepper",
-                    "amount": 0.5,
-                    "unit": "tsp"
+                    "amount": 2.5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cooking oil",
@@ -973,6 +1002,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1,
+                    "unit": "l"
                 }
             ],
             "summary": "Classic Louisiana Creole dish",
@@ -1021,8 +1055,8 @@
                 },
                 {
                     "ingredient": "mustard powder",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -1041,7 +1075,8 @@
                 "Add cooked macaroni, stir to combine.",
                 "Season with salt and pepper.",
                 "Serve hot."
-            ]
+            ],
+            "notes": "Cheddar cheese: Can substitute with aged Gouda, Västerbotten, or Präst cheese"
         },
         {
             "title": "Daal (Indian Lentil Stew)",
@@ -1073,18 +1108,18 @@
                 },
                 {
                     "ingredient": "cumin seeds",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "turmeric",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "curry powder",
-                    "amount": 1,
-                    "unit": "tbsp"
+                    "amount": 15,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "vegetable oil",
@@ -1115,7 +1150,8 @@
                 "Stir occasionally, add water if too thick.",
                 "Season with salt.",
                 "Garnish with cilantro, serve with rice."
-            ]
+            ],
+            "notes": "Cilantro: Can substitute with parsley if unavailable"
         },
         {
             "title": "Spanish Rice",
@@ -1145,9 +1181,8 @@
                     "amount": 3
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 400,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "tomato paste",
@@ -1156,13 +1191,13 @@
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "paprika",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cooking oil",
@@ -1171,6 +1206,11 @@
                 },
                 {
                     "ingredient": "salt"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 400,
+                    "unit": "ml"
                 }
             ],
             "summary": "Flavorful Mexican-style rice with tomatoes",
@@ -1194,7 +1234,7 @@
             "ingredients": [
                 {
                     "ingredient": "canned chickpeas",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -1222,8 +1262,8 @@
                 },
                 {
                     "ingredient": "dried oregano",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -1286,7 +1326,7 @@
                 "In pan, cook bacon until crispy, remove excess fat.",
                 "Add minced garlic to pan, cook 30 seconds.",
                 "In bowl, whisk eggs with grated parmesan and black pepper.",
-                "Reserve 1 cup pasta water, drain pasta.",
+                "Reserve 240 ml pasta water, drain pasta.",
                 "Add hot pasta to bacon pan off heat.",
                 "Quickly stir in egg mixture, adding pasta water to create creamy sauce.",
                 "Serve immediately with extra parmesan and pepper."
@@ -1324,14 +1364,13 @@
                     "amount": 4
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.5,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
                 },
                 {
                     "ingredient": "dried rosemary",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "bay leaf",
@@ -1347,6 +1386,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
                 }
             ],
             "summary": "Rustic Mediterranean white bean stew",
@@ -1375,7 +1419,7 @@
                 },
                 {
                     "ingredient": "canned diced tomatoes",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -1392,23 +1436,22 @@
                 },
                 {
                     "ingredient": "chili powder",
-                    "amount": 3,
-                    "unit": "tbsp"
+                    "amount": 45,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 2,
-                    "unit": "tsp"
+                    "amount": 10,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "paprika",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 500,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "cooking oil",
@@ -1420,6 +1463,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
                 }
             ],
             "summary": "Hearty and spicy vegetarian chili",
@@ -1446,9 +1494,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.2,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
                 },
                 {
                     "ingredient": "yellow onion",
@@ -1483,6 +1530,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.2,
+                    "unit": "l"
                 }
             ],
             "summary": "Creamy Italian rice dish",
@@ -1512,7 +1564,7 @@
                 },
                 {
                     "ingredient": "canned diced tomatoes",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -1535,8 +1587,8 @@
                 },
                 {
                     "ingredient": "red pepper flakes",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -1545,8 +1597,8 @@
                 },
                 {
                     "ingredient": "dried oregano",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -1599,9 +1651,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.5,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
                 },
                 {
                     "ingredient": "bay leaf",
@@ -1609,8 +1660,8 @@
                 },
                 {
                     "ingredient": "dried thyme",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -1622,6 +1673,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
                 }
             ],
             "summary": "Hearty and nutritious lentil soup",
@@ -1668,8 +1724,8 @@
                 },
                 {
                     "ingredient": "dried basil",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "parmesan cheese",
@@ -1687,7 +1743,7 @@
             "instructions": [
                 "Cook pasta according to package directions.",
                 "In last 3 minutes of cooking, add frozen vegetables.",
-                "Drain pasta and vegetables, reserve 1 cup pasta water.",
+                "Drain pasta and vegetables, reserve 240 ml pasta water.",
                 "In same pot, heat olive oil and sauté minced garlic.",
                 "Add pasta, vegetables, lemon juice, and basil.",
                 "Toss with pasta water to create light sauce.",
@@ -1726,13 +1782,13 @@
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "chili powder",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "lime juice",
@@ -1762,7 +1818,8 @@
                 "Stir lime juice into cooked rice.",
                 "Season beans with salt.",
                 "Serve beans over rice, garnish with cilantro."
-            ]
+            ],
+            "notes": "Cilantro: Can substitute with parsley if unavailable"
         },
         {
             "title": "Couscous with Vegetables",
@@ -1775,9 +1832,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 400,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "canned chickpeas",
@@ -1799,13 +1855,13 @@
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cinnamon",
-                    "amount": 0.5,
-                    "unit": "tsp"
+                    "amount": 2.5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -1817,6 +1873,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 400,
+                    "unit": "ml"
                 }
             ],
             "summary": "North African inspired couscous dish",
@@ -1844,7 +1905,7 @@
                 },
                 {
                     "ingredient": "canned white beans",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -1868,13 +1929,13 @@
                 },
                 {
                     "ingredient": "dried basil",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "red pepper flakes",
-                    "amount": 0.5,
-                    "unit": "tsp"
+                    "amount": 2.5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -1929,9 +1990,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.5,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
                 },
                 {
                     "ingredient": "bay leaf",
@@ -1939,8 +1999,8 @@
                 },
                 {
                     "ingredient": "dried thyme",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -1952,6 +2012,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
                 }
             ],
             "summary": "Hearty soup with chewy barley",
@@ -1978,9 +2043,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 750,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
                 },
                 {
                     "ingredient": "lemon juice",
@@ -1989,8 +2053,8 @@
                 },
                 {
                     "ingredient": "lemon zest",
-                    "amount": 1,
-                    "unit": "tbsp"
+                    "amount": 15,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "garlic clove",
@@ -2008,14 +2072,19 @@
                 },
                 {
                     "ingredient": "dried parsley",
-                    "amount": 2,
-                    "unit": "tbsp"
+                    "amount": 30,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 750,
+                    "unit": "ml"
                 }
             ],
             "summary": "Bright and zesty orzo pasta",
@@ -2051,8 +2120,8 @@
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 2,
-                    "unit": "tsp"
+                    "amount": 10,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cooking oil",
@@ -2088,9 +2157,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
                 },
                 {
                     "ingredient": "soy sauce",
@@ -2122,6 +2190,11 @@
                 },
                 {
                     "ingredient": "white pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1,
+                    "unit": "l"
                 }
             ],
             "summary": "Quick Asian noodle soup",
@@ -2148,7 +2221,7 @@
                 },
                 {
                     "ingredient": "canned white beans",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -2165,14 +2238,13 @@
                     "amount": 1
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 500,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "dried basil",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -2184,6 +2256,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
                 }
             ],
             "summary": "Quick version of Italian bean and pasta soup",
@@ -2221,13 +2298,13 @@
                 },
                 {
                     "ingredient": "sugar",
-                    "amount": 1,
-                    "unit": "tbsp"
+                    "amount": 15,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt",
-                    "amount": 0.5,
-                    "unit": "tsp"
+                    "amount": 2.5,
+                    "unit": "ml"
                 }
             ],
             "summary": "Fragrant coconut-infused rice",
@@ -2253,7 +2330,7 @@
                 },
                 {
                     "ingredient": "canned crushed tomatoes",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -2262,8 +2339,8 @@
                 },
                 {
                     "ingredient": "red pepper flakes",
-                    "amount": 2,
-                    "unit": "tsp"
+                    "amount": 10,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -2272,8 +2349,8 @@
                 },
                 {
                     "ingredient": "dried parsley",
-                    "amount": 2,
-                    "unit": "tbsp"
+                    "amount": 30,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -2322,8 +2399,8 @@
                 },
                 {
                     "ingredient": "dried basil",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -2335,7 +2412,7 @@
             "summary": "Creamy pasta with hummus sauce",
             "instructions": [
                 "Cook pasta according to package directions.",
-                "Reserve 1 cup pasta water.",
+                "Reserve 240 ml pasta water.",
                 "In large bowl, mix hummus, lemon juice, minced garlic, olive oil, and basil.",
                 "Add hot pasta to hummus mixture.",
                 "Add pasta water gradually to create creamy sauce.",
@@ -2367,9 +2444,8 @@
                     "amount": 2
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 300,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "tomato paste",
@@ -2378,8 +2454,8 @@
                 },
                 {
                     "ingredient": "dried basil",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cooking oil",
@@ -2391,6 +2467,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 300,
+                    "unit": "ml"
                 }
             ],
             "summary": "Flavorful rice cooked in tomato sauce",
@@ -2419,7 +2500,7 @@
                 },
                 {
                     "ingredient": "canned chickpeas",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -2438,13 +2519,13 @@
                 },
                 {
                     "ingredient": "red pepper flakes",
-                    "amount": 0.5,
-                    "unit": "tsp"
+                    "amount": 2.5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "dried oregano",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -2478,9 +2559,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 600,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "yellow onion",
@@ -2496,8 +2576,8 @@
                 },
                 {
                     "ingredient": "dried thyme",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -2509,6 +2589,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 600,
+                    "unit": "ml"
                 }
             ],
             "summary": "Nutritious quinoa side dish",
@@ -2551,9 +2636,8 @@
                     "amount": 4
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 2,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 4
                 },
                 {
                     "ingredient": "bay leaf",
@@ -2561,8 +2645,8 @@
                 },
                 {
                     "ingredient": "dried thyme",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -2574,6 +2658,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 2,
+                    "unit": "l"
                 }
             ],
             "summary": "Classic white bean soup",
@@ -2606,7 +2695,7 @@
                 },
                 {
                     "ingredient": "canned crushed tomatoes",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -2619,13 +2708,13 @@
                 },
                 {
                     "ingredient": "dried basil",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "dried oregano",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -2668,9 +2757,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.2,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
                 },
                 {
                     "ingredient": "yellow onion",
@@ -2702,14 +2790,19 @@
                 },
                 {
                     "ingredient": "dried thyme",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.2,
+                    "unit": "l"
                 }
             ],
             "summary": "Rich and earthy mushroom risotto",
@@ -2752,18 +2845,18 @@
                 },
                 {
                     "ingredient": "chili powder",
-                    "amount": 2,
-                    "unit": "tbsp"
+                    "amount": 30,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "paprika",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "tomato paste",
@@ -2804,9 +2897,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 2,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 4
                 },
                 {
                     "ingredient": "ginger",
@@ -2836,6 +2928,11 @@
                 },
                 {
                     "ingredient": "white pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 2,
+                    "unit": "l"
                 }
             ],
             "summary": "Comforting Asian rice porridge",
@@ -2878,13 +2975,13 @@
                 },
                 {
                     "ingredient": "red pepper flakes",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "dried parsley",
-                    "amount": 2,
-                    "unit": "tbsp"
+                    "amount": 30,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -2944,8 +3041,8 @@
                 },
                 {
                     "ingredient": "dried oregano",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -2978,7 +3075,7 @@
                 },
                 {
                     "ingredient": "canned diced tomatoes",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -2994,19 +3091,18 @@
                     "amount": 4
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 500,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 2,
-                    "unit": "tsp"
+                    "amount": 10,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "paprika",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -3018,6 +3114,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
                 }
             ],
             "summary": "Hearty chickpea stew with vegetables",
@@ -3054,13 +3155,13 @@
                 },
                 {
                     "ingredient": "dried parsley",
-                    "amount": 2,
-                    "unit": "tbsp"
+                    "amount": 30,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "garlic powder",
-                    "amount": 0.5,
-                    "unit": "tsp"
+                    "amount": 2.5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -3116,13 +3217,13 @@
                 },
                 {
                     "ingredient": "red pepper flakes",
-                    "amount": 0.5,
-                    "unit": "tsp"
+                    "amount": 2.5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "dried parsley",
-                    "amount": 2,
-                    "unit": "tbsp"
+                    "amount": 30,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
@@ -3176,14 +3277,13 @@
                     "amount": 3
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.5,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
                 },
                 {
                     "ingredient": "dried thyme",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "bay leaf",
@@ -3199,6 +3299,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
                 }
             ],
             "summary": "Earthy mushroom and barley soup",
@@ -3282,7 +3387,7 @@
             "ingredients": [
                 {
                     "ingredient": "canned white beans",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -3300,20 +3405,24 @@
                     "unit": "ml"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 100,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 0
                 },
                 {
                     "ingredient": "dried rosemary",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "salt"
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 100,
+                    "unit": "ml"
                 }
             ],
             "summary": "Creamy mashed white beans as a side",
@@ -3340,7 +3449,7 @@
                 },
                 {
                     "ingredient": "canned crushed tomatoes",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -3356,19 +3465,18 @@
                     "amount": 3
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "paprika",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "olive oil",
@@ -3380,6 +3488,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1,
+                    "unit": "l"
                 }
             ],
             "summary": "Warming tomato and lentil soup",
@@ -3407,7 +3520,7 @@
                 },
                 {
                     "ingredient": "canned black beans",
-                    "amount": 800,
+                    "amount": 750,
                     "unit": "g"
                 },
                 {
@@ -3428,19 +3541,18 @@
                     "amount": 3
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 600,
-                    "unit": "ml"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
                 },
                 {
                     "ingredient": "cumin",
-                    "amount": 2,
-                    "unit": "tsp"
+                    "amount": 10,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "chili powder",
-                    "amount": 1,
-                    "unit": "tbsp"
+                    "amount": 15,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "cheese",
@@ -3454,6 +3566,11 @@
                 },
                 {
                     "ingredient": "salt"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 600,
+                    "unit": "ml"
                 }
             ],
             "summary": "Baked rice and bean casserole",
@@ -3497,8 +3614,8 @@
                 },
                 {
                     "ingredient": "cinnamon",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "brown sugar",
@@ -3507,8 +3624,8 @@
                 },
                 {
                     "ingredient": "salt",
-                    "amount": 0.25,
-                    "unit": "tsp"
+                    "amount": 1.25,
+                    "unit": "ml"
                 }
             ],
             "summary": "Warm breakfast oatmeal with dried fruits",
@@ -3548,8 +3665,8 @@
                 },
                 {
                     "ingredient": "red pepper flakes",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "breadcrumbs",
@@ -3558,8 +3675,8 @@
                 },
                 {
                     "ingredient": "dried parsley",
-                    "amount": 2,
-                    "unit": "tbsp"
+                    "amount": 30,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "black pepper"
@@ -3610,18 +3727,18 @@
                 },
                 {
                     "ingredient": "cumin seeds",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "turmeric",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "garam masala",
-                    "amount": 1,
-                    "unit": "tsp"
+                    "amount": 5,
+                    "unit": "ml"
                 },
                 {
                     "ingredient": "vegetable oil",
@@ -3653,7 +3770,8 @@
                 "Season with salt.",
                 "Garnish with cilantro.",
                 "Serve with rice or flatbread."
-            ]
+            ],
+            "notes": "Garam masala: Available in well-stocked supermarkets or Asian specialty stores. Cilantro: Can substitute with parsley if unavailable"
         },
         {
             "title": "Barley Risotto",
@@ -3666,9 +3784,8 @@
                     "unit": "g"
                 },
                 {
-                    "ingredient": "vegetable stock",
-                    "amount": 1.2,
-                    "unit": "l"
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
                 },
                 {
                     "ingredient": "yellow onion",
@@ -3703,6 +3820,11 @@
                 },
                 {
                     "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.2,
+                    "unit": "l"
                 }
             ],
             "summary": "Creamy barley cooked risotto-style",
