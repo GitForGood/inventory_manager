@@ -1,3 +1,174 @@
 {
-    "recipces":[]
+    "recipces":[
+        {
+            "name": "Ture's Red lentil soup",
+            "serves": 4,
+            "cooking_time": 30,
+            "ingredients" : [
+                {
+                    "ingredient": "dried red lentils",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 500,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "yellow onions",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "white cheese",
+                    "amount": 100,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "red chili pepper",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 15,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1,
+                    "unit": "l"
+                },
+                {
+                    "ingredient": "parsley"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "A creamy and smooth vegetable soup with a tangy twist",
+            "steps":  [
+                "Pre-soak the red lentils if necessary based on packaging recommendation",
+                "Peel and chop up carrots into equal size pieces roughly same height as width.",
+                "Rougly chop the garlic, onion, and red chili.",
+                "Heat up a pot with the cooking oil.",
+                "Lightly toast the carrots, garlic, onion, and chili in the pot on medium heat (~5 minutes).",
+                "Pour in the water, stock cube, and lentils and bring to a boil.",
+                "If you want the parsley in the soup instead of using it for garnish, this is the time to add it.",
+                "Let cook for 15 minnutes.",
+                "Blend with a hand mixer or food processor until smooth.",
+                "Adjust texture with additional water if desired.",
+                "Salt and Pepper to taste",
+                "(optional) Crumble the white cheese on top of plate when serving along with the parsley."
+            ]
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+    ]
 }
