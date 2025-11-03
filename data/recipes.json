@@ -636,7 +636,7 @@
             "readyInMinutes": 90,
             "ingredients": [
                 {
-                    "ingredient": "dried navy beans",
+                    "ingredient": "dried white beans",
                     "amount": 400,
                     "unit": "g"
                 },
@@ -683,7 +683,7 @@
             ],
             "summary": "Sweet and savory homemade baked beans",
             "instructions": [
-                "Soak navy beans overnight, then drain.",
+                "Soak white beans overnight, then drain.",
                 "Preheat oven to 160°C (320°F).",
                 "Dice onion finely.",
                 "In oven-safe pot, combine beans, onion, tomato paste, molasses, sugar, mustard, vinegar, and stock.",
@@ -2530,7 +2530,7 @@
             "readyInMinutes": 60,
             "ingredients": [
                 {
-                    "ingredient": "dried navy beans",
+                    "ingredient": "dried white beans",
                     "amount": 400,
                     "unit": "g"
                 },
@@ -2578,7 +2578,7 @@
             ],
             "summary": "Classic white bean soup",
             "instructions": [
-                "Soak navy beans overnight, drain.",
+                "Soak white beans overnight, drain.",
                 "Dice carrots, celery, and onions.",
                 "Heat oil in large pot, sauté vegetables for 10 minutes.",
                 "Add minced garlic and thyme, cook 1 minute.",
