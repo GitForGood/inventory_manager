@@ -1,3 +1,3907 @@
 {
-    "recipces":[]
+    "recipces": [
+        {
+            "title": "Ture's Red lentil soup",
+            "servings": 4,
+            "readyInMinutes": 30,
+            "ingredients": [
+                {
+                    "ingredient": "dried red lentils",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 500,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "yellow onions",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "white cheese",
+                    "amount": 100,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "red chili pepper",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 15,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1,
+                    "unit": "l"
+                },
+                {
+                    "ingredient": "parsley"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "A creamy and smooth vegetable soup with a tangy twist",
+            "instructions": [
+                "Pre-soak the red lentils if necessary based on packaging recommendation",
+                "Peel and chop up carrots into equal size pieces roughly same height as width.",
+                "Rougly chop the garlic, onion, and red chili.",
+                "Heat up a pot with the cooking oil.",
+                "Lightly toast the carrots, garlic, onion, and chili in the pot on medium heat (~5 minutes).",
+                "Pour in the water, stock cube, and lentils and bring to a boil.",
+                "If you want the parsley in the soup instead of using it for garnish, this is the time to add it.",
+                "Let cook for 15 minnutes.",
+                "Blend with a hand mixer or food processor until smooth.",
+                "Adjust texture with additional water if desired.",
+                "Salt and Pepper to taste",
+                "(optional) Crumble the white cheese on top of plate when serving along with the parsley."
+            ]
+        },
+        {
+            "title": "Classic Pasta e Fagioli",
+            "servings": 6,
+            "readyInMinutes": 45,
+            "ingredients": [
+                {
+                    "ingredient": "dried white beans",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "ditalini pasta",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried oregano",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Traditional Italian bean and pasta soup, hearty and comforting",
+            "instructions": [
+                "Soak white beans overnight or use quick-soak method.",
+                "Dice onion, carrots, and celery finely.",
+                "Heat olive oil in large pot and sauté vegetables until softened (8-10 minutes).",
+                "Add minced garlic and cook for 1 minute.",
+                "Add drained beans, tomatoes, stock, oregano, and bay leaves.",
+                "Bring to boil, then simmer for 30 minutes until beans are tender.",
+                "Add pasta and cook until al dente.",
+                "Remove bay leaves, season with salt and pepper to taste.",
+                "Serve with a drizzle of olive oil."
+            ]
+        },
+        {
+            "title": "Chickpea Curry",
+            "servings": 4,
+            "readyInMinutes": 35,
+            "ingredients": [
+                {
+                    "ingredient": "dried chickpeas",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned coconut milk",
+                    "amount": 400,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "ginger",
+                    "amount": 20,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "curry powder",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "cilantro"
+                }
+            ],
+            "summary": "Creamy and aromatic chickpea curry with coconut milk",
+            "instructions": [
+                "Soak and cook chickpeas until tender (or use canned).",
+                "Dice onion, mince garlic and ginger.",
+                "Heat oil in pan, sauté onion until golden.",
+                "Add garlic, ginger, curry powder, and cumin. Cook for 1 minute.",
+                "Add tomatoes and simmer for 10 minutes.",
+                "Add chickpeas and coconut milk, simmer for 15 minutes.",
+                "Season with salt to taste.",
+                "Garnish with fresh cilantro and serve with rice."
+            ],
+            "notes": "Cilantro: Can substitute with parsley if unavailable"
+        },
+        {
+            "title": "Spaghetti Aglio e Olio",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "spaghetti",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 6
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 80,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "red pepper flakes",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried parsley",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                }
+            ],
+            "summary": "Simple Italian pasta with garlic and oil",
+            "instructions": [
+                "Cook spaghetti in salted boiling water until al dente.",
+                "Meanwhile, thinly slice garlic cloves.",
+                "Heat olive oil in large pan over medium-low heat.",
+                "Add garlic and red pepper flakes, cook until garlic is golden.",
+                "Reserve 240 ml pasta water, then drain pasta.",
+                "Add pasta to garlic oil, toss with some pasta water.",
+                "Add parsley, season with salt.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Black Bean Soup",
+            "servings": 6,
+            "readyInMinutes": 50,
+            "ingredients": [
+                {
+                    "ingredient": "dried black beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "paprika",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Rich and hearty Latin-inspired black bean soup",
+            "instructions": [
+                "Soak black beans overnight, then drain.",
+                "Dice onions, carrots, and celery.",
+                "Heat oil in large pot, sauté vegetables for 8 minutes.",
+                "Add minced garlic, cumin, and paprika. Cook 1 minute.",
+                "Add beans, stock, and bay leaves.",
+                "Bring to boil, then simmer 40 minutes until beans are tender.",
+                "Remove bay leaves, partially blend for creamy texture.",
+                "Season with salt and pepper to taste."
+            ]
+        },
+        {
+            "title": "Rice and Lentils (Mujadara)",
+            "servings": 4,
+            "readyInMinutes": 45,
+            "ingredients": [
+                {
+                    "ingredient": "brown lentils",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "long grain rice",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 60,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 750,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Middle Eastern comfort food with caramelized onions",
+            "instructions": [
+                "Rinse lentils and rice separately.",
+                "Thinly slice onions.",
+                "Heat oil in pan, fry onions until deeply caramelized (20-25 minutes).",
+                "Remove half the onions and set aside for topping.",
+                "Add lentils, cumin, and water to pot. Simmer 20 minutes.",
+                "Add rice and salt, cook until rice is tender (15-20 minutes).",
+                "Season with pepper.",
+                "Top with reserved caramelized onions."
+            ]
+        },
+        {
+            "title": "Pasta with Tomato Sauce",
+            "servings": 4,
+            "readyInMinutes": 30,
+            "ingredients": [
+                {
+                    "ingredient": "penne pasta",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned crushed tomatoes",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "dried basil",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried oregano",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "sugar",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Classic Italian tomato sauce with pasta",
+            "instructions": [
+                "Dice onion and mince garlic.",
+                "Heat olive oil in large pan, sauté onion until soft.",
+                "Add garlic, cook for 1 minute.",
+                "Add crushed tomatoes, basil, oregano, and sugar.",
+                "Simmer for 20 minutes, stirring occasionally.",
+                "Meanwhile, cook pasta according to package directions.",
+                "Season sauce with salt and pepper.",
+                "Toss pasta with sauce and serve."
+            ]
+        },
+        {
+            "title": "Split Pea Soup",
+            "servings": 6,
+            "readyInMinutes": 60,
+            "ingredients": [
+                {
+                    "ingredient": "dried split peas",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "dried thyme",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 2,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Thick and comforting split pea soup",
+            "instructions": [
+                "Rinse split peas and remove any debris.",
+                "Dice carrots, celery, and onion.",
+                "Heat oil in large pot, sauté vegetables for 8 minutes.",
+                "Add minced garlic, cook for 1 minute.",
+                "Add split peas, stock, bay leaves, and thyme.",
+                "Bring to boil, then simmer for 45-50 minutes until peas break down.",
+                "Remove bay leaves.",
+                "Season with salt and pepper, serve hot."
+            ]
+        },
+        {
+            "title": "Fried Rice",
+            "servings": 4,
+            "readyInMinutes": 25,
+            "ingredients": [
+                {
+                    "ingredient": "cooked rice",
+                    "amount": 600,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "eggs",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "frozen mixed vegetables",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "green onions",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "soy sauce",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "sesame oil",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "white pepper"
+                }
+            ],
+            "summary": "Quick and versatile fried rice with vegetables",
+            "instructions": [
+                "Use day-old refrigerated rice for best results.",
+                "Beat eggs with pinch of salt.",
+                "Heat wok or large pan with oil over high heat.",
+                "Scramble eggs, remove and set aside.",
+                "Add more oil, stir-fry minced garlic for 30 seconds.",
+                "Add frozen vegetables, stir-fry for 3 minutes.",
+                "Add rice, break up clumps, stir-fry for 5 minutes.",
+                "Add soy sauce, sesame oil, and eggs.",
+                "Stir in chopped green onions, season with pepper."
+            ]
+        },
+        {
+            "title": "Pasta e Ceci (Pasta and Chickpeas)",
+            "servings": 4,
+            "readyInMinutes": 40,
+            "ingredients": [
+                {
+                    "ingredient": "dried chickpeas",
+                    "amount": 250,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "small pasta shells",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "rosemary",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "red pepper flakes"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Roman-style chickpea and pasta stew",
+            "instructions": [
+                "Soak and cook chickpeas until tender.",
+                "Heat olive oil, sauté minced garlic and rosemary.",
+                "Add tomatoes, cook for 5 minutes.",
+                "Add chickpeas and stock, simmer 15 minutes.",
+                "Mash some chickpeas for creaminess.",
+                "Add pasta, cook until tender.",
+                "Season with salt, pepper, and red pepper flakes.",
+                "Drizzle with olive oil before serving."
+            ]
+        },
+        {
+            "title": "Baked Beans",
+            "servings": 6,
+            "readyInMinutes": 90,
+            "ingredients": [
+                {
+                    "ingredient": "dried white beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "tomato paste",
+                    "amount": 60,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "molasses",
+                    "amount": 60,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "brown sugar",
+                    "amount": 40,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "mustard powder",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "apple cider vinegar",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Sweet and savory homemade baked beans",
+            "instructions": [
+                "Soak white beans overnight, then drain.",
+                "Preheat oven to 160°C (320°F).",
+                "Dice onion finely.",
+                "In oven-safe pot, combine beans, onion, tomato paste, molasses, sugar, mustard, vinegar, and stock.",
+                "Cover and bake for 75 minutes, stirring occasionally.",
+                "Add water if beans become too dry.",
+                "Season with salt and pepper.",
+                "Serve hot or cold."
+            ],
+            "notes": "Molasses: Use dark syrup (mörk sirap) or honey as substitute"
+        },
+        {
+            "title": "Lentil Bolognese",
+            "servings": 4,
+            "readyInMinutes": 40,
+            "ingredients": [
+                {
+                    "ingredient": "brown lentils",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "spaghetti",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned crushed tomatoes",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "tomato paste",
+                    "amount": 30,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "dried oregano",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried basil",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Hearty vegetarian bolognese with lentils",
+            "instructions": [
+                "Rinse lentils and cook until tender, drain.",
+                "Finely dice carrots, celery, and onion.",
+                "Heat oil in large pan, sauté vegetables for 10 minutes.",
+                "Add minced garlic, cook 1 minute.",
+                "Add tomato paste, cook for 2 minutes.",
+                "Add crushed tomatoes, oregano, and basil.",
+                "Add cooked lentils, simmer for 20 minutes.",
+                "Cook spaghetti according to package directions.",
+                "Season sauce with salt and pepper.",
+                "Serve sauce over pasta."
+            ]
+        },
+        {
+            "title": "Rice Pilaf",
+            "servings": 4,
+            "readyInMinutes": 30,
+            "ingredients": [
+                {
+                    "ingredient": "long grain rice",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "butter",
+                    "amount": 30,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "dried thyme",
+                    "amount": 2.5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 600,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Fluffy and flavorful rice side dish",
+            "instructions": [
+                "Rinse rice until water runs clear.",
+                "Dice onion and mince garlic.",
+                "Melt butter in pot, sauté onion until translucent.",
+                "Add garlic, cook for 1 minute.",
+                "Add rice, stir to coat with butter for 2 minutes.",
+                "Add stock, bay leaf, thyme, and salt.",
+                "Bring to boil, cover, reduce to low heat.",
+                "Cook for 18 minutes without lifting lid.",
+                "Remove from heat, let rest 5 minutes.",
+                "Fluff with fork, remove bay leaf, season with pepper."
+            ]
+        },
+        {
+            "title": "Minestrone Soup",
+            "servings": 6,
+            "readyInMinutes": 45,
+            "ingredients": [
+                {
+                    "ingredient": "dried white beans",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "small pasta",
+                    "amount": 100,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "zucchini",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "dried basil",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried oregano",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Italian vegetable soup with beans and pasta",
+            "instructions": [
+                "Soak and cook white beans until tender.",
+                "Dice all vegetables into small pieces.",
+                "Heat oil in large pot, sauté onion, carrots, and celery for 8 minutes.",
+                "Add garlic, cook 1 minute.",
+                "Add tomatoes, stock, beans, basil, and oregano.",
+                "Bring to boil, simmer for 20 minutes.",
+                "Add zucchini and pasta, cook until pasta is tender.",
+                "Season with salt and pepper.",
+                "Serve with crusty bread."
+            ]
+        },
+        {
+            "title": "Red Beans and Rice",
+            "servings": 6,
+            "readyInMinutes": 60,
+            "ingredients": [
+                {
+                    "ingredient": "dried red kidney beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "long grain rice",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "bell pepper",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "dried thyme",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "paprika",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cayenne pepper",
+                    "amount": 2.5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Classic Louisiana Creole dish",
+            "instructions": [
+                "Soak red beans overnight, then drain.",
+                "Dice onion, bell pepper, and celery.",
+                "Heat oil in large pot, sauté vegetables for 10 minutes.",
+                "Add minced garlic, thyme, paprika, and cayenne. Cook 1 minute.",
+                "Add beans, stock, and bay leaves.",
+                "Bring to boil, then simmer for 45-50 minutes until beans are creamy.",
+                "Mash some beans against pot for thickness.",
+                "Meanwhile, cook rice separately.",
+                "Remove bay leaves, season with salt and pepper.",
+                "Serve beans over rice."
+            ]
+        },
+        {
+            "title": "Mac and Cheese",
+            "servings": 4,
+            "readyInMinutes": 25,
+            "ingredients": [
+                {
+                    "ingredient": "elbow macaroni",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "butter",
+                    "amount": 50,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "flour",
+                    "amount": 40,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "milk",
+                    "amount": 500,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cheddar cheese",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "mustard powder",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Creamy and comforting macaroni and cheese",
+            "instructions": [
+                "Cook macaroni according to package directions, drain.",
+                "In same pot, melt butter over medium heat.",
+                "Whisk in flour, cook for 1 minute.",
+                "Gradually whisk in milk, cook until thickened.",
+                "Add shredded cheese and mustard powder, stir until melted.",
+                "Add cooked macaroni, stir to combine.",
+                "Season with salt and pepper.",
+                "Serve hot."
+            ],
+            "notes": "Cheddar cheese: Can substitute with aged Gouda, Västerbotten, or Präst cheese"
+        },
+        {
+            "title": "Daal (Indian Lentil Stew)",
+            "servings": 4,
+            "readyInMinutes": 35,
+            "ingredients": [
+                {
+                    "ingredient": "red lentils",
+                    "amount": 250,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "ginger",
+                    "amount": 20,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "cumin seeds",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "turmeric",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "curry powder",
+                    "amount": 15,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "vegetable oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 750,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "cilantro"
+                }
+            ],
+            "summary": "Warming Indian lentil stew with aromatic spices",
+            "instructions": [
+                "Rinse lentils until water runs clear.",
+                "Dice onion, mince garlic and ginger.",
+                "Heat oil in pot, add cumin seeds until they sizzle.",
+                "Add onion, cook until golden.",
+                "Add garlic, ginger, turmeric, and curry powder. Cook 1 minute.",
+                "Add lentils, tomatoes, and water.",
+                "Bring to boil, then simmer for 25 minutes until lentils are soft.",
+                "Stir occasionally, add water if too thick.",
+                "Season with salt.",
+                "Garnish with cilantro, serve with rice."
+            ],
+            "notes": "Cilantro: Can substitute with parsley if unavailable"
+        },
+        {
+            "title": "Spanish Rice",
+            "servings": 4,
+            "readyInMinutes": 35,
+            "ingredients": [
+                {
+                    "ingredient": "long grain rice",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "bell pepper",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "tomato paste",
+                    "amount": 30,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "paprika",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 400,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Flavorful Mexican-style rice with tomatoes",
+            "instructions": [
+                "Rinse rice until water runs clear.",
+                "Dice onion and bell pepper.",
+                "Heat oil in large pan, sauté vegetables for 5 minutes.",
+                "Add minced garlic, cumin, and paprika. Cook 1 minute.",
+                "Add rice, stir to toast for 2 minutes.",
+                "Add tomatoes, tomato paste, stock, and salt.",
+                "Bring to boil, cover, reduce heat to low.",
+                "Cook for 20 minutes without lifting lid.",
+                "Remove from heat, let rest 5 minutes.",
+                "Fluff with fork and serve."
+            ]
+        },
+        {
+            "title": "Chickpea Salad",
+            "servings": 4,
+            "readyInMinutes": 15,
+            "ingredients": [
+                {
+                    "ingredient": "canned chickpeas",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "cucumber",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "cherry tomatoes",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "red onion",
+                    "amount": 0.5
+                },
+                {
+                    "ingredient": "lemon juice",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 60,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried oregano",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Fresh and protein-packed chickpea salad",
+            "instructions": [
+                "Drain and rinse chickpeas.",
+                "Dice cucumber and halve cherry tomatoes.",
+                "Thinly slice red onion.",
+                "In large bowl, combine chickpeas, cucumber, tomatoes, and onion.",
+                "In small bowl, whisk together lemon juice, olive oil, and oregano.",
+                "Pour dressing over salad, toss to combine.",
+                "Season with salt and pepper.",
+                "Chill for 10 minutes before serving."
+            ]
+        },
+        {
+            "title": "Pasta Carbonara",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "spaghetti",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "eggs",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "parmesan cheese",
+                    "amount": 100,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "bacon",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "salt"
+                }
+            ],
+            "summary": "Classic Roman pasta with egg and cheese sauce",
+            "instructions": [
+                "Cook spaghetti in salted boiling water until al dente.",
+                "Cut bacon into small pieces.",
+                "In pan, cook bacon until crispy, remove excess fat.",
+                "Add minced garlic to pan, cook 30 seconds.",
+                "In bowl, whisk eggs with grated parmesan and black pepper.",
+                "Reserve 240 ml pasta water, drain pasta.",
+                "Add hot pasta to bacon pan off heat.",
+                "Quickly stir in egg mixture, adding pasta water to create creamy sauce.",
+                "Serve immediately with extra parmesan and pepper."
+            ]
+        },
+        {
+            "title": "White Bean Stew",
+            "servings": 6,
+            "readyInMinutes": 50,
+            "ingredients": [
+                {
+                    "ingredient": "dried white beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "dried rosemary",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Rustic Mediterranean white bean stew",
+            "instructions": [
+                "Soak white beans overnight, drain.",
+                "Dice carrots, celery, and onions.",
+                "Heat oil in large pot, sauté vegetables for 10 minutes.",
+                "Add minced garlic and rosemary, cook 1 minute.",
+                "Add beans, tomatoes, stock, and bay leaves.",
+                "Bring to boil, then simmer for 40 minutes until beans are tender.",
+                "Remove bay leaves.",
+                "Partially mash beans for creamier texture.",
+                "Season with salt and pepper.",
+                "Drizzle with olive oil before serving."
+            ]
+        },
+        {
+            "title": "Pinto Bean Chili",
+            "servings": 6,
+            "readyInMinutes": 55,
+            "ingredients": [
+                {
+                    "ingredient": "dried pinto beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "bell peppers",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "chili powder",
+                    "amount": 45,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "paprika",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Hearty and spicy vegetarian chili",
+            "instructions": [
+                "Soak pinto beans overnight, cook until tender.",
+                "Dice onions and bell peppers.",
+                "Heat oil in large pot, sauté vegetables for 8 minutes.",
+                "Add minced garlic, chili powder, cumin, and paprika. Cook 1 minute.",
+                "Add beans, tomatoes, and stock.",
+                "Bring to boil, then simmer for 30 minutes.",
+                "Stir occasionally, add water if too thick.",
+                "Season with salt and pepper.",
+                "Serve with cornbread or rice."
+            ]
+        },
+        {
+            "title": "Risotto",
+            "servings": 4,
+            "readyInMinutes": 35,
+            "ingredients": [
+                {
+                    "ingredient": "arborio rice",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "white wine",
+                    "amount": 120,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "parmesan cheese",
+                    "amount": 80,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "butter",
+                    "amount": 40,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.2,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Creamy Italian rice dish",
+            "instructions": [
+                "Heat stock in separate pot and keep warm.",
+                "Finely dice onion and mince garlic.",
+                "Heat oil and half butter in large pan, sauté onion until soft.",
+                "Add garlic, cook 1 minute.",
+                "Add rice, stir to coat, toast for 2 minutes.",
+                "Add wine, stir until absorbed.",
+                "Add stock one ladle at a time, stirring constantly.",
+                "Wait for liquid to absorb before adding more stock.",
+                "Continue for 20 minutes until rice is creamy but al dente.",
+                "Remove from heat, stir in remaining butter and parmesan.",
+                "Season with salt and pepper, serve immediately."
+            ]
+        },
+        {
+            "title": "Pasta Puttanesca",
+            "servings": 4,
+            "readyInMinutes": 25,
+            "ingredients": [
+                {
+                    "ingredient": "spaghetti",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "black olives",
+                    "amount": 100,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "capers",
+                    "amount": 40,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "anchovy fillets",
+                    "amount": 6
+                },
+                {
+                    "ingredient": "red pepper flakes",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried oregano",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Bold and briny Italian pasta sauce",
+            "instructions": [
+                "Cook spaghetti according to package directions.",
+                "Slice olives and chop anchovies.",
+                "Heat olive oil in pan, sauté minced garlic and anchovies.",
+                "Add red pepper flakes, cook 1 minute.",
+                "Add tomatoes, olives, capers, and oregano.",
+                "Simmer for 15 minutes.",
+                "Season with salt and pepper.",
+                "Toss with drained pasta and serve."
+            ]
+        },
+        {
+            "title": "Lentil Soup",
+            "servings": 6,
+            "readyInMinutes": 40,
+            "ingredients": [
+                {
+                    "ingredient": "green lentils",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "dried thyme",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Hearty and nutritious lentil soup",
+            "instructions": [
+                "Rinse lentils and remove debris.",
+                "Dice carrots, celery, and onion.",
+                "Heat oil in large pot, sauté vegetables for 8 minutes.",
+                "Add minced garlic and thyme, cook 1 minute.",
+                "Add lentils, tomatoes, stock, and bay leaves.",
+                "Bring to boil, then simmer for 30 minutes.",
+                "Remove bay leaves.",
+                "Season with salt and pepper.",
+                "Serve with crusty bread."
+            ]
+        },
+        {
+            "title": "Pasta Primavera",
+            "servings": 4,
+            "readyInMinutes": 25,
+            "ingredients": [
+                {
+                    "ingredient": "penne pasta",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "frozen mixed vegetables",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "lemon juice",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried basil",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "parmesan cheese",
+                    "amount": 50,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Light pasta with vegetables",
+            "instructions": [
+                "Cook pasta according to package directions.",
+                "In last 3 minutes of cooking, add frozen vegetables.",
+                "Drain pasta and vegetables, reserve 240 ml pasta water.",
+                "In same pot, heat olive oil and sauté minced garlic.",
+                "Add pasta, vegetables, lemon juice, and basil.",
+                "Toss with pasta water to create light sauce.",
+                "Add grated parmesan.",
+                "Season with salt and pepper.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Bean and Rice Burrito Bowl",
+            "servings": 4,
+            "readyInMinutes": 30,
+            "ingredients": [
+                {
+                    "ingredient": "black beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "long grain rice",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "chili powder",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "lime juice",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "cilantro"
+                }
+            ],
+            "summary": "Tex-Mex inspired rice and bean bowl",
+            "instructions": [
+                "Cook rice according to package directions.",
+                "Drain and rinse black beans if canned.",
+                "Dice onion and mince garlic.",
+                "Heat oil in pan, sauté onion for 5 minutes.",
+                "Add garlic, cumin, and chili powder. Cook 1 minute.",
+                "Add beans and tomatoes, simmer for 10 minutes.",
+                "Stir lime juice into cooked rice.",
+                "Season beans with salt.",
+                "Serve beans over rice, garnish with cilantro."
+            ],
+            "notes": "Cilantro: Can substitute with parsley if unavailable"
+        },
+        {
+            "title": "Couscous with Vegetables",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "couscous",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "canned chickpeas",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "dried apricots",
+                    "amount": 100,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cinnamon",
+                    "amount": 2.5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 400,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "North African inspired couscous dish",
+            "instructions": [
+                "Dice onion and apricots.",
+                "Heat oil in pan, sauté onion for 5 minutes.",
+                "Add minced garlic, cumin, and cinnamon. Cook 1 minute.",
+                "Add chickpeas and apricots, cook for 5 minutes.",
+                "Bring stock to boil in separate pot.",
+                "Pour stock over couscous in bowl, cover for 5 minutes.",
+                "Fluff couscous with fork.",
+                "Mix chickpea mixture with couscous.",
+                "Season with salt and pepper."
+            ]
+        },
+        {
+            "title": "Pasta with White Beans",
+            "servings": 4,
+            "readyInMinutes": 25,
+            "ingredients": [
+                {
+                    "ingredient": "short pasta",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned white beans",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 5
+                },
+                {
+                    "ingredient": "cherry tomatoes",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "spinach",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 50,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried basil",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "red pepper flakes",
+                    "amount": 2.5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Quick pasta with beans and greens",
+            "instructions": [
+                "Cook pasta according to package directions.",
+                "Drain and rinse white beans.",
+                "Halve cherry tomatoes.",
+                "Heat olive oil in large pan, sauté sliced garlic until golden.",
+                "Add red pepper flakes and tomatoes, cook 5 minutes.",
+                "Add white beans and basil, cook 5 minutes.",
+                "Add spinach, cook until wilted.",
+                "Add drained pasta and pasta water to create sauce.",
+                "Season with salt and pepper.",
+                "Serve with olive oil drizzle."
+            ]
+        },
+        {
+            "title": "Vegetable Barley Soup",
+            "servings": 6,
+            "readyInMinutes": 50,
+            "ingredients": [
+                {
+                    "ingredient": "pearl barley",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "dried thyme",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Hearty soup with chewy barley",
+            "instructions": [
+                "Rinse barley.",
+                "Dice carrots, celery, and onion.",
+                "Heat oil in large pot, sauté vegetables for 8 minutes.",
+                "Add minced garlic and thyme, cook 1 minute.",
+                "Add barley, tomatoes, stock, and bay leaves.",
+                "Bring to boil, then simmer for 40 minutes.",
+                "Remove bay leaves.",
+                "Season with salt and pepper.",
+                "Serve hot."
+            ]
+        },
+        {
+            "title": "Lemon Orzo",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "orzo pasta",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "lemon juice",
+                    "amount": 60,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "lemon zest",
+                    "amount": 15,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "butter",
+                    "amount": 40,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "parmesan cheese",
+                    "amount": 60,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "dried parsley",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 750,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Bright and zesty orzo pasta",
+            "instructions": [
+                "In pot, melt butter and sauté minced garlic for 1 minute.",
+                "Add orzo, toast for 2 minutes.",
+                "Add stock, bring to boil.",
+                "Simmer uncovered for 10-12 minutes, stirring occasionally.",
+                "Remove from heat when orzo is creamy.",
+                "Stir in lemon juice, zest, and parmesan.",
+                "Add parsley.",
+                "Season with salt and pepper.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Refried Beans",
+            "servings": 4,
+            "readyInMinutes": 40,
+            "ingredients": [
+                {
+                    "ingredient": "dried pinto beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                }
+            ],
+            "summary": "Creamy Mexican-style beans",
+            "instructions": [
+                "Soak and cook pinto beans until very tender.",
+                "Drain beans, reserve cooking liquid.",
+                "Dice onion and mince garlic.",
+                "Heat oil in large pan, sauté onion until golden.",
+                "Add garlic and cumin, cook 1 minute.",
+                "Add beans, mash with potato masher.",
+                "Add reserved cooking liquid to reach desired consistency.",
+                "Cook for 10 minutes, stirring constantly.",
+                "Season with salt.",
+                "Serve as side dish or in tacos."
+            ]
+        },
+        {
+            "title": "Ramen Noodle Soup",
+            "servings": 2,
+            "readyInMinutes": 15,
+            "ingredients": [
+                {
+                    "ingredient": "ramen noodles",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "soy sauce",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "ginger",
+                    "amount": 10,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "green onions",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "sesame oil",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried seaweed",
+                    "amount": 5,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "white pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Quick Asian noodle soup",
+            "instructions": [
+                "Bring stock to boil in pot.",
+                "Add minced garlic and ginger.",
+                "Add soy sauce and sesame oil.",
+                "Add ramen noodles, cook according to package time.",
+                "Add dried seaweed in last minute.",
+                "Season with white pepper.",
+                "Garnish with sliced green onions.",
+                "Serve hot."
+            ]
+        },
+        {
+            "title": "Pasta Fagioli (Simplified)",
+            "servings": 4,
+            "readyInMinutes": 30,
+            "ingredients": [
+                {
+                    "ingredient": "small pasta",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned white beans",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned crushed tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "dried basil",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Quick version of Italian bean and pasta soup",
+            "instructions": [
+                "Dice onion and mince garlic.",
+                "Heat oil in pot, sauté onion for 5 minutes.",
+                "Add garlic and basil, cook 1 minute.",
+                "Add tomatoes, beans, and stock.",
+                "Bring to boil, add pasta.",
+                "Simmer until pasta is cooked.",
+                "Partially mash some beans for thickness.",
+                "Season with salt and pepper.",
+                "Serve with crusty bread."
+            ]
+        },
+        {
+            "title": "Coconut Rice",
+            "servings": 4,
+            "readyInMinutes": 25,
+            "ingredients": [
+                {
+                    "ingredient": "jasmine rice",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned coconut milk",
+                    "amount": 400,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 200,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "sugar",
+                    "amount": 15,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt",
+                    "amount": 2.5,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Fragrant coconut-infused rice",
+            "instructions": [
+                "Rinse rice until water runs clear.",
+                "In pot, combine rice, coconut milk, water, sugar, and salt.",
+                "Bring to boil, stir once.",
+                "Cover, reduce heat to lowest setting.",
+                "Cook for 15 minutes without lifting lid.",
+                "Remove from heat, let rest 5 minutes.",
+                "Fluff with fork and serve."
+            ]
+        },
+        {
+            "title": "Pasta Arrabbiata",
+            "servings": 4,
+            "readyInMinutes": 25,
+            "ingredients": [
+                {
+                    "ingredient": "penne pasta",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned crushed tomatoes",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "red pepper flakes",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried parsley",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                }
+            ],
+            "summary": "Spicy Italian tomato sauce with pasta",
+            "instructions": [
+                "Cook pasta according to package directions.",
+                "Heat olive oil in large pan.",
+                "Add sliced garlic and red pepper flakes, cook 1 minute.",
+                "Add crushed tomatoes.",
+                "Simmer for 15 minutes.",
+                "Add parsley and salt to taste.",
+                "Toss with drained pasta.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Hummus Pasta",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "pasta",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "hummus",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "lemon juice",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried basil",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Creamy pasta with hummus sauce",
+            "instructions": [
+                "Cook pasta according to package directions.",
+                "Reserve 240 ml pasta water.",
+                "In large bowl, mix hummus, lemon juice, minced garlic, olive oil, and basil.",
+                "Add hot pasta to hummus mixture.",
+                "Add pasta water gradually to create creamy sauce.",
+                "Season with salt and pepper.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Tomato Rice",
+            "servings": 4,
+            "readyInMinutes": 30,
+            "ingredients": [
+                {
+                    "ingredient": "long grain rice",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "tomato paste",
+                    "amount": 30,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "dried basil",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 300,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Flavorful rice cooked in tomato sauce",
+            "instructions": [
+                "Rinse rice until water runs clear.",
+                "Dice onion and mince garlic.",
+                "Heat oil in pot, sauté onion for 5 minutes.",
+                "Add garlic and basil, cook 1 minute.",
+                "Add rice, stir to coat for 2 minutes.",
+                "Add tomatoes, tomato paste, stock, and salt.",
+                "Bring to boil, cover, reduce heat to low.",
+                "Cook for 18 minutes without lifting lid.",
+                "Remove from heat, let rest 5 minutes.",
+                "Fluff with fork, season with pepper."
+            ]
+        },
+        {
+            "title": "Chickpea Pasta",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "pasta",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned chickpeas",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "lemon juice",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 50,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "red pepper flakes",
+                    "amount": 2.5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried oregano",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Simple pasta with chickpeas and garlic",
+            "instructions": [
+                "Cook pasta according to package directions.",
+                "Drain and rinse chickpeas.",
+                "Heat olive oil in large pan.",
+                "Add sliced garlic and red pepper flakes, cook 2 minutes.",
+                "Add chickpeas and oregano, cook 5 minutes.",
+                "Lightly mash some chickpeas.",
+                "Add drained pasta and lemon juice.",
+                "Toss with pasta water to create sauce.",
+                "Season with salt and pepper.",
+                "Serve hot."
+            ]
+        },
+        {
+            "title": "Quinoa Pilaf",
+            "servings": 4,
+            "readyInMinutes": 25,
+            "ingredients": [
+                {
+                    "ingredient": "quinoa",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "dried thyme",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 600,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Nutritious quinoa side dish",
+            "instructions": [
+                "Rinse quinoa thoroughly.",
+                "Dice onion and carrots finely.",
+                "Heat oil in pot, sauté vegetables for 5 minutes.",
+                "Add minced garlic and thyme, cook 1 minute.",
+                "Add quinoa, toast for 2 minutes.",
+                "Add stock and salt, bring to boil.",
+                "Cover, reduce heat to low, cook 15 minutes.",
+                "Remove from heat, let rest 5 minutes.",
+                "Fluff with fork, season with pepper."
+            ]
+        },
+        {
+            "title": "Navy Bean Soup",
+            "servings": 6,
+            "readyInMinutes": 60,
+            "ingredients": [
+                {
+                    "ingredient": "dried white beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "dried thyme",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 2,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Classic white bean soup",
+            "instructions": [
+                "Soak white beans overnight, drain.",
+                "Dice carrots, celery, and onions.",
+                "Heat oil in large pot, sauté vegetables for 10 minutes.",
+                "Add minced garlic and thyme, cook 1 minute.",
+                "Add beans, stock, and bay leaves.",
+                "Bring to boil, then simmer for 50 minutes.",
+                "Remove bay leaves.",
+                "Partially blend for creamy texture.",
+                "Season with salt and pepper."
+            ]
+        },
+        {
+            "title": "Pasta with Lentil Sauce",
+            "servings": 4,
+            "readyInMinutes": 35,
+            "ingredients": [
+                {
+                    "ingredient": "pasta",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "red lentils",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned crushed tomatoes",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "dried basil",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried oregano",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Protein-rich pasta with red lentil sauce",
+            "instructions": [
+                "Rinse red lentils.",
+                "Dice onion and mince garlic.",
+                "Heat oil in pot, sauté onion for 5 minutes.",
+                "Add garlic, basil, and oregano, cook 1 minute.",
+                "Add lentils and tomatoes.",
+                "Simmer for 25 minutes until lentils are soft.",
+                "Meanwhile, cook pasta according to package directions.",
+                "Season sauce with salt and pepper.",
+                "Serve sauce over pasta."
+            ]
+        },
+        {
+            "title": "Mushroom Risotto",
+            "servings": 4,
+            "readyInMinutes": 40,
+            "ingredients": [
+                {
+                    "ingredient": "arborio rice",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "dried mushrooms",
+                    "amount": 30,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "white wine",
+                    "amount": 120,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "parmesan cheese",
+                    "amount": 80,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "butter",
+                    "amount": 40,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried thyme",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.2,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Rich and earthy mushroom risotto",
+            "instructions": [
+                "Soak dried mushrooms in warm water for 20 minutes, then chop.",
+                "Heat stock and keep warm.",
+                "Dice onion and mince garlic.",
+                "Heat oil and half butter in pan, sauté onion until soft.",
+                "Add garlic and thyme, cook 1 minute.",
+                "Add mushrooms, cook 3 minutes.",
+                "Add rice, toast for 2 minutes.",
+                "Add wine, stir until absorbed.",
+                "Add stock one ladle at a time, stirring constantly.",
+                "Continue for 20 minutes until rice is creamy.",
+                "Stir in remaining butter and parmesan.",
+                "Season with salt and pepper."
+            ]
+        },
+        {
+            "title": "Lentil Tacos",
+            "servings": 4,
+            "readyInMinutes": 30,
+            "ingredients": [
+                {
+                    "ingredient": "brown lentils",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "taco shells",
+                    "amount": 12
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "chili powder",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "paprika",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "tomato paste",
+                    "amount": 30,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                }
+            ],
+            "summary": "Vegetarian tacos with seasoned lentils",
+            "instructions": [
+                "Cook lentils until tender, drain.",
+                "Dice onion and mince garlic.",
+                "Heat oil in pan, sauté onion for 5 minutes.",
+                "Add garlic, chili powder, cumin, and paprika. Cook 1 minute.",
+                "Add lentils and tomato paste, stir well.",
+                "Add small amount of water if too dry.",
+                "Season with salt.",
+                "Warm taco shells.",
+                "Fill shells with lentil mixture.",
+                "Serve with desired toppings."
+            ]
+        },
+        {
+            "title": "Congee (Rice Porridge)",
+            "servings": 4,
+            "readyInMinutes": 60,
+            "ingredients": [
+                {
+                    "ingredient": "white rice",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "ginger",
+                    "amount": 20,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "green onions",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "soy sauce",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "sesame oil",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "white pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 2,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Comforting Asian rice porridge",
+            "instructions": [
+                "Rinse rice thoroughly.",
+                "Slice ginger thinly.",
+                "In large pot, combine rice, stock, and ginger.",
+                "Bring to boil, then reduce to low simmer.",
+                "Cook for 50-60 minutes, stirring occasionally.",
+                "Rice should break down into creamy porridge.",
+                "Add minced garlic in last 10 minutes.",
+                "Season with soy sauce, sesame oil, salt, and pepper.",
+                "Garnish with sliced green onions.",
+                "Serve hot."
+            ]
+        },
+        {
+            "title": "Pasta with Garlic and Breadcrumbs",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "spaghetti",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "breadcrumbs",
+                    "amount": 100,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 6
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 80,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "red pepper flakes",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried parsley",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                }
+            ],
+            "summary": "Simple pasta with crispy garlic breadcrumbs",
+            "instructions": [
+                "Cook spaghetti according to package directions.",
+                "Heat half the oil in pan, toast breadcrumbs until golden.",
+                "Remove breadcrumbs and set aside.",
+                "Add remaining oil, sauté sliced garlic until golden.",
+                "Add red pepper flakes.",
+                "Add drained pasta and parsley.",
+                "Toss with pasta water.",
+                "Season with salt.",
+                "Top with toasted breadcrumbs.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Bean Salad",
+            "servings": 6,
+            "readyInMinutes": 15,
+            "ingredients": [
+                {
+                    "ingredient": "canned kidney beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned chickpeas",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned black beans",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "red onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "bell pepper",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 60,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "red wine vinegar",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried oregano",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Colorful three-bean salad",
+            "instructions": [
+                "Drain and rinse all beans.",
+                "Dice red onion and bell pepper.",
+                "In large bowl, combine beans, onion, and pepper.",
+                "In small bowl, whisk oil, vinegar, and oregano.",
+                "Pour dressing over bean mixture.",
+                "Toss to combine.",
+                "Season with salt and pepper.",
+                "Chill for at least 30 minutes before serving."
+            ]
+        },
+        {
+            "title": "Chickpea Stew",
+            "servings": 4,
+            "readyInMinutes": 40,
+            "ingredients": [
+                {
+                    "ingredient": "dried chickpeas",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "paprika",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Hearty chickpea stew with vegetables",
+            "instructions": [
+                "Soak and cook chickpeas until tender.",
+                "Dice onions and carrots.",
+                "Heat oil in large pot, sauté vegetables for 8 minutes.",
+                "Add minced garlic, cumin, and paprika. Cook 1 minute.",
+                "Add chickpeas, tomatoes, and stock.",
+                "Bring to boil, then simmer for 25 minutes.",
+                "Season with salt and pepper.",
+                "Serve with crusty bread."
+            ]
+        },
+        {
+            "title": "Buttered Noodles",
+            "servings": 4,
+            "readyInMinutes": 15,
+            "ingredients": [
+                {
+                    "ingredient": "egg noodles",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "butter",
+                    "amount": 60,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "parmesan cheese",
+                    "amount": 50,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "dried parsley",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "garlic powder",
+                    "amount": 2.5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Simple and comforting buttered noodles",
+            "instructions": [
+                "Cook egg noodles according to package directions.",
+                "Drain noodles, return to pot.",
+                "Add butter while noodles are hot, stir until melted.",
+                "Add parmesan, parsley, and garlic powder.",
+                "Toss to combine.",
+                "Season with salt and pepper.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Pasta with Canned Tuna",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "pasta",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned tuna",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "capers",
+                    "amount": 30,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "lemon juice",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 50,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "red pepper flakes",
+                    "amount": 2.5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried parsley",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Quick pasta with tuna and capers",
+            "instructions": [
+                "Cook pasta according to package directions.",
+                "Drain tuna.",
+                "Heat olive oil in large pan.",
+                "Sauté minced garlic and red pepper flakes for 1 minute.",
+                "Add tuna and capers, break up tuna.",
+                "Add drained pasta, lemon juice, and parsley.",
+                "Toss with pasta water to create sauce.",
+                "Season with salt and pepper.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Mushroom Barley Soup",
+            "servings": 6,
+            "readyInMinutes": 55,
+            "ingredients": [
+                {
+                    "ingredient": "pearl barley",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "dried mushrooms",
+                    "amount": 40,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "celery stalks",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "dried thyme",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "bay leaf",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.5,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Earthy mushroom and barley soup",
+            "instructions": [
+                "Soak dried mushrooms in warm water for 20 minutes, chop.",
+                "Rinse barley.",
+                "Dice carrots, celery, and onion.",
+                "Heat oil in pot, sauté vegetables for 8 minutes.",
+                "Add minced garlic and thyme, cook 1 minute.",
+                "Add mushrooms, barley, stock, and bay leaves.",
+                "Bring to boil, then simmer for 45 minutes.",
+                "Remove bay leaves.",
+                "Season with salt and pepper.",
+                "Serve hot."
+            ]
+        },
+        {
+            "title": "Peanut Noodles",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "noodles",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "peanut butter",
+                    "amount": 100,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "soy sauce",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "rice vinegar",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "sesame oil",
+                    "amount": 15,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "ginger",
+                    "amount": 10,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "green onions",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "red pepper flakes"
+                }
+            ],
+            "summary": "Creamy Asian-inspired peanut noodles",
+            "instructions": [
+                "Cook noodles according to package directions.",
+                "In bowl, whisk peanut butter, soy sauce, vinegar, and sesame oil.",
+                "Add minced garlic and ginger to sauce.",
+                "Add warm water to thin sauce if needed.",
+                "Drain noodles, reserve some cooking water.",
+                "Toss noodles with sauce, adding pasta water as needed.",
+                "Garnish with sliced green onions.",
+                "Add red pepper flakes to taste.",
+                "Serve warm or cold."
+            ]
+        },
+        {
+            "title": "White Bean Mash",
+            "servings": 4,
+            "readyInMinutes": 25,
+            "ingredients": [
+                {
+                    "ingredient": "canned white beans",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 50,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "lemon juice",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 0
+                },
+                {
+                    "ingredient": "dried rosemary",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 100,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Creamy mashed white beans as a side",
+            "instructions": [
+                "Drain and rinse white beans.",
+                "In pot, heat olive oil and sauté minced garlic for 1 minute.",
+                "Add beans, stock, and rosemary.",
+                "Heat through for 5 minutes.",
+                "Mash beans with potato masher to desired consistency.",
+                "Add lemon juice.",
+                "Season with salt and pepper.",
+                "Serve as side dish."
+            ]
+        },
+        {
+            "title": "Tomato Lentil Soup",
+            "servings": 6,
+            "readyInMinutes": 40,
+            "ingredients": [
+                {
+                    "ingredient": "red lentils",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned crushed tomatoes",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "carrots",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "paprika",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Warming tomato and lentil soup",
+            "instructions": [
+                "Rinse red lentils.",
+                "Dice onion and carrots.",
+                "Heat oil in pot, sauté vegetables for 8 minutes.",
+                "Add minced garlic, cumin, and paprika. Cook 1 minute.",
+                "Add lentils, tomatoes, and stock.",
+                "Bring to boil, then simmer for 25 minutes.",
+                "Blend partially for creamy texture if desired.",
+                "Season with salt and pepper.",
+                "Serve hot."
+            ]
+        },
+        {
+            "title": "Rice and Bean Casserole",
+            "servings": 6,
+            "readyInMinutes": 45,
+            "ingredients": [
+                {
+                    "ingredient": "long grain rice",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned black beans",
+                    "amount": 750,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "bell pepper",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "cumin",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "chili powder",
+                    "amount": 15,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cheese",
+                    "amount": 150,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 600,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Baked rice and bean casserole",
+            "instructions": [
+                "Preheat oven to 180°C (350°F).",
+                "Dice onion and bell peppers.",
+                "Heat oil in pan, sauté vegetables for 5 minutes.",
+                "Add minced garlic, cumin, and chili powder. Cook 1 minute.",
+                "In casserole dish, combine rice, beans, tomatoes, sautéed vegetables, stock, and salt.",
+                "Cover tightly with foil.",
+                "Bake for 35 minutes until rice is tender.",
+                "Uncover, top with shredded cheese.",
+                "Bake 5 more minutes until cheese melts.",
+                "Serve hot."
+            ]
+        },
+        {
+            "title": "Oatmeal with Dried Fruit",
+            "servings": 2,
+            "readyInMinutes": 10,
+            "ingredients": [
+                {
+                    "ingredient": "rolled oats",
+                    "amount": 200,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 500,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "dried raisins",
+                    "amount": 50,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "dried apricots",
+                    "amount": 50,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "cinnamon",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "brown sugar",
+                    "amount": 30,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "salt",
+                    "amount": 1.25,
+                    "unit": "ml"
+                }
+            ],
+            "summary": "Warm breakfast oatmeal with dried fruits",
+            "instructions": [
+                "Chop dried apricots into small pieces.",
+                "In pot, bring water to boil.",
+                "Add oats, raisins, apricots, cinnamon, and salt.",
+                "Reduce heat to medium, stir occasionally.",
+                "Cook for 5-7 minutes until thick and creamy.",
+                "Stir in brown sugar.",
+                "Serve hot."
+            ]
+        },
+        {
+            "title": "Pasta with Anchovies",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "spaghetti",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "anchovy fillets",
+                    "amount": 50,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 4
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 60,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "red pepper flakes",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "breadcrumbs",
+                    "amount": 50,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "dried parsley",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "black pepper"
+                }
+            ],
+            "summary": "Classic Italian pasta with anchovies",
+            "instructions": [
+                "Cook spaghetti according to package directions.",
+                "In separate pan, toast breadcrumbs in a bit of oil, set aside.",
+                "Heat olive oil in large pan.",
+                "Add anchovy fillets and sliced garlic.",
+                "Cook until anchovies dissolve into oil.",
+                "Add red pepper flakes.",
+                "Add drained pasta and parsley.",
+                "Toss with pasta water.",
+                "Top with toasted breadcrumbs.",
+                "Season with black pepper.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Red Lentil Daal",
+            "servings": 4,
+            "readyInMinutes": 30,
+            "ingredients": [
+                {
+                    "ingredient": "red lentils",
+                    "amount": 250,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "canned diced tomatoes",
+                    "amount": 400,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "ginger",
+                    "amount": 15,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "cumin seeds",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "turmeric",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "garam masala",
+                    "amount": 5,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "vegetable oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 600,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "cilantro"
+                }
+            ],
+            "summary": "Spiced Indian red lentil curry",
+            "instructions": [
+                "Rinse red lentils until water runs clear.",
+                "Dice onion, mince garlic and ginger.",
+                "Heat oil in pot, add cumin seeds until they sizzle.",
+                "Add onion, cook until golden.",
+                "Add garlic, ginger, turmeric, and garam masala. Cook 1 minute.",
+                "Add lentils, tomatoes, and water.",
+                "Bring to boil, then simmer for 20 minutes.",
+                "Stir occasionally, lentils should be very soft.",
+                "Season with salt.",
+                "Garnish with cilantro.",
+                "Serve with rice or flatbread."
+            ],
+            "notes": "Garam masala: Available in well-stocked supermarkets or Asian specialty stores. Cilantro: Can substitute with parsley if unavailable"
+        },
+        {
+            "title": "Barley Risotto",
+            "servings": 4,
+            "readyInMinutes": 45,
+            "ingredients": [
+                {
+                    "ingredient": "pearl barley",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "vegetable stock cube",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "yellow onion",
+                    "amount": 1
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "white wine",
+                    "amount": 120,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "parmesan cheese",
+                    "amount": 80,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "butter",
+                    "amount": 40,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "olive oil",
+                    "amount": 20,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                },
+                {
+                    "ingredient": "black pepper"
+                },
+                {
+                    "ingredient": "water",
+                    "amount": 1.2,
+                    "unit": "l"
+                }
+            ],
+            "summary": "Creamy barley cooked risotto-style",
+            "instructions": [
+                "Heat stock and keep warm.",
+                "Dice onion and mince garlic.",
+                "Heat oil and half butter in pan, sauté onion until soft.",
+                "Add garlic, cook 1 minute.",
+                "Add barley, toast for 2 minutes.",
+                "Add wine, stir until absorbed.",
+                "Add stock one ladle at a time, stirring frequently.",
+                "Wait for liquid to absorb before adding more.",
+                "Continue for 30-35 minutes until barley is tender.",
+                "Stir in remaining butter and parmesan.",
+                "Season with salt and pepper.",
+                "Serve immediately."
+            ]
+        },
+        {
+            "title": "Vegetable Fried Quinoa",
+            "servings": 4,
+            "readyInMinutes": 20,
+            "ingredients": [
+                {
+                    "ingredient": "cooked quinoa",
+                    "amount": 600,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "frozen mixed vegetables",
+                    "amount": 300,
+                    "unit": "g"
+                },
+                {
+                    "ingredient": "eggs",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "garlic clove",
+                    "amount": 2
+                },
+                {
+                    "ingredient": "green onions",
+                    "amount": 3
+                },
+                {
+                    "ingredient": "soy sauce",
+                    "amount": 40,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "sesame oil",
+                    "amount": 10,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "cooking oil",
+                    "amount": 30,
+                    "unit": "ml"
+                },
+                {
+                    "ingredient": "salt"
+                }
+            ],
+            "summary": "Healthy quinoa fried rice alternative",
+            "instructions": [
+                "Use cold cooked quinoa for best results.",
+                "Beat eggs with pinch of salt.",
+                "Heat wok with oil over high heat.",
+                "Scramble eggs, remove and set aside.",
+                "Add more oil, stir-fry minced garlic for 30 seconds.",
+                "Add frozen vegetables, stir-fry for 3 minutes.",
+                "Add quinoa, break up clumps, stir-fry for 5 minutes.",
+                "Add soy sauce, sesame oil, and eggs.",
+                "Stir in chopped green onions.",
+                "Serve hot."
+            ]
+        }
+    ]
 }
