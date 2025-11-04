@@ -7,15 +7,27 @@ import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barre
 import 'package:inventory_manager/repositories/recipe_repository.dart';
 import 'package:inventory_manager/repositories/settings_repository.dart';
 import 'package:inventory_manager/services/app_initialization.dart';
+import 'package:inventory_manager/services/notification_service.dart';
 import 'package:inventory_manager/themes/nixie_theme.dart';
 import 'package:inventory_manager/views/home_view.dart';
 import 'package:inventory_manager/views/recipes_view.dart';
 import 'package:inventory_manager/views/consumption_quota_view.dart';
 import 'package:inventory_manager/views/settings_view.dart';
 
+// Global key for navigation
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final mainNavigationKey = GlobalKey<_MainNavigationScreenState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppInitialization.initialize();
+
+  // Set up notification tap handler
+  NotificationService.onNotificationTap = () {
+    // Navigate to quota view (index 1)
+    mainNavigationKey.currentState?.navigateToTab(1);
+  };
+
   runApp(const MyApp());
 }
 
@@ -60,7 +72,8 @@ class MyApp extends StatelessWidget {
             title: 'Inventory Manager',
             theme: currentTheme,
             themeMode: ThemeMode.dark,
-            home: const MainNavigationScreen(),
+            navigatorKey: navigatorKey,
+            home: MainNavigationScreen(key: mainNavigationKey),
             debugShowCheckedModeBanner: false,
           );
         },
@@ -85,6 +98,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     RecipesView(),
     SettingsView(),
   ];
+
+  /// Navigate to a specific tab by index
+  /// Used by notification tap handler to navigate to quota view
+  void navigateToTab(int index) {
+    if (index >= 0 && index < _screens.length) {
+      setState(() {
+        _currentIndex = index;
+      });
+    }
+  }
 
   final List<NavigationDestination> _destinations = const [
     NavigationDestination(

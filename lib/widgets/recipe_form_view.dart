@@ -164,11 +164,11 @@ class _RecipeFormViewState extends State<RecipeFormView> {
             ),
             const SizedBox(height: 8),
             if (_ingredients.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
                   'No ingredients added yet',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               )
             else
@@ -221,11 +221,11 @@ class _RecipeFormViewState extends State<RecipeFormView> {
             ),
             const SizedBox(height: 8),
             if (_instructions.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
                   'No instructions added yet',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               )
             else
@@ -371,9 +371,9 @@ class _RecipeFormViewState extends State<RecipeFormView> {
 
     if (_ingredients.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please add at least one ingredient'),
-          backgroundColor: Colors.orange,
+        SnackBar(
+          content: const Text('Please add at least one ingredient'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;
@@ -381,9 +381,9 @@ class _RecipeFormViewState extends State<RecipeFormView> {
 
     if (_instructions.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please add at least one instruction'),
-          backgroundColor: Colors.orange,
+        SnackBar(
+          content: const Text('Please add at least one instruction'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;
@@ -431,9 +431,9 @@ class _RecipeFormViewState extends State<RecipeFormView> {
       context.read<RecipesBloc>().add(const LoadAllRecipes());
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Recipe created successfully!'),
-          backgroundColor: Colors.green,
+        SnackBar(
+          content: const Text('Recipe created successfully!'),
+          backgroundColor: Theme.of(context).colorScheme.tertiary,
         ),
       );
 
@@ -444,7 +444,7 @@ class _RecipeFormViewState extends State<RecipeFormView> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to create recipe: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
     } finally {

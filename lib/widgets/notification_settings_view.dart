@@ -20,11 +20,11 @@ class NotificationSettingsView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
                   const SizedBox(height: 16),
                   Text(
                     state.message,
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(color: Theme.of(context).colorScheme.error),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -35,13 +35,13 @@ class NotificationSettingsView extends StatelessWidget {
 
             return ListView(
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Manage your notification preferences',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -100,13 +100,13 @@ class NotificationSettingsView extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Note: Individual notification types are only active when master notifications are enabled.',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontStyle: FontStyle.italic,
                     ),
                   ),

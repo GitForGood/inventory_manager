@@ -6,6 +6,8 @@ import 'package:inventory_manager/repositories/consumption_quota_repository.dart
 import 'package:inventory_manager/services/quota_generation_service.dart';
 import 'package:inventory_manager/services/recipe_database.dart';
 import 'package:inventory_manager/services/consumption_service.dart';
+import 'package:inventory_manager/services/notification_service.dart';
+import 'package:inventory_manager/services/quota_notification_helper.dart';
 
 class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaState> {
   final ConsumptionQuotaRepository _repository = ConsumptionQuotaRepository();
@@ -31,6 +33,21 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
     emit(const ConsumptionQuotaLoading());
     try {
       final period = await _repository.getPreferredPeriod();
+      final allQuotas = await _repository.getAllQuotas();
+
+      // Check if quotas need regeneration (expired or missing)
+      final needsRegeneration = QuotaGenerationService.needsRegeneration(
+        existingQuotas: allQuotas,
+        period: period,
+      );
+
+      if (needsRegeneration) {
+        // Automatically regenerate expired quotas
+        add(const ClearAndRegenerateAllQuotas());
+        return;
+      }
+
+      // Quotas are still valid, load them normally
       final quotasByFoodItem = await _repository.getQuotasGroupedByFoodItem();
 
       emit(ConsumptionQuotaLoaded(
@@ -51,6 +68,21 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
     emit(const ConsumptionQuotaLoading());
     try {
       final period = await _repository.getPreferredPeriod();
+      final allQuotas = await _repository.getAllQuotas();
+
+      // Check if quotas need regeneration (expired or missing)
+      final needsRegeneration = QuotaGenerationService.needsRegeneration(
+        existingQuotas: allQuotas,
+        period: period,
+      );
+
+      if (needsRegeneration) {
+        // Automatically regenerate expired quotas
+        add(const ClearAndRegenerateAllQuotas());
+        return;
+      }
+
+      // Quotas are still valid, load current period only
       final quotasByFoodItem = await _repository.getCurrentPeriodQuotas();
 
       emit(ConsumptionQuotaLoaded(
@@ -189,6 +221,9 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
 
       final quotasByFoodItem = await _repository.getQuotasGroupedByFoodItem();
 
+      // Reschedule notification for the new period
+      await _scheduleQuotaRegenerationNotification(event.newPeriod);
+
       emit(ConsumptionQuotaLoaded(
         quotasByFoodItem: quotasByFoodItem,
         selectedPeriod: event.newPeriod,
@@ -252,10 +287,33 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
 
       await _repository.createQuotas(quotas);
 
+      // Schedule notification for next period regeneration
+      await _scheduleQuotaRegenerationNotification(period);
+
       // Reload quotas to update state
       add(const LoadConsumptionQuotas());
     } catch (e) {
       emit(ConsumptionQuotaError('Failed to clear and regenerate quotas: $e'));
+    }
+  }
+
+  /// Schedule a notification for the next quota regeneration
+  Future<void> _scheduleQuotaRegenerationNotification(
+    period,
+  ) async {
+    try {
+      final notificationService = NotificationService();
+      final nextNotificationTime =
+          QuotaNotificationHelper.calculateNextNotificationTime(period);
+      final periodName = QuotaNotificationHelper.getPeriodName(period);
+
+      await notificationService.scheduleQuotaRegenerationNotification(
+        scheduledDate: nextNotificationTime,
+        periodName: periodName,
+      );
+    } catch (e) {
+      // Notification scheduling failure shouldn't block quota operations
+      // Log error if you have logging set up
     }
   }
 }

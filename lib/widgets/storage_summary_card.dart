@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
+import 'package:inventory_manager/models/daily_calorie_target.dart';
 import 'package:inventory_manager/services/storage_calculator_service.dart';
+import 'package:inventory_manager/widgets/assist_chip.dart';
 import 'package:inventory_manager/widgets/calorie_target_bottom_sheet.dart';
+import 'package:inventory_manager/widgets/outlined_card.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class StorageSummaryCard extends StatelessWidget {
@@ -10,7 +13,11 @@ class StorageSummaryCard extends StatelessWidget {
 
   const StorageSummaryCard({super.key, required this.status});
 
-  void _showCalorieTargetSheet(BuildContext context, int? currentTarget) {
+  void _showCalorieTargetSheet(
+    BuildContext context,
+    DailyCalorieTarget? currentTarget,
+    int? currentDailyConsumption,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -34,13 +41,15 @@ class StorageSummaryCard extends StatelessWidget {
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (context, settingsState) {
         final calorieTarget = settingsState is SettingsLoaded
-            ? settingsState.settings.inventoryCalorieTarget
+            ? settingsState.settings.dailyCalorieTarget
+            : null;
+        final dailyConsumption = settingsState is SettingsLoaded
+            ? (settingsState.settings.dailyCalorieTarget is CalculatedCalorieTarget) ? (settingsState.settings.dailyCalorieTarget as CalculatedCalorieTarget).dailyConsumption : null
             : null;
 
-        return Card(
-          margin: const EdgeInsets.all(16),
+        return OutlinedCard(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -53,7 +62,7 @@ class StorageSummaryCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Storage Overview',
+                        'Storage Summary',
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -61,66 +70,67 @@ class StorageSummaryCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                const SizedBox(height: 8),
+                // Horizontally scrollable chip row
+                Wrap(
+                  spacing: 8,
                   children: [
-                    SummaryItem(
-                      icon: Icons.inventory,
-                      label: 'Items',
-                      value: status.totalItems.toString(),
-                      color: Theme.of(context).colorScheme.secondary
-                    ),
-                    SummaryItem(
-                      icon: Symbols.package_2,
-                      label: 'Batches',
-                      value: status.totalBatches.toString(),
-                      color: Theme.of(context).colorScheme.secondary
-                    ),
-                    SummaryItem(
-                      icon: Icons.calendar_today,
-                      label: 'Days',
-                      value: status.estimatedDays.toStringAsFixed(1),
-                      color: Theme.of(context).colorScheme.secondary
-                    ),
+                    AssistChip(icon: Icons.inventory, labelText: '${status.totalItems.toString()} Items'),
+                    AssistChip(icon: Symbols.package_2, labelText: '${status.totalBatches.toString()} Batches'),
+                    // Only show Days chip if daily consumption is configured
+                    if (status.estimatedDays != null) ...[
+                      AssistChip(icon: Icons.calendar_today, labelText: '${status.estimatedDays!.toStringAsFixed(1)} Days'),
+                    ],
                   ],
                 ),
-
                 // Calorie target progress
-                if (calorieTarget != null) ...[
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 12),
-                  _buildCalorieProgress(
-                    context,
-                    theme,
-                    calorieTarget,
-                    (status.totalNutrition['kcal'] ?? 0).toInt(),
+                const Divider(),
+                //const SizedBox(height: 8),
+                InkWell(
+                  onTap: () => _showCalorieTargetSheet(context, calorieTarget, dailyConsumption),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: calorieTarget != null
+                        ? _buildCalorieProgress(
+                            context,
+                            theme,
+                            calorieTarget.target,
+                            (status.totalNutrition['kcal'] ?? 0).toInt(),
+                          )
+                        : _buildSetCalorieTarget(context, theme),
                   ),
-                ],
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton.icon(
-                      onPressed: () => _showCalorieTargetSheet(context, calorieTarget),
-                      icon: Icon(
-                        calorieTarget != null
-                            ? Icons.local_fire_department
-                            : Icons.local_fire_department_outlined,
-                        color: calorieTarget != null
-                            ? Theme.of(context).colorScheme.primary
-                            : theme.colorScheme.onSurfaceVariant,
-                      ), 
-                      label: Text('Set calorie target', style: Theme.of(context).textTheme.titleSmall,),
-                    )
-                  ],
-                )
+                ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSetCalorieTarget(BuildContext context, ThemeData theme) {
+    return Row(
+      children: [
+        Icon(
+          Icons.local_fire_department_outlined,
+          size: 20,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            'Tap to set calorie target',
+            style: theme.textTheme.titleSmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+        Icon(
+          Icons.chevron_right,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ],
     );
   }
 
@@ -157,7 +167,7 @@ class StorageSummaryCard extends StatelessWidget {
               '$percentage%',
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isComplete ? Colors.green : Theme.of(context).colorScheme.secondary,
+                color: isComplete ? theme.colorScheme.tertiary : Theme.of(context).colorScheme.secondary,
               ),
             ),
           ],
@@ -170,7 +180,7 @@ class StorageSummaryCard extends StatelessWidget {
             minHeight: 8,
             backgroundColor: theme.colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(
-              isComplete ? Colors.green : Theme.of(context).colorScheme.secondary,
+              isComplete ? theme.colorScheme.tertiary : Theme.of(context).colorScheme.secondary,
             ),
           ),
         ),
@@ -192,38 +202,6 @@ class StorageSummaryCard extends StatelessWidget {
             ),
           ],
         ),
-      ],
-    );
-  }
-}
-
-class SummaryItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  const SummaryItem({super.key, 
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 32),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        Text(label, style: Theme.of(context).textTheme.bodySmall),
       ],
     );
   }

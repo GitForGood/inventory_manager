@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
+import 'package:inventory_manager/models/daily_calorie_target.dart';
 
 /// Bottom sheet for setting inventory calorie target
 /// Supports both manual entry and calculator mode
 class CalorieTargetBottomSheet extends StatefulWidget {
-  final int? currentTarget;
+  final DailyCalorieTarget? currentTarget;
 
   const CalorieTargetBottomSheet({
     super.key,
@@ -18,28 +19,56 @@ class CalorieTargetBottomSheet extends StatefulWidget {
 }
 
 class _CalorieTargetBottomSheetState extends State<CalorieTargetBottomSheet> {
-  bool _isCalculatorMode = false;
-
-  // Manual mode
-  late TextEditingController _manualController;
+  late bool _isCalculatorMode;
 
   // Calculator mode
   late TextEditingController _peopleController;
   late TextEditingController _daysController;
-  late TextEditingController _percentageController;
-  int _dailyCaloriesPerPerson = 2000; // Default daily calorie needs
+  late TextEditingController _dailyCalorieController;
+
+  final int _defaultPeopleAmount = 4;
+  final int _defaultDaysAmount = 14;
+  final int _defaultDailyCalories = 2000;
 
   int? _calculatedTarget;
+
+  // Manual mode
+  late TextEditingController _manualController;
+
+  final int _defaultManualCalories = 112000; //4 * 14 * 2000
 
   @override
   void initState() {
     super.initState();
+
+    // Determine mode based on whether dailyConsumption is set
+    // If dailyConsumption exists, last mode was calculator
+    // If target exists but no dailyConsumption, last mode was manual
+    // If neither exists, default to calculator
+    _isCalculatorMode = widget.currentTarget == null || widget.currentTarget is CalculatedCalorieTarget;
+    
+    final CalculatedCalorieTarget startingCalculatedTarget;
+    if (widget.currentTarget is CalculatedCalorieTarget) {
+      startingCalculatedTarget = widget.currentTarget as CalculatedCalorieTarget;
+    } else {
+      startingCalculatedTarget = CalculatedCalorieTarget(
+        people: _defaultPeopleAmount, 
+        days: _defaultDaysAmount, 
+        caloriesPerPerson: _defaultDailyCalories
+      );
+    }
+
     _manualController = TextEditingController(
-      text: widget.currentTarget?.toString() ?? '',
+      text: widget.currentTarget?.target.toString() ?? '',
     );
-    _peopleController = TextEditingController(text: '1');
-    _daysController = TextEditingController(text: '30');
-    _percentageController = TextEditingController(text: '100');
+    _peopleController = TextEditingController(text: startingCalculatedTarget.people.toString());
+    _daysController = TextEditingController(text: startingCalculatedTarget.days.toString());
+    _dailyCalorieController = TextEditingController(text: startingCalculatedTarget.caloriesPerPerson.toString());
+
+    // Calculate the initial target if in calculator mode
+    if (_isCalculatorMode) {
+      _calculateTarget();
+    }
   }
 
   @override
@@ -47,32 +76,36 @@ class _CalorieTargetBottomSheetState extends State<CalorieTargetBottomSheet> {
     _manualController.dispose();
     _peopleController.dispose();
     _daysController.dispose();
-    _percentageController.dispose();
+    _dailyCalorieController.dispose();
     super.dispose();
   }
 
   void _calculateTarget() {
-    final people = int.tryParse(_peopleController.text) ?? 1;
-    final days = int.tryParse(_daysController.text) ?? 30;
-    final percentage = int.tryParse(_percentageController.text) ?? 100;
+    final people = int.tryParse(_peopleController.text) ?? _defaultPeopleAmount;
+    final days = int.tryParse(_daysController.text) ?? _defaultDaysAmount;
+    final dailyCalories = int.tryParse(_dailyCalorieController.text) ?? _defaultDailyCalories;
 
     setState(() {
-      _calculatedTarget = (people * days * _dailyCaloriesPerPerson * percentage / 100).round();
+      _calculatedTarget = (people * days * dailyCalories).round();
     });
   }
 
   void _saveTarget(BuildContext context) {
-    final int? target;
-    final colorScheme = Theme.of(context).colorScheme;
-
+    final int target;
     if (_isCalculatorMode) {
-      target = _calculatedTarget;
+      final calculatedTarget = CalculatedCalorieTarget(
+        people: int.tryParse(_peopleController.text) ?? _defaultPeopleAmount, 
+        days: int.tryParse(_daysController.text) ?? _defaultDaysAmount, 
+        caloriesPerPerson: int.tryParse(_dailyCalorieController.text) ?? _defaultDailyCalories
+      );
+      target = calculatedTarget.target;
+      context.read<SettingsBloc>().add(SetCalculateedDailyCalorieTarget(calculatedTarget));
     } else {
-      target = int.tryParse(_manualController.text);
+      target = int.tryParse(_manualController.text) ?? _defaultManualCalories;
+      context.read<SettingsBloc>().add(SetManualCalorieTarget(ManualCalorieTarget(target: target)));
     }
 
-    if (target != null && target > 0) {
-      context.read<SettingsBloc>().add(UpdateInventoryCalorieTarget(target));
+    if (target > 0) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -89,7 +122,7 @@ class _CalorieTargetBottomSheetState extends State<CalorieTargetBottomSheet> {
   }
 
   void _clearTarget(BuildContext context) {
-    context.read<SettingsBloc>().add(const UpdateInventoryCalorieTarget(0));
+    context.read<SettingsBloc>().add(const ClearDailyCalorieTarget());
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -153,14 +186,14 @@ class _CalorieTargetBottomSheetState extends State<CalorieTargetBottomSheet> {
               SegmentedButton<bool>(
                 segments: const [
                   ButtonSegment(
-                    value: false,
-                    label: Text('Manual'),
-                    icon: Icon(Icons.edit),
-                  ),
-                  ButtonSegment(
                     value: true,
                     label: Text('Calculator'),
                     icon: Icon(Icons.calculate),
+                  ),
+                  ButtonSegment(
+                    value: false,
+                    label: Text('Manual'),
+                    icon: Icon(Icons.edit),
                   ),
                 ],
                 selected: {_isCalculatorMode},
@@ -230,45 +263,13 @@ class _CalorieTargetBottomSheetState extends State<CalorieTargetBottomSheet> {
                 ),
                 const SizedBox(height: 16),
 
-                // Daily calories per person selector
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Daily calories per person:',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ),
-                    DropdownButton<int>(
-                      value: _dailyCaloriesPerPerson,
-                      items: const [
-                        DropdownMenuItem(value: 1500, child: Text('1,500 kcal')),
-                        DropdownMenuItem(value: 2000, child: Text('2,000 kcal')),
-                        DropdownMenuItem(value: 2500, child: Text('2,500 kcal')),
-                        DropdownMenuItem(value: 3000, child: Text('3,000 kcal')),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            _dailyCaloriesPerPerson = value;
-                            _calculateTarget();
-                          });
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Percentage of daily needs
                 TextField(
-                  controller: _percentageController,
+                  controller: _dailyCalorieController,
                   decoration: const InputDecoration(
-                    labelText: 'Percentage of Daily Needs',
-                    hintText: 'What % of daily calories',
-                    suffixText: '%',
+                    labelText: 'Daily Kcal per person',
+                    hintText: 'individual caloric need per person per day',
+                    suffixText: 'Kcal',
                     border: OutlineInputBorder(),
-                    helperText: '100% = full daily calories, 50% = half',
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],

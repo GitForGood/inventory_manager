@@ -16,7 +16,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<UpdateExpirationNotifications>(_onUpdateExpirationNotifications);
     on<UpdateQuotaGenerationNotifications>(_onUpdateQuotaGenerationNotifications);
     on<UpdatePreferredQuotaInterval>(_onUpdatePreferredQuotaInterval);
-    on<UpdateInventoryCalorieTarget>(_onUpdateInventoryCalorieTarget);
+    on<DailyCalorieTargetEvent>(_onDailyCalorieTargetEvent);
     on<ResetSettings>(_onResetSettings);
   }
 
@@ -150,21 +150,20 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 
-  // Update inventory calorie target
-  Future<void> _onUpdateInventoryCalorieTarget(
-    UpdateInventoryCalorieTarget event,
+  Future<void> _onDailyCalorieTargetEvent(
+    DailyCalorieTargetEvent event,
     Emitter<SettingsState> emit,
   ) async {
-    if (state is SettingsLoaded) {
+    if (state is SettingsLoaded){
       final currentState = state as SettingsLoaded;
-      try {
+      try{
         final updatedSettings = currentState.settings.copyWith(
-          inventoryCalorieTarget: event.calorieTarget,
+          dailyCalorieTarget: event.target
         );
         await repository.saveSettings(updatedSettings);
         emit(SettingsLoaded(updatedSettings));
       } catch (e) {
-        emit(SettingsError('Failed to update calorie target: $e'));
+        emit(SettingsError('Failed to update daily calorie target: $e'));
       }
     }
   }

@@ -116,7 +116,7 @@ class _BatchFormViewState extends State<BatchFormView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to load ingredient tags: $e'),
-            backgroundColor: Colors.orange,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
@@ -190,9 +190,9 @@ class _BatchFormViewState extends State<BatchFormView> {
 
     if (carbs == 0 && fats == 0 && protein == 0 && kcal == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please provide at least some nutrition information'),
-          backgroundColor: Colors.orange,
+        SnackBar(
+          content: const Text('Please provide at least some nutrition information'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;
@@ -234,9 +234,9 @@ class _BatchFormViewState extends State<BatchFormView> {
         context.read<ConsumptionQuotaBloc>().add(GenerateQuotasForBatch(batch));
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Batch added successfully'),
-            backgroundColor: Colors.green,
+          SnackBar(
+            content: const Text('Batch added successfully'),
+            backgroundColor: Theme.of(context).colorScheme.tertiary,
           ),
         );
 
@@ -248,7 +248,7 @@ class _BatchFormViewState extends State<BatchFormView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to save batch: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
@@ -504,11 +504,11 @@ class _BatchFormViewState extends State<BatchFormView> {
             ),
             const SizedBox(height: 8),
             if (_selectedIngredients.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
                   'No ingredient tags added yet',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               )
             else
@@ -530,17 +530,17 @@ class _BatchFormViewState extends State<BatchFormView> {
             const SizedBox(height: 16),
             if (widget.productData != null && !widget.productData!.hasNutritionData)
               Card(
-                color: Colors.orange.shade50,
-                child: const Padding(
-                  padding: EdgeInsets.all(12.0),
+                color: Theme.of(context).colorScheme.errorContainer,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
                   child: Row(
                     children: [
-                      Icon(Icons.info_outline, color: Colors.orange),
-                      SizedBox(width: 8),
+                      Icon(Icons.info_outline, color: Theme.of(context).colorScheme.error),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Product found but nutrition data is incomplete. Please fill in manually.',
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onErrorContainer),
                         ),
                       ),
                     ],
@@ -606,10 +606,10 @@ class _IngredientSelectionDialogState extends State<_IngredientSelectionDialog> 
     final name = _newIngredientController.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter an ingredient name'),
-          backgroundColor: Colors.orange,
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: const Text('Please enter an ingredient name'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          duration: const Duration(seconds: 2),
         ),
       );
       return;
@@ -638,7 +638,7 @@ class _IngredientSelectionDialogState extends State<_IngredientSelectionDialog> 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Created and selected "$name"'),
-            backgroundColor: Colors.green,
+            backgroundColor: Theme.of(context).colorScheme.tertiary,
             duration: const Duration(seconds: 2),
           ),
         );
@@ -648,7 +648,7 @@ class _IngredientSelectionDialogState extends State<_IngredientSelectionDialog> 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to create ingredient: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
@@ -747,24 +747,24 @@ class _IngredientSelectionDialogState extends State<_IngredientSelectionDialog> 
                           Icon(
                             Icons.info_outline,
                             size: 48,
-                            color: Colors.grey[600],
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             widget.availableIngredients.isEmpty
                                 ? 'No ingredients in database yet'
                                 : 'No ingredients match your search',
-                            style: const TextStyle(
-                              color: Colors.grey,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
+                          Text(
                             'Create a new one using the field above',
                             style: TextStyle(
-                              color: Colors.grey,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                               fontSize: 14,
                             ),
                           ),

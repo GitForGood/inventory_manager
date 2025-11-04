@@ -27,7 +27,7 @@ class FoodItemQuotaCard extends StatelessWidget {
     final isCollapsed = quota.isCompleted;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 8),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -62,13 +62,7 @@ class FoodItemQuotaCard extends StatelessWidget {
                     children: [
                       Text(
                         foodItemName,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isCollapsed
-                              ? colorScheme.onSurfaceVariant
-                              : colorScheme.onSurface,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 4),
                       Row(
@@ -81,10 +75,7 @@ class FoodItemQuotaCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             'Due: ${dateFormat.format(quota.targetDate)}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
+                            //style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
@@ -98,8 +89,9 @@ class FoodItemQuotaCard extends StatelessWidget {
                   Icon(
                     Icons.check_circle,
                     size: 32,
-                    color: const Color(0xFF66BB6A),
+                    color: colorScheme.tertiary,
                   ),
+                  SizedBox(width: 8,)
                 ] else ...[
                   // Active quota button
                   // Increment button
@@ -130,19 +122,11 @@ class FoodItemQuotaCard extends StatelessWidget {
                           children: [
                             Text(
                               'Progress',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: colorScheme.onSurfaceVariant,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: Theme.of(context).textTheme.labelLarge
                             ),
                             Text(
                               '${quota.consumedCount}/${quota.targetCount} items',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: _getProgressColor(quota.progressPercentage, context),
-                              ),
+                              style: Theme.of(context).textTheme.labelLarge
                             ),
                           ],
                         ),
@@ -172,13 +156,10 @@ class FoodItemQuotaCard extends StatelessWidget {
   }
 
   /// Get progress bar color based on completion percentage
-  /// Returns green when complete (100%), orange when near complete (>=80%),
-  /// or blue for lower progress
+  /// Returns tertiary when complete (100%), or secondary for lower progress
   Color _getProgressColor(double percentage, BuildContext context) {
     if (percentage >= 100) {
-      return Colors.green;
-    } else if (percentage >= 80) {
-      return Theme.of(context).colorScheme.primary;
+      return Theme.of(context).colorScheme.tertiary;
     } else {
       return Theme.of(context).colorScheme.secondary;
     }
@@ -222,7 +203,7 @@ class FoodItemQuotaCard extends StatelessWidget {
                     onPressed: () => Navigator.pop(inputContext),
                     child: const Text('Cancel'),
                   ),
-                  ElevatedButton(
+                  TextButton(
                     onPressed: () {
                       final value = int.tryParse(manualController.text);
                       if (value != null && value >= 1 && value <= remainingCount) {
@@ -232,7 +213,7 @@ class FoodItemQuotaCard extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Please enter a value between 1 and $remainingCount'),
-                            backgroundColor: Colors.orange,
+                            backgroundColor: Theme.of(context).colorScheme.error,
                           ),
                         );
                       }
@@ -276,11 +257,7 @@ class FoodItemQuotaCard extends StatelessWidget {
                         children: [
                           Text(
                             '${sliderValue.round()}',
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onPrimaryContainer,
-                            ),
+                            style: Theme.of(context).textTheme.headlineLarge,
                           ),
                           const SizedBox(width: 8),
                           Icon(
@@ -297,10 +274,7 @@ class FoodItemQuotaCard extends StatelessWidget {
                 Center(
                   child: Text(
                     'Tap to enter manually',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -319,24 +293,15 @@ class FoodItemQuotaCard extends StatelessWidget {
                   children: [
                     Text(
                       '1',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                      style: Theme.of(context).textTheme.labelMedium,
                     ),
                     Text(
                       'Remaining: $remainingCount items',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                      style: Theme.of(context).textTheme.labelMedium,
                     ),
                     Text(
                       '$remainingCount',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                      style: Theme.of(context).textTheme.labelMedium,
                     ),
                   ],
                 ),
@@ -347,7 +312,7 @@ class FoodItemQuotaCard extends StatelessWidget {
                 onPressed: () => Navigator.pop(dialogContext),
                 child: const Text('Cancel'),
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () {
                   context.read<ConsumptionQuotaBloc>().add(
                         CompleteQuota(

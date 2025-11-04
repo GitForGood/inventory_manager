@@ -52,7 +52,7 @@ class _RecipesViewState extends State<RecipesView>
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.red,
+                backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
           }
@@ -94,7 +94,7 @@ class _RecipesViewState extends State<RecipesView>
                   Icon(
                     Icons.favorite_border,
                     size: 64,
-                    color: Colors.grey[400],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -212,7 +212,7 @@ class _RecipesViewState extends State<RecipesView>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.restaurant_menu, size: 64, color: Colors.grey[400]),
+          Icon(Icons.restaurant_menu, size: 64, color: Theme.of(context).colorScheme.onSurfaceVariant),
           const SizedBox(height: 16),
           const Text(
             'No recipes found',
@@ -279,15 +279,15 @@ class _RecipeCard extends StatelessWidget {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.restaurant, size: 48),
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          child: Icon(Icons.restaurant, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
                         );
                       },
                     )
                   else
                     Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.restaurant, size: 48),
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                      child: Icon(Icons.restaurant, size: 48, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   Positioned(
                     top: 4,
@@ -295,11 +295,11 @@ class _RecipeCard extends StatelessWidget {
                     child: IconButton(
                       icon: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite ? Colors.red : Colors.white,
+                        color: isFavorite ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onPrimary,
                       ),
                       onPressed: onFavoriteToggle,
                       style: IconButton.styleFrom(
-                        backgroundColor: Colors.black54,
+                        backgroundColor: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.5),
                       ),
                     ),
                   ),
@@ -375,7 +375,7 @@ class _RecipeDetailsSheet extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -457,8 +457,8 @@ class _RecipeDetailsSheet extends StatelessWidget {
                           child: Center(
                             child: Text(
                               '${entry.key + 1}',
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
+import 'package:inventory_manager/models/daily_calorie_target.dart';
 import 'package:inventory_manager/services/storage_calculator_service.dart';
 import 'package:inventory_manager/views/barcode_scanner_view.dart';
 import 'package:inventory_manager/widgets/batch_form_view.dart';
@@ -19,44 +20,6 @@ class HomeView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Inventory'),
         actions: [
-          PopupMenuButton<InventoryFilter>(
-            icon: const Icon(Icons.filter_list),
-            tooltip: 'Filter',
-            offset: const Offset(0, 48),
-            onSelected: (InventoryFilter filter) {
-              context.read<InventoryBloc>().add(FilterInventory(filter));
-            },
-            itemBuilder: (context) => const [
-              PopupMenuItem(
-                value: InventoryFilter.all,
-                child: ListTile(
-                  leading: Icon(Icons.all_inclusive),
-                  title: Text('All Items'),
-                ),
-              ),
-              PopupMenuItem(
-                value: InventoryFilter.fresh,
-                child: ListTile(
-                  leading: Icon(Icons.check_circle, color: Colors.green),
-                  title: Text('Fresh Items'),
-                ),
-              ),
-              PopupMenuItem(
-                value: InventoryFilter.expiringSoon,
-                child: ListTile(
-                  leading: Icon(Icons.warning, color: Colors.orange),
-                  title: Text('Expiring Soon'),
-                ),
-              ),
-              PopupMenuItem(
-                value: InventoryFilter.expired,
-                child: ListTile(
-                  leading: Icon(Icons.error, color: Colors.red),
-                  title: Text('Expired'),
-                ),
-              ),
-            ],
-          ),
           PopupMenuButton<InventorySortCriteria>(
             icon: const Icon(Icons.sort),
             tooltip: 'Sort',
@@ -108,11 +71,11 @@ class HomeView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
                   const SizedBox(height: 16),
                   Text(
                     state.message,
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(color: Theme.of(context).colorScheme.error),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
@@ -134,8 +97,16 @@ class HomeView extends StatelessWidget {
                 StorageStatus? storageStatus;
 
                 if (settingsState is SettingsLoaded && batches.isNotEmpty) {
+                  // Extract daily consumption from the calorie target
+                  // For CalculatedCalorieTarget, use dailyConsumption getter
+                  // For ManualCalorieTarget, there's no daily consumption, so use null
+                  final dailyConsumption = settingsState.settings.dailyCalorieTarget is CalculatedCalorieTarget
+                      ? (settingsState.settings.dailyCalorieTarget as CalculatedCalorieTarget).dailyConsumption
+                      : null;
+
                   storageStatus = StorageCalculatorService.getStorageStatus(
                     batches: batches,
+                    dailyCalorieConsumption: dailyConsumption,
                   );
                 }
 
@@ -179,24 +150,22 @@ class HomeView extends StatelessWidget {
                           final group = groupedItems[index];
                           final status = group.expirationStatus;
 
+                          final colorScheme = Theme.of(context).colorScheme;
                           Color statusColor;
                           switch (status) {
                             case ExpirationStatus.expired:
-                              statusColor = Colors.red;
+                              statusColor = colorScheme.error;
                               break;
                             case ExpirationStatus.expiringSoon:
-                              statusColor = Colors.orange;
+                              statusColor = colorScheme.secondary;
                               break;
                             case ExpirationStatus.fresh:
-                              statusColor = Colors.green;
+                              statusColor = colorScheme.tertiary;
                               break;
                           }
 
                           return Card(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 4,
-                            ),
+                            margin: EdgeInsets.symmetric(horizontal: 16,vertical: 4 ),
                             shape: Theme.of(context).cardTheme.shape,
                             child: ListTile(
                               leading: CircleAvatar(
@@ -208,7 +177,6 @@ class HomeView extends StatelessWidget {
                               ),
                               title: Text(group.foodItem.name),
                               subtitle: Text(
-                                //'Oldest batch expiry: ${_formatDate(group.closestExpirationDate)}\n'
                                 group.daysUntilClosestExpiration >= 0 ? "${group.daysUntilClosestExpiration} days remaining" : "Expired ${-group.daysUntilClosestExpiration} days ago",
                               ),
                               trailing: Row(
@@ -247,14 +215,17 @@ class HomeView extends StatelessWidget {
       floatingActionButton: SpeedDial(
         icon: Icons.add, // icon when closed
         activeIcon: Icons.close, // icon when open
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        overlayColor: Colors.black,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+        overlayColor: Theme.of(context).colorScheme.scrim,
         overlayOpacity: 0.5,
         spacing: 8,
         spaceBetweenChildren: 8,
         children: [
           SpeedDialChild(
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+            labelBackgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             child: const Icon(Icons.inventory),
             label: 'Restock Existing Item',
             onTap: () {
@@ -262,6 +233,9 @@ class HomeView extends StatelessWidget {
             },
           ),
           SpeedDialChild(
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+            labelBackgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             child: const Icon(Icons.barcode_reader),
             label: 'Scan Barcode',
             onTap: () {
@@ -274,6 +248,9 @@ class HomeView extends StatelessWidget {
             },
           ),
           SpeedDialChild(
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+            labelBackgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             child: const Icon(Icons.keyboard),
             label: 'Enter Manually',
             onTap: () {
@@ -298,9 +275,9 @@ class HomeView extends StatelessWidget {
 
     if (inventoryState is! InventoryLoaded || inventoryState.batches.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No items in inventory to restock. Add a new item first.'),
-          backgroundColor: Colors.orange,
+        SnackBar(
+          content: const Text('No items in inventory to restock. Add a new item first.'),
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;

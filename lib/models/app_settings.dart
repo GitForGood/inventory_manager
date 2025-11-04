@@ -1,4 +1,5 @@
 import 'package:inventory_manager/models/consumption_period.dart';
+import 'package:inventory_manager/models/daily_calorie_target.dart';
 
 class AppSettings {
   final bool notificationsEnabled;
@@ -7,7 +8,7 @@ class AppSettings {
   final bool highContrast;
   final int expirationWarningDays;
   final ConsumptionPeriod preferredQuotaInterval;
-  final int? inventoryCalorieTarget; // Target calories for total inventory
+  final DailyCalorieTarget? dailyCalorieTarget;
 
   const AppSettings({
     this.notificationsEnabled = true,
@@ -16,7 +17,7 @@ class AppSettings {
     this.highContrast = false,
     this.expirationWarningDays = 7,
     this.preferredQuotaInterval = ConsumptionPeriod.weekly,
-    this.inventoryCalorieTarget,
+    this.dailyCalorieTarget,
   });
 
   // CopyWith method for immutable updates
@@ -27,7 +28,7 @@ class AppSettings {
     bool? highContrast,
     int? expirationWarningDays,
     ConsumptionPeriod? preferredQuotaInterval,
-    int? inventoryCalorieTarget,
+    Object? dailyCalorieTarget = _undefined,
   }) {
     return AppSettings(
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
@@ -36,9 +37,13 @@ class AppSettings {
       highContrast: highContrast ?? this.highContrast,
       expirationWarningDays: expirationWarningDays ?? this.expirationWarningDays,
       preferredQuotaInterval: preferredQuotaInterval ?? this.preferredQuotaInterval,
-      inventoryCalorieTarget: inventoryCalorieTarget ?? this.inventoryCalorieTarget,
+      dailyCalorieTarget: dailyCalorieTarget == _undefined
+          ? this.dailyCalorieTarget
+          : dailyCalorieTarget as DailyCalorieTarget?,
     );
   }
+
+  static const _undefined = Object();
 
   // Equality operator for comparison
   @override
@@ -51,7 +56,23 @@ class AppSettings {
         other.highContrast == highContrast &&
         other.expirationWarningDays == expirationWarningDays &&
         other.preferredQuotaInterval == preferredQuotaInterval &&
-        other.inventoryCalorieTarget == inventoryCalorieTarget;
+        _calorieTargetsEqual(other.dailyCalorieTarget, dailyCalorieTarget);
+  }
+
+  // Helper to compare calorie targets
+  bool _calorieTargetsEqual(DailyCalorieTarget? a, DailyCalorieTarget? b) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    if (a.runtimeType != b.runtimeType) return false;
+
+    if (a is ManualCalorieTarget && b is ManualCalorieTarget) {
+      return a.target == b.target;
+    } else if (a is CalculatedCalorieTarget && b is CalculatedCalorieTarget) {
+      return a.people == b.people &&
+             a.days == b.days &&
+             a.caloriesPerPerson == b.caloriesPerPerson;
+    }
+    return false;
   }
 
   // HashCode for collections and comparisons
@@ -64,7 +85,7 @@ class AppSettings {
       highContrast,
       expirationWarningDays,
       preferredQuotaInterval,
-      inventoryCalorieTarget,
+      dailyCalorieTarget?.target,
     );
   }
 
@@ -77,12 +98,30 @@ class AppSettings {
            'quotaGenerationNotifications: $quotaGenerationNotificationsEnabled, '
            'highContrast: $highContrast, '
            'warningDays: $expirationWarningDays, '
-           'quotaInterval: $preferredQuotaInterval, '
-           'calorieTarget: $inventoryCalorieTarget)';
+           'quotaInterval: $preferredQuotaInterval, ';
   }
 
   // Convert to JSON for storage
   Map<String, dynamic> toJson() {
+    Map<String, dynamic>? calorieTargetJson;
+    if (dailyCalorieTarget != null) {
+      if (dailyCalorieTarget is ManualCalorieTarget) {
+        final manual = dailyCalorieTarget as ManualCalorieTarget;
+        calorieTargetJson = {
+          'type': 'manual',
+          'target': manual.target,
+        };
+      } else if (dailyCalorieTarget is CalculatedCalorieTarget) {
+        final calculated = dailyCalorieTarget as CalculatedCalorieTarget;
+        calorieTargetJson = {
+          'type': 'calculated',
+          'people': calculated.people,
+          'days': calculated.days,
+          'caloriesPerPerson': calculated.caloriesPerPerson,
+        };
+      }
+    }
+
     return {
       'notificationsEnabled': notificationsEnabled,
       'expirationNotificationsEnabled': expirationNotificationsEnabled,
@@ -90,12 +129,29 @@ class AppSettings {
       'highContrast': highContrast,
       'expirationWarningDays': expirationWarningDays,
       'preferredQuotaInterval': preferredQuotaInterval.index,
-      'inventoryCalorieTarget': inventoryCalorieTarget,
+      if (calorieTargetJson != null) 'dailyCalorieTarget': calorieTargetJson,
     };
   }
 
   // Create from JSON
   factory AppSettings.fromJson(Map<String, dynamic> json) {
+    DailyCalorieTarget? dailyCalorieTarget;
+    final calorieTargetJson = json['dailyCalorieTarget'] as Map<String, dynamic>?;
+    if (calorieTargetJson != null) {
+      final type = calorieTargetJson['type'] as String?;
+      if (type == 'manual') {
+        dailyCalorieTarget = ManualCalorieTarget(
+          target: calorieTargetJson['target'] as int,
+        );
+      } else if (type == 'calculated') {
+        dailyCalorieTarget = CalculatedCalorieTarget(
+          people: calorieTargetJson['people'] as int,
+          days: calorieTargetJson['days'] as int,
+          caloriesPerPerson: calorieTargetJson['caloriesPerPerson'] as int,
+        );
+      }
+    }
+
     return AppSettings(
       notificationsEnabled: json['notificationsEnabled'] as bool? ?? true,
       expirationNotificationsEnabled: json['expirationNotificationsEnabled'] as bool? ?? true,
@@ -103,7 +159,7 @@ class AppSettings {
       highContrast: json['highContrast'] as bool? ?? false,
       expirationWarningDays: json['expirationWarningDays'] as int? ?? 7,
       preferredQuotaInterval: ConsumptionPeriod.values[json['preferredQuotaInterval'] as int? ?? ConsumptionPeriod.weekly.index],
-      inventoryCalorieTarget: json['inventoryCalorieTarget'] as int?,
+      dailyCalorieTarget: dailyCalorieTarget,
     );
   }
 }

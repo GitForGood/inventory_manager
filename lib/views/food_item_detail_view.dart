@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barrel.dart';
 import 'package:inventory_manager/models/food_item_group.dart';
 import 'package:inventory_manager/models/inventory_batch.dart';
+import 'package:inventory_manager/widgets/assist_chip.dart';
+import 'package:inventory_manager/widgets/outlined_card.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 /// Detailed view showing all batches for a specific food item
@@ -59,99 +62,64 @@ class FoodItemDetailView extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text('Add batch'),
+        icon: Icon(Icons.add),
+        onPressed: () => _showQuickRestockDialog(context)
+        ),
+      body: Column(
         children: [
-          // Summary Card
-          Card(
+          // Fixed Summary Card
+          OutlinedCard(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Summary',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 16),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _SummaryItem(
-                        label: 'Total Items',
-                        value: currentGroup.totalCount.toString(),
-                        icon: Icons.inventory_2,
+                      Text(
+                        'Summary: ${currentGroup.foodItem.name}',
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      _SummaryItem(
-                        label: 'Batches',
-                        value: currentGroup.batchCount.toString(),
-                        icon: Symbols.package_2,
-                      ),
-                      _SummaryItem(
-                        label: 'Total Weight',
-                        value: '~${(currentGroup.totalCount * currentGroup.foodItem.weightPerItemGrams/1000).toStringAsFixed(0)}kg',
-                        icon: Icons.scale,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 8),
-                  // Nutrition Section Header
-                  Text(
-                    'Nutrition (per 100g)',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Nutrition Values
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _NutritionItem(
-                          label: 'Carbs',
-                          value: '${currentGroup.foodItem.carbohydratesPerHundredGrams}g',
-                          icon: Icons.grain,
-                        ),
-                        _NutritionItem(
-                          label: 'Fats',
-                          value: '${currentGroup.foodItem.fatsPerHundredGrams}g',
-                          icon: Icons.water_drop,
-                        ),
-                        _NutritionItem(
-                          label: 'Protein',
-                          value: '${currentGroup.foodItem.proteinPerHundredGrams}g',
-                          icon: Icons.fitness_center,
-                        ),
-                        _NutritionItem(
-                          label: 'Calories',
-                          value: currentGroup.foodItem.kcalPerHundredGrams.toStringAsFixed(0),
-                          icon: Icons.local_fire_department,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton.icon(
+                      IconButton(
                         icon: const Icon(Icons.edit_outlined),
                         onPressed: () => _showEditNutritionDialog(context, currentGroup),
-                        label: Text('Edit nutrition', style: Theme.of(context).textTheme.titleSmall,),
                       ),
                     ],
                   ),
-                                   
+                  const SizedBox(height: 16),
+                  // Horizontally scrollable chip row
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      AssistChip(
+                        icon: Icons.inventory_2,
+                        labelText: '${currentGroup.totalCount} Items',
+                      ),
+                      AssistChip(
+                        icon: Symbols.package_2,
+                        labelText: '${currentGroup.batchCount} Batches',
+                      ),
+                      AssistChip(
+                        icon: Icons.scale,
+                        labelText: '~${(currentGroup.totalCount * currentGroup.foodItem.weightPerItemGrams/1000).toStringAsFixed(1)}kg',
+                      ),
+                      AssistChip(
+                        icon: Icons.local_fire_department,
+                        labelText: '${(currentGroup.totalCount * currentGroup.foodItem.weightPerItemGrams / 1000 * currentGroup.foodItem.kcalPerHundredGrams * 10).toStringAsFixed(0)} kcal',
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
 
-          // Batches Section
+          // Fixed Batches Header
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -159,64 +127,60 @@ class FoodItemDetailView extends StatelessWidget {
                   'Batches',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                ElevatedButton.icon(
-                  onPressed: () => _showQuickRestockDialog(context),
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add Batch'),
-                ),
               ],
             ),
           ),
-          const SizedBox(height: 8),
 
-          // Batches List
-          ...batches.map((batch) {
-            final isExpired = batch.isExpired();
-            final isExpiringSoon = batch.isExpiringSoon();
-            
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Card(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: isExpired
-                        ? Colors.red
-                        : isExpiringSoon
-                            ? Colors.orange
-                            : Colors.green,
-                    child: Text(
-                      batch.count.toString(),
-                      style: TextStyle(color: Theme.of(context).primaryColor),
+          // Scrollable Batches List
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: batches.length,
+              itemBuilder: (context, index) {
+                final batch = batches[index];
+                final isExpired = batch.isExpired();
+                final isExpiringSoon = batch.isExpiringSoon();
+
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: isExpired
+                          ? Theme.of(context).colorScheme.error
+                          : isExpiringSoon
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.tertiary,
+                      child: Text(
+                        batch.count.toString(),
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                    title: Text(
+                      'Batch ${index + 1}',
+                    ),
+                    subtitle: Text(
+                      'Expires: ${_formatDate(batch.expirationDate)}',
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit_outlined),
+                          onPressed: () => _showEditBatchDialog(context, batch),
+                          tooltip: 'Edit',
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline),
+                          onPressed: () => _confirmDeleteBatch(context, batch.id),
+                          tooltip: 'Delete',
+                        ),
+                      ],
                     ),
                   ),
-                  title: Text(
-                    'Batch ${batches.indexOf(batch) + 1}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    'Expires: ${_formatDate(batch.expirationDate)}'
-                    //'${daysUntilExpiration >= 0 ? "$daysUntilExpiration days remaining" : "Expired ${-daysUntilExpiration} days ago"}',
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit_outlined),
-                        onPressed: () => _showEditBatchDialog(context, batch),
-                        tooltip: 'Edit',
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        onPressed: () => _confirmDeleteBatch(context, batch.id),
-                        tooltip: 'Delete',
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -356,9 +320,9 @@ class FoodItemDetailView extends StatelessWidget {
 
                           if (carbs == null || fats == null || protein == null || calories == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Please enter valid numbers for all fields'),
-                                backgroundColor: Colors.orange,
+                              SnackBar(
+                                content: const Text('Please enter valid numbers for all fields'),
+                                backgroundColor: Theme.of(context).colorScheme.error,
                               ),
                             );
                             return;
@@ -366,9 +330,9 @@ class FoodItemDetailView extends StatelessWidget {
 
                           if (carbs < 0 || fats < 0 || protein < 0 || calories < 0) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Values cannot be negative'),
-                                backgroundColor: Colors.orange,
+                              SnackBar(
+                                content: const Text('Values cannot be negative'),
+                                backgroundColor: Theme.of(context).colorScheme.error,
                               ),
                             );
                             return;
@@ -390,9 +354,9 @@ class FoodItemDetailView extends StatelessWidget {
 
                           Navigator.pop(sheetContext);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Nutrition values updated'),
-                              backgroundColor: Colors.green,
+                            SnackBar(
+                              content: const Text('Nutrition values updated'),
+                              backgroundColor: Theme.of(context).colorScheme.tertiary,
                             ),
                           );
                         },
@@ -478,9 +442,9 @@ class FoodItemDetailView extends StatelessWidget {
                 final count = int.tryParse(countController.text);
                 if (count == null || count <= 0) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please enter a valid quantity'),
-                      backgroundColor: Colors.orange,
+                    SnackBar(
+                      content: const Text('Please enter a valid quantity'),
+                      backgroundColor: Theme.of(context).colorScheme.error,
                     ),
                   );
                   return;
@@ -503,9 +467,9 @@ class FoodItemDetailView extends StatelessWidget {
 
                 Navigator.pop(dialogContext);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Batch added successfully'),
-                    backgroundColor: Colors.green,
+                  SnackBar(
+                    content: const Text('Batch added successfully'),
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
                 );
               },
@@ -590,9 +554,9 @@ class FoodItemDetailView extends StatelessWidget {
                 final count = int.tryParse(countController.text);
                 if (count == null || count < 0) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please enter a valid quantity'),
-                      backgroundColor: Colors.orange,
+                    SnackBar(
+                      content: const Text('Please enter a valid quantity'),
+                      backgroundColor: Theme.of(context).colorScheme.error,
                     ),
                   );
                   return;
@@ -608,9 +572,9 @@ class FoodItemDetailView extends StatelessWidget {
 
                 Navigator.pop(dialogContext);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Batch updated successfully'),
-                    backgroundColor: Colors.green,
+                  SnackBar(
+                    content: const Text('Batch updated successfully'),
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
                 );
               },
@@ -654,13 +618,13 @@ class FoodItemDetailView extends StatelessWidget {
               }
 
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Batch deleted'),
-                  backgroundColor: Colors.green,
+                SnackBar(
+                  content: const Text('Batch deleted'),
+                  backgroundColor: Theme.of(context).colorScheme.tertiary,
                 ),
               );
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text('Delete', style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
@@ -701,88 +665,16 @@ class FoodItemDetailView extends StatelessWidget {
               Navigator.pop(context);
 
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('All batches deleted'),
-                  backgroundColor: Colors.green,
+                SnackBar(
+                  content: const Text('All batches deleted'),
+                  backgroundColor: Theme.of(context).colorScheme.tertiary,
                 ),
               );
             },
-            child: const Text('Delete All', style: TextStyle(color: Colors.red)),
+            child: Text('Delete All', style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
-    );
-  }
-}
-
-/// Widget for displaying a summary item
-class _SummaryItem extends StatelessWidget {
-  final String label;
-  final String value;
-  final IconData icon;
-
-  const _SummaryItem({
-    required this.label,
-    required this.value,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, size: 32, color: Theme.of(context).colorScheme.secondary),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
-    );
-  }
-}
-
-/// Widget for displaying a nutrition item
-class _NutritionItem extends StatelessWidget {
-  final String label;
-  final String value;
-  final IconData icon;
-
-  const _NutritionItem({
-    required this.label,
-    required this.value,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(
-          icon,
-          size: 24,
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-        ),
-      ],
     );
   }
 }

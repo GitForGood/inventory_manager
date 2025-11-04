@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:inventory_manager/models/daily_calorie_target.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:inventory_manager/models/app_settings.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
@@ -78,6 +79,13 @@ class SettingsRepository {
       preferredQuotaInterval: intervalIndex >= 0 && intervalIndex < 3
           ? [ConsumptionPeriod.weekly, ConsumptionPeriod.monthly, ConsumptionPeriod.quarterly][intervalIndex]
           : settings.preferredQuotaInterval,
+    ));
+  }
+
+  Future<void> updateDailyCalorieTarget(DailyCalorieTarget? target) async {
+    final settings = await loadSettings();
+    await saveSettings(settings.copyWith(
+      dailyCalorieTarget: target
     ));
   }
 }

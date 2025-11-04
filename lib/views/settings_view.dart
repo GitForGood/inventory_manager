@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
+import 'package:inventory_manager/models/daily_calorie_target.dart';
 import 'package:inventory_manager/services/recipe_database.dart';
 import 'package:inventory_manager/services/recipe_import_service.dart';
 import 'package:inventory_manager/widgets/calorie_target_bottom_sheet.dart';
 import 'package:inventory_manager/widgets/notification_settings_view.dart';
+import 'package:inventory_manager/views/theme_swatch_view.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -25,11 +27,11 @@ class SettingsView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
                   const SizedBox(height: 16),
                   Text(
                     state.message,
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(color: Theme.of(context).colorScheme.error),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -69,6 +71,19 @@ class SettingsView extends StatelessWidget {
                           );
                     },
                   ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.palette_outlined),
+                  title: const Text('Theme Colors'),
+                  subtitle: const Text('View all theme colors'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ThemeSwatchView(),
+                      ),
+                    );
+                  },
                 ),
                 const Divider(),
                 const Padding(
@@ -113,20 +128,15 @@ class SettingsView extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  leading: Icon(
-                    Icons.local_fire_department,
-                    color: settings.inventoryCalorieTarget != null
-                        ? Colors.orange
-                        : null,
-                  ),
+                  leading: Icon(Icons.local_fire_department),
                   title: const Text('Calorie Target'),
                   subtitle: Text(
-                    settings.inventoryCalorieTarget != null
-                        ? '${_formatNumber(settings.inventoryCalorieTarget!)} kcal'
+                    settings.dailyCalorieTarget != null
+                        ? '${_formatNumber(settings.dailyCalorieTarget?.target ?? 0)} kcal'
                         : 'Not set',
                   ),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showCalorieTargetSheet(context, settings.inventoryCalorieTarget),
+                  onTap: () => _showCalorieTargetSheet(context, settings.dailyCalorieTarget),
                 ),
                 const Divider(),
                 const Padding(
@@ -353,7 +363,7 @@ class SettingsView extends StatelessWidget {
                 const SnackBar(content: Text('Settings reset to defaults')),
               );
             },
-            child: const Text('Reset', style: TextStyle(color: Colors.red)),
+            child: Text('Reset', style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
@@ -373,9 +383,9 @@ class SettingsView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Enter the URL to your recipes JSON file:',
-              style: TextStyle(fontSize: 14),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
             TextField(
@@ -388,9 +398,9 @@ class SettingsView extends StatelessWidget {
               maxLines: 3,
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'This will add recipes from the JSON file to your local database.',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -439,7 +449,7 @@ class SettingsView extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(result.message),
-                      backgroundColor: Colors.green,
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
                       duration: const Duration(seconds: 5),
                     ),
                   );
@@ -452,7 +462,7 @@ class SettingsView extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(result.message),
-                      backgroundColor: Colors.red,
+                      backgroundColor: Theme.of(context).colorScheme.error,
                       duration: const Duration(seconds: 5),
                     ),
                   );
@@ -462,7 +472,7 @@ class SettingsView extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Error importing recipes: $e'),
-                    backgroundColor: Colors.red,
+                    backgroundColor: Theme.of(context).colorScheme.error,
                     duration: const Duration(seconds: 5),
                   ),
                 );
@@ -534,9 +544,9 @@ class SettingsView extends StatelessWidget {
                   () async {
                     await RecipeDatabase.instance.clearAllRecipes();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('All recipes cleared'),
-                        backgroundColor: Colors.green,
+                      SnackBar(
+                        content: const Text('All recipes cleared'),
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
                       ),
                     );
                   },
@@ -557,9 +567,9 @@ class SettingsView extends StatelessWidget {
                   () async {
                     await RecipeDatabase.instance.clearAllInventory();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('All inventory cleared'),
-                        backgroundColor: Colors.green,
+                      SnackBar(
+                        content: const Text('All inventory cleared'),
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
                       ),
                     );
                   },
@@ -580,9 +590,9 @@ class SettingsView extends StatelessWidget {
                   () async {
                     await RecipeDatabase.instance.clearAllQuotas();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('All quotas cleared'),
-                        backgroundColor: Colors.green,
+                      SnackBar(
+                        content: const Text('All quotas cleared'),
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
                       ),
                     );
                   },
@@ -591,8 +601,8 @@ class SettingsView extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.delete_forever, color: Colors.red),
-              title: const Text('Clear All Data', style: TextStyle(color: Colors.red)),
+              leading: Icon(Icons.delete_forever, color: Theme.of(context).colorScheme.error),
+              title: Text('Clear All Data', style: TextStyle(color: Theme.of(context).colorScheme.error)),
               subtitle: const Text('Delete everything (recipes, inventory, food items)'),
               onTap: () {
                 Navigator.pop(dialogContext);
@@ -603,9 +613,9 @@ class SettingsView extends StatelessWidget {
                   () async {
                     await RecipeDatabase.instance.clearAllData();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('All data cleared'),
-                        backgroundColor: Colors.orange,
+                      SnackBar(
+                        content: const Text('All data cleared'),
+                        backgroundColor: Theme.of(context).colorScheme.error,
                       ),
                     );
                   },
@@ -649,19 +659,19 @@ class SettingsView extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Error: $e'),
-                    backgroundColor: Colors.red,
+                    backgroundColor: Theme.of(context).colorScheme.error,
                   ),
                 );
               }
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text('Delete', style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
     );
   }
 
-  void _showCalorieTargetSheet(BuildContext context, int? currentTarget) {
+  void _showCalorieTargetSheet(BuildContext context, DailyCalorieTarget? currentTarget) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

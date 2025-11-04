@@ -1,4 +1,5 @@
 import 'package:inventory_manager/services/recipe_database.dart';
+import 'package:inventory_manager/services/notification_service.dart';
 
 /// Service to handle app initialization tasks
 class AppInitialization {
@@ -17,6 +18,22 @@ class AppInitialization {
   static Future<void> initialize() async {
     // Initialize the database
     await _initializeDatabase();
+
+    // Initialize notifications
+    await _initializeNotifications();
+  }
+
+  /// Initialize the notification service
+  static Future<void> _initializeNotifications() async {
+    try {
+      final notificationService = NotificationService();
+      await notificationService.initialize();
+      // Request permissions immediately on startup
+      await notificationService.requestPermissions();
+    } catch (e) {
+      // Notification initialization failure shouldn't block app launch
+      // Log error if you have logging set up
+    }
   }
 
   /// Initialize the recipe database

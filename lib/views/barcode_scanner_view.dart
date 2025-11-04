@@ -98,7 +98,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to fetch product data: $e'),
-            backgroundColor: Colors.orange,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
 

@@ -4,6 +4,7 @@ import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barre
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/widgets/consumption_quota_card.dart';
+import 'package:inventory_manager/widgets/outlined_card.dart';
 
 class ConsumptionQuotaView extends StatefulWidget {
   const ConsumptionQuotaView({super.key});
@@ -220,7 +221,7 @@ class _PeriodSelector extends StatelessWidget {
         color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -271,9 +272,9 @@ class _ProgressOverview extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Card(
+    return OutlinedCard(
       child: Padding(
-        padding: EdgeInsetsGeometry.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
           Row(
@@ -315,7 +316,7 @@ class _ProgressOverview extends StatelessWidget {
                 icon: Icons.check_circle,
                 label: 'Completed',
                 count: state.completedQuotas.length,
-                color: const Color(0xFF66BB6A), // Success green
+                color: colorScheme.tertiary,
               ),
               _StatusChip(
                 icon: Icons.warning,

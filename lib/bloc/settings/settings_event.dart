@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:inventory_manager/models/daily_calorie_target.dart';
 
 abstract class SettingsEvent extends Equatable {
   const SettingsEvent();
@@ -80,6 +81,50 @@ class UpdateInventoryCalorieTarget extends SettingsEvent {
 
   @override
   List<Object?> get props => [calorieTarget];
+}
+
+abstract class DailyCalorieTargetEvent extends SettingsEvent{
+  final DailyCalorieTarget? target;
+
+  const DailyCalorieTargetEvent(this.target);
+}
+
+class SetManualCalorieTarget extends DailyCalorieTargetEvent {
+  final ManualCalorieTarget manualTarget;
+
+  const SetManualCalorieTarget(this.manualTarget) : super(manualTarget);
+
+  @override
+  List<Object?> get props => [manualTarget.target];
+}
+
+class SetCalculateedDailyCalorieTarget extends DailyCalorieTargetEvent {
+  final CalculatedCalorieTarget calculatedTarget;
+
+  const SetCalculateedDailyCalorieTarget(this.calculatedTarget): super(calculatedTarget);
+  
+  @override
+  List<Object?> get props => [
+    calculatedTarget.people,
+    calculatedTarget.days,
+    calculatedTarget.caloriesPerPerson,
+    calculatedTarget.target
+  ];
+}
+
+class ClearDailyCalorieTarget extends DailyCalorieTargetEvent {
+  const ClearDailyCalorieTarget(): super(null);
+}
+
+
+// Update daily calorie consumption
+class UpdateDailyCalorieConsumption extends SettingsEvent {
+  final int? dailyCalories;
+
+  const UpdateDailyCalorieConsumption(this.dailyCalories);
+
+  @override
+  List<Object?> get props => [dailyCalories];
 }
 
 // Reset all settings to defaults
