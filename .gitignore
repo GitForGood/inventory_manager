@@ -123,3 +123,4 @@ build_apk.bat
 build_release.bat
 create_keystore.bat
 RELEASE_GUIDE.md
+BLACK_SCREEN_FIX.md

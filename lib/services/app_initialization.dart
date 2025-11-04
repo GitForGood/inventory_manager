@@ -16,11 +16,17 @@ class AppInitialization {
   /// }
   /// ```
   static Future<void> initialize() async {
-    // Initialize the database
-    await _initializeDatabase();
+    try {
+      // Initialize the database
+      await _initializeDatabase();
 
-    // Initialize notifications
-    await _initializeNotifications();
+      // Initialize notifications
+      await _initializeNotifications();
+    } catch (e) {
+      // Log error but don't prevent app from starting
+      print('Initialization error: $e');
+      // Allow app to continue even if initialization fails
+    }
   }
 
   /// Initialize the notification service
@@ -43,8 +49,9 @@ class AppInitialization {
       final db = RecipeDatabase.instance;
       await db.database;
     } catch (e) {
-      // You might want to show an error dialog to the user here
-      rethrow;
+      // Log error but don't crash the app
+      print('Database initialization error: $e');
+      // Don't rethrow - allow app to start even if database fails
     }
   }
 }
