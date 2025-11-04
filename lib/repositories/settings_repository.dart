@@ -58,11 +58,6 @@ class SettingsRepository {
     await saveSettings(settings.copyWith(highContrast: enabled));
   }
 
-  Future<void> updateExpirationWarningDays(int days) async {
-    final settings = await loadSettings();
-    await saveSettings(settings.copyWith(expirationWarningDays: days));
-  }
-
   Future<void> updateExpirationNotifications(bool enabled) async {
     final settings = await loadSettings();
     await saveSettings(settings.copyWith(expirationNotificationsEnabled: enabled));

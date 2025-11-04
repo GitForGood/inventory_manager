@@ -48,7 +48,7 @@ class CardVariants extends ThemeExtension<CardVariants> {
 
 class NixieTubeTheme {
   // Seed colors for Material 3 ColorScheme generation
-  static const Color seedColor = Color.fromARGB(255, 255, 115, 0); 
+  static const Color seedColor = Color.fromARGB(255, 255, 140, 0); 
   static const Color hcSeedColor = Color.fromARGB(255, 255, 140, 0); 
 
   // M3 Spacing Scale (mobile-optimized)

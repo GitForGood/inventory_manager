@@ -11,8 +11,46 @@ import 'package:inventory_manager/views/food_item_detail_view.dart';
 import 'package:inventory_manager/widgets/storage_summary_card.dart';
 import 'package:inventory_manager/models/food_item_group.dart';
 import 'package:material_symbols_icons/symbols.dart';
-class HomeView extends StatelessWidget {
+
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final ScrollController _scrollController = ScrollController();
+  bool _showScrollToTop = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    // Show FAB when scrolled down more than 200 pixels
+    final shouldShow = _scrollController.offset > 200;
+    if (shouldShow != _showScrollToTop) {
+      setState(() => _showScrollToTop = shouldShow);
+    }
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +98,9 @@ class HomeView extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<InventoryBloc, InventoryState>(
+      body: Stack(
+        children: [
+          BlocBuilder<InventoryBloc, InventoryState>(
         builder: (context, state) {
           if (state is InventoryInitial) {
             return const Center(child: Text('Loading inventory...'));
@@ -111,25 +151,30 @@ class HomeView extends StatelessWidget {
                 }
 
                 if (filteredBatches.isEmpty) {
-                  return Column(
+                  return ListView(
+                    controller: _scrollController,
                     children: [
                       if (storageStatus != null)
                         StorageSummaryCard(status: storageStatus),
-                      Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.inventory_2_outlined, size: 64),
-                              const SizedBox(height: 16),
-                              const Text(
-                                'No inventory items match filter',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              const SizedBox(height: 8),
-                              const Text('Clear filters or add items'),
-                            ],
-                          ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('Foods', style: Theme.of(context).textTheme.headlineSmall),
+                      ),
+                      const SizedBox(height: 400),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.inventory_2_outlined, size: 64),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'No inventory items match filter',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text('Clear filters or add items'),
+                          ],
                         ),
                       ),
                     ],
@@ -139,71 +184,81 @@ class HomeView extends StatelessWidget {
                 // Group batches by food item
                 final groupedItems = FoodItemGroup.groupBatches(filteredBatches);
 
-                return Column(
-                  children: [
-                    if (storageStatus != null)
-                      StorageSummaryCard(status: storageStatus),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: groupedItems.length,
-                        itemBuilder: (context, index) {
-                          final group = groupedItems[index];
-                          final status = group.expirationStatus;
+                return ListView.builder(
+                  controller: _scrollController,
+                  itemCount: groupedItems.length + 2, // +2 for summary and header
+                  itemBuilder: (context, index) {
+                    // Summary card
+                    if (index == 0) {
+                      if (storageStatus == null) return const SizedBox.shrink();
+                      return StorageSummaryCard(status: storageStatus);
+                    }
 
-                          final colorScheme = Theme.of(context).colorScheme;
-                          Color statusColor;
-                          switch (status) {
-                            case ExpirationStatus.expired:
-                              statusColor = colorScheme.error;
-                              break;
-                            case ExpirationStatus.expiringSoon:
-                              statusColor = colorScheme.secondary;
-                              break;
-                            case ExpirationStatus.fresh:
-                              statusColor = colorScheme.tertiary;
-                              break;
-                          }
+                    // Header with spacing
+                    if (index == 1) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text('Foods', style: Theme.of(context).textTheme.headlineSmall),
+                          ),
+                        ],
+                      );
+                    }
 
-                          return Card(
-                            margin: EdgeInsets.symmetric(horizontal: 16,vertical: 4 ),
-                            shape: Theme.of(context).cardTheme.shape,
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: statusColor,
-                                child: Text(
-                                  group.totalCount.toString(),
-                                  style: TextStyle(color: Theme.of(context).primaryColor),
-                                ),
-                              ),
-                              title: Text(group.foodItem.name),
-                              subtitle: Text(
-                                group.daysUntilClosestExpiration >= 0 ? "${group.daysUntilClosestExpiration} days remaining" : "Expired ${-group.daysUntilClosestExpiration} days ago",
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    group.batchCount.toString(),
-                                    style: Theme.of(context).textTheme.labelLarge,
-                                  ),
-                                  SizedBox(width: 8,),
-                                  Icon(Symbols.package_2),
-                                ],
-                              ), 
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FoodItemDetailView(group: group),
-                                  ),
-                                );
-                              },
+                    // List items
+                    final itemIndex = index - 2;
+                    final group = groupedItems[itemIndex];
+
+                    final colorScheme = Theme.of(context).colorScheme;
+
+                    return Card(
+                      margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                      shape: Theme.of(context).cardTheme.shape,
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: group.hasExpiredBatch
+                            ? colorScheme.errorContainer
+                            : colorScheme.primary,
+                          child: Text(
+                            group.totalCount.toString(),
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: group.hasExpiredBatch
+                              ? colorScheme.onErrorContainer
+                              : colorScheme.onPrimary,
+                            ),
+                          )
+                        ),
+                        title: Text(group.foodItem.name),
+                        subtitle: Text(
+                          group.daysUntilClosestExpiration >= 0
+                              ? "${group.daysUntilClosestExpiration} days remaining"
+                              : "Expired ${-group.daysUntilClosestExpiration} days ago",
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              group.batchCount.toString(),
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Symbols.package_2),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FoodItemDetailView(group: group),
                             ),
                           );
                         },
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 );
               },
             );
@@ -211,6 +266,35 @@ class HomeView extends StatelessWidget {
 
           return const Center(child: Text('Unknown state'));
         },
+          ),
+          // Scroll-to-top FAB
+          if (_showScrollToTop)
+            Positioned(
+              top: 8,
+              left: MediaQuery.of(context).size.width / 2 - 20,
+              child: Material(
+                elevation: 4,
+                borderRadius: BorderRadius.circular(20),
+                child: InkWell(
+                  onTap: _scrollToTop,
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Icon(
+                      Icons.keyboard_arrow_up,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
       floatingActionButton: SpeedDial(
         icon: Icons.add, // icon when closed

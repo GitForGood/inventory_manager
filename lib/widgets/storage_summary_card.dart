@@ -96,7 +96,7 @@ class StorageSummaryCard extends StatelessWidget {
                             context,
                             theme,
                             calorieTarget.target,
-                            (status.totalNutrition['kcal'] ?? 0).toInt(),
+                            status.totalCalories.toInt(),
                           )
                         : _buildSetCalorieTarget(context, theme),
                   ),

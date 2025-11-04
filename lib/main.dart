@@ -36,47 +36,57 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiRepositoryProvider(
       providers: [
-        BlocProvider(
-          create: (context) => InventoryBloc()..add(const LoadInventory()),
+        RepositoryProvider(
+          create: (context) => RecipeRepository(),
         ),
-        BlocProvider(
-          create: (context) =>
-              SettingsBloc(repository: SettingsRepository())
-                ..add(const LoadSettings()),
-        ),
-        BlocProvider(
-          create: (context) =>
-              RecipesBloc(repository: RecipeRepository())
-                ..add(const LoadFavorites()),
-        ),
-        BlocProvider(
-          create: (context) => ConsumptionQuotaBloc()
-                ..add(const LoadConsumptionQuotas()),
+        RepositoryProvider(
+          create: (context) => SettingsRepository(),
         ),
       ],
-      child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, state) {
-          // Default to regular dark theme
-          ThemeData currentTheme = NixieTubeTheme.darkTheme;
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => InventoryBloc()..add(const LoadInventory()),
+          ),
+          BlocProvider(
+            create: (context) => SettingsBloc(
+              repository: context.read<SettingsRepository>(),
+            )..add(const LoadSettings()),
+          ),
+          BlocProvider(
+            create: (context) => RecipesBloc(
+              repository: context.read<RecipeRepository>(),
+            )..add(const LoadFavorites()),
+          ),
+          BlocProvider(
+            create: (context) => ConsumptionQuotaBloc()
+              ..add(const LoadConsumptionQuotas()),
+          ),
+        ],
+        child: BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (context, state) {
+            // Default to regular dark theme
+            ThemeData currentTheme = NixieTubeTheme.darkTheme;
 
-          // Update theme based on high contrast setting if settings are loaded
-          if (state is SettingsLoaded) {
-            currentTheme = state.settings.highContrast
-                ? NixieTubeTheme.highContrastDarkTheme
-                : NixieTubeTheme.darkTheme;
-          }
+            // Update theme based on high contrast setting if settings are loaded
+            if (state is SettingsLoaded) {
+              currentTheme = state.settings.highContrast
+                  ? NixieTubeTheme.highContrastDarkTheme
+                  : NixieTubeTheme.darkTheme;
+            }
 
-          return MaterialApp(
-            title: 'Inventory Manager',
-            theme: currentTheme,
-            themeMode: ThemeMode.dark,
-            navigatorKey: navigatorKey,
-            home: MainNavigationScreen(key: mainNavigationKey),
-            debugShowCheckedModeBanner: false,
-          );
-        },
+            return MaterialApp(
+              title: 'Inventory Manager',
+              theme: currentTheme,
+              themeMode: ThemeMode.dark,
+              navigatorKey: navigatorKey,
+              home: MainNavigationScreen(key: mainNavigationKey),
+              debugShowCheckedModeBanner: false,
+            );
+          },
+        ),
       ),
     );
   }

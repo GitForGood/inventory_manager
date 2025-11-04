@@ -81,7 +81,6 @@ class ConsumeFromInventory extends InventoryEvent {
 enum InventoryFilter {
   all,
   expired,
-  expiringSoon,
   fresh,
 }
 

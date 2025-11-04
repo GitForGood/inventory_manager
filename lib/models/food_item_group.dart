@@ -45,18 +45,11 @@ class FoodItemGroup {
     return batches.any((batch) => batch.isExpired());
   }
 
-  /// Check if any batch is expiring soon
-  bool get hasExpiringSoonBatch {
-    return batches.any((batch) => batch.isExpiringSoon());
-  }
-
-  /// Get the expiration status color for the group
-  /// Red if any expired, orange if any expiring soon, green otherwise
+  /// Get the expiration status for the group
+  /// Expired if any batch is expired, fresh otherwise
   ExpirationStatus get expirationStatus {
     if (hasExpiredBatch) {
       return ExpirationStatus.expired;
-    } else if (hasExpiringSoonBatch) {
-      return ExpirationStatus.expiringSoon;
     } else {
       return ExpirationStatus.fresh;
     }
@@ -69,31 +62,12 @@ class FoodItemGroup {
     return sortedBatches;
   }
 
-  /// Calculate total nutrition for all items in all batches
-  Map<String, double> getTotalNutrition() {
-    final totalCarbs = batches.fold<double>(
+  /// Calculate total calories for all items in all batches
+  double getTotalCalories() {
+    return batches.fold<double>(
       0,
-      (sum, batch) => sum + batch.getTotalNutrition()['carbohydrates']!,
+      (sum, batch) => sum + batch.getTotalCalories(),
     );
-    final totalFats = batches.fold<double>(
-      0,
-      (sum, batch) => sum + batch.getTotalNutrition()['fats']!,
-    );
-    final totalProtein = batches.fold<double>(
-      0,
-      (sum, batch) => sum + batch.getTotalNutrition()['protein']!,
-    );
-    final totalKcal = batches.fold<double>(
-      0,
-      (sum, batch) => sum + batch.getTotalNutrition()['kcal']!,
-    );
-
-    return {
-      'carbohydrates': totalCarbs,
-      'fats': totalFats,
-      'protein': totalProtein,
-      'kcal': totalKcal,
-    };
   }
 
   @override
@@ -126,6 +100,5 @@ class FoodItemGroup {
 /// Enum for expiration status
 enum ExpirationStatus {
   expired,
-  expiringSoon,
   fresh,
 }

@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barrel.dart';
 import 'package:inventory_manager/models/consumption_quota.dart';
+import 'package:inventory_manager/models/recipe.dart';
+import 'package:inventory_manager/repositories/recipe_repository.dart';
+import 'package:inventory_manager/widgets/recipe_carousel.dart';
 
-class FoodItemQuotaCard extends StatelessWidget {
+class FoodItemQuotaCard extends StatefulWidget {
   final String foodItemName;
   final List<ConsumptionQuota> quotas;
 
@@ -15,9 +18,46 @@ class FoodItemQuotaCard extends StatelessWidget {
   });
 
   @override
+  State<FoodItemQuotaCard> createState() => _FoodItemQuotaCardState();
+}
+
+class _FoodItemQuotaCardState extends State<FoodItemQuotaCard> {
+  List<Recipe>? _recipes;
+  bool _loadingRecipes = false;
+  bool _isExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecipes();
+  }
+
+  Future<void> _loadRecipes() async {
+    // Get the food item ID from the first quota
+    final quota = widget.quotas.isNotEmpty ? widget.quotas.first : null;
+    if (quota == null) return;
+
+    setState(() => _loadingRecipes = true);
+    try {
+      final repository = context.read<RecipeRepository>();
+      final recipes = await repository.getRecipesForFoodItem(quota.foodItemId);
+      if (mounted) {
+        setState(() {
+          _recipes = recipes;
+          _loadingRecipes = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _loadingRecipes = false);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     // With the new system, there should only be one quota per food item
-    final quota = quotas.isNotEmpty ? quotas.first : null;
+    final quota = widget.quotas.isNotEmpty ? widget.quotas.first : null;
 
     if (quota == null) return const SizedBox.shrink();
 
@@ -28,129 +68,192 @@ class FoodItemQuotaCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header Row
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Food Icon
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: isCollapsed
-                        ? colorScheme.surfaceContainerHighest
-                        : colorScheme.secondary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.track_changes,
-                    color: isCollapsed
-                        ? colorScheme.onSurfaceVariant
-                        : colorScheme.secondary,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-
-                // Title and Date
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        foodItemName,
-                        style: Theme.of(context).textTheme.titleMedium,
+                // Header Row
+                Row(
+                  children: [
+                    // Food Icon
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isCollapsed
+                            ? colorScheme.surfaceContainerHighest
+                            : colorScheme.secondary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      const SizedBox(height: 4),
-                      Row(
+                      child: Icon(
+                        Icons.track_changes,
+                        color: isCollapsed
+                            ? colorScheme.onSurfaceVariant
+                            : colorScheme.secondary,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+
+                    // Title and Date
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.calendar_today,
-                            size: 16,
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                          const SizedBox(width: 8),
                           Text(
-                            'Due: ${dateFormat.format(quota.targetDate)}',
-                            //style: Theme.of(context).textTheme.bodyMedium,
+                            widget.foodItemName,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.calendar_today,
+                                size: 16,
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Due: ${dateFormat.format(quota.targetDate)}',
+                                //style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
                         ],
                       ),
+                    ),
+
+                    // Action Buttons / Indicators
+                    if (quota.isCompleted) ...[
+                      // Completed indicator
+                      Icon(
+                        Icons.check_circle,
+                        size: 32,
+                        color: colorScheme.tertiary,
+                      ),
+                      SizedBox(width: 8,)
+                    ] else ...[
+                      // Active quota button
+                      // Increment button
+                      IconButton(
+                        icon: const Icon(Icons.add_circle),
+                        color: colorScheme.primary,
+                        iconSize: 32,
+                        tooltip: 'Mark items as consumed',
+                        onPressed: () {
+                          _showIncrementDialog(context, quota);
+                        },
+                      ),
                     ],
-                  ),
+                  ],
                 ),
 
-                // Action Buttons / Indicators
-                if (quota.isCompleted) ...[
-                  // Completed indicator
-                  Icon(
-                    Icons.check_circle,
-                    size: 32,
-                    color: colorScheme.tertiary,
-                  ),
-                  SizedBox(width: 8,)
-                ] else ...[
-                  // Active quota button
-                  // Increment button
-                  IconButton(
-                    icon: const Icon(Icons.add_circle),
-                    color: colorScheme.primary,
-                    iconSize: 32,
-                    tooltip: 'Mark items as consumed',
-                    onPressed: () {
-                      _showIncrementDialog(context, quota);
-                    },
+                // Progress Section (only shown when not collapsed)
+                if (!isCollapsed) ...[
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Progress',
+                                  style: Theme.of(context).textTheme.labelLarge
+                                ),
+                                Text(
+                                  '${quota.consumedCount}/${quota.targetCount} items',
+                                  style: Theme.of(context).textTheme.labelLarge
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: LinearProgressIndicator(
+                                value: quota.progressPercentage / 100,
+                                minHeight: 8,
+                                backgroundColor:
+                                    colorScheme.surfaceContainerHighest,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  _getProgressColor(quota.progressPercentage, context),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ],
             ),
+          ),
 
-            // Progress Section (only shown when not collapsed)
-            if (!isCollapsed) ...[
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          // Recipe carousel (only shown when expanded)
+          if (_isExpanded && _recipes != null && _recipes!.isNotEmpty) ...[
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Divider(height: 1),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12, bottom: 8),
+              child: RecipeCarousel(recipes: _recipes!),
+            ),
+          ],
+
+          // Expand/Collapse bottom bar (only shown when not collapsed and recipes available)
+          if (!isCollapsed && _recipes != null && _recipes!.isNotEmpty)
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
+              child: Material(
+                color: colorScheme.surfaceContainerHighest,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                    });
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Progress',
-                              style: Theme.of(context).textTheme.labelLarge
-                            ),
-                            Text(
-                              '${quota.consumedCount}/${quota.targetCount} items',
-                              style: Theme.of(context).textTheme.labelLarge
-                            ),
-                          ],
+                        Icon(
+                          Icons.restaurant_menu,
+                          size: 16,
+                          color: colorScheme.onSurfaceVariant,
                         ),
-                        const SizedBox(height: 8),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: quota.progressPercentage / 100,
-                            minHeight: 8,
-                            backgroundColor:
-                                colorScheme.surfaceContainerHighest,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              _getProgressColor(quota.progressPercentage, context),
-                            ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _isExpanded ? 'Hide Recipes' : 'Show Recipe Ideas',
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                           ),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(
+                          _isExpanded ? Icons.expand_less : Icons.expand_more,
+                          size: 20,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
-            ]
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

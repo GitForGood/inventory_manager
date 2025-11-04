@@ -26,7 +26,7 @@ class RecipeDatabase {
 
     return await openDatabase(
       path,
-      version: 4,
+      version: 5,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -106,9 +106,6 @@ class RecipeDatabase {
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         weightPerItemGrams REAL NOT NULL,
-        carbohydratesPerHundredGrams REAL NOT NULL,
-        fatsPerHundredGrams REAL NOT NULL,
-        proteinPerHundredGrams REAL NOT NULL,
         kcalPerHundredGrams REAL NOT NULL
       )
     ''');
@@ -160,15 +157,16 @@ class RecipeDatabase {
 
   Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      // Add food_items table
+      // Add food_items table (with nutrition columns for migration compatibility)
+      // These will be removed in version 5 migration
       await db.execute('''
         CREATE TABLE IF NOT EXISTS food_items (
           id TEXT PRIMARY KEY,
           name TEXT NOT NULL,
           weightPerItemGrams REAL NOT NULL,
-          carbohydratesPerHundredGrams REAL NOT NULL,
-          fatsPerHundredGrams REAL NOT NULL,
-          proteinPerHundredGrams REAL NOT NULL,
+          carbohydratesPerHundredGrams REAL NOT NULL DEFAULT 0,
+          fatsPerHundredGrams REAL NOT NULL DEFAULT 0,
+          proteinPerHundredGrams REAL NOT NULL DEFAULT 0,
           kcalPerHundredGrams REAL NOT NULL
         )
       ''');
@@ -271,6 +269,34 @@ class RecipeDatabase {
       await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_batch ON consumption_quotas(batchId)');
       await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_food_item ON consumption_quotas(foodItemId)');
       await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_target_date ON consumption_quotas(targetDate)');
+    }
+
+    if (oldVersion < 5) {
+      // Remove unused nutrition columns from food_items
+      // SQLite doesn't support DROP COLUMN directly, so we need to recreate the table
+
+      // 1. Create new table without nutrition columns
+      await db.execute('''
+        CREATE TABLE food_items_new (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          weightPerItemGrams REAL NOT NULL,
+          kcalPerHundredGrams REAL NOT NULL
+        )
+      ''');
+
+      // 2. Copy data from old table (keeping only relevant columns)
+      await db.execute('''
+        INSERT INTO food_items_new (id, name, weightPerItemGrams, kcalPerHundredGrams)
+        SELECT id, name, weightPerItemGrams, kcalPerHundredGrams
+        FROM food_items
+      ''');
+
+      // 3. Drop old table
+      await db.execute('DROP TABLE food_items');
+
+      // 4. Rename new table
+      await db.execute('ALTER TABLE food_items_new RENAME TO food_items');
     }
   }
 
@@ -659,9 +685,6 @@ class RecipeDatabase {
         'id': item.id,
         'name': item.name,
         'weightPerItemGrams': item.weightPerItemGrams,
-        'carbohydratesPerHundredGrams': item.carbohydratesPerHundredGrams,
-        'fatsPerHundredGrams': item.fatsPerHundredGrams,
-        'proteinPerHundredGrams': item.proteinPerHundredGrams,
         'kcalPerHundredGrams': item.kcalPerHundredGrams,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
@@ -707,9 +730,6 @@ class RecipeDatabase {
       id: map['id'] as String,
       name: map['name'] as String,
       weightPerItemGrams: map['weightPerItemGrams'] as double,
-      carbohydratesPerHundredGrams: map['carbohydratesPerHundredGrams'] as double,
-      fatsPerHundredGrams: map['fatsPerHundredGrams'] as double,
-      proteinPerHundredGrams: map['proteinPerHundredGrams'] as double,
       kcalPerHundredGrams: map['kcalPerHundredGrams'] as double,
       ingredientIds: ingredientIds,
     );

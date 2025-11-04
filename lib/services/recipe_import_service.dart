@@ -20,7 +20,6 @@ class RecipeImportService {
   ///       "title": "Recipe Name",
   ///       "readyInMinutes": 30,
   ///       "servings": 4,
-  ///       "imageUrl": "https://...",
   ///       "summary": "Recipe description",
   ///       "isFavorite": false,
   ///       "steps": [
@@ -32,8 +31,8 @@ class RecipeImportService {
   ///       "ingredients": [
   ///         {
   ///           "name": "Ingredient Name",
-  ///           "amount": 2.0,
-  ///           "unit": "cup"
+  ///           "amount": 2,
+  ///           "unit": "g"
   ///         }
   ///       ]
   ///     }
@@ -98,7 +97,14 @@ class RecipeImportService {
   Future<void> _importSingleRecipe(Map<String, dynamic> recipeData) async {
     // Parse instructions/steps
     final instructions = <String>[];
-    if (recipeData.containsKey('steps')) {
+
+    // Support both formats: direct "instructions" array or nested "steps" array
+    if (recipeData.containsKey('instructions')) {
+      final instructionsList = recipeData['instructions'] as List<dynamic>;
+      for (final instruction in instructionsList) {
+        instructions.add(instruction as String);
+      }
+    } else if (recipeData.containsKey('steps')) {
       final steps = recipeData['steps'] as List<dynamic>;
       // Sort by step number to ensure correct order
       final sortedSteps = List<Map<String, dynamic>>.from(
@@ -118,17 +124,18 @@ class RecipeImportService {
         final ingredientMap = ingredientData as Map<String, dynamic>;
 
         // Get or create the ingredient
-        final ingredientName = ingredientMap['name'] as String;
+        // Support both "ingredient" and "name" fields
+        final ingredientName = (ingredientMap['ingredient'] ?? ingredientMap['name']) as String;
         Ingredient? ingredient = await _database.getIngredientByName(ingredientName);
         ingredient ??= await _database.createIngredient(ingredientName);
 
-        // Get or create the unit
-        final unitName = ingredientMap['unit'] as String;
+        // Get or create the unit (with default if not specified)
+        final unitName = (ingredientMap['unit'] ?? 'piece') as String;
         Unit? unit = await _database.getUnitByName(unitName);
         unit ??= await _database.createUnit(unitName);
 
-        // Create recipe ingredient
-        final amount = (ingredientMap['amount'] as num).toDouble();
+        // Create recipe ingredient (with amount defaulting to 1 if not specified)
+        final amount = (ingredientMap['amount'] as num?)?.toDouble() ?? 1.0;
         recipeIngredients.add(RecipeIngredient(
           ingredientId: ingredient.id!,
           amount: amount,

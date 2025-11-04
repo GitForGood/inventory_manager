@@ -28,9 +28,6 @@ class _BatchFormViewState extends State<BatchFormView> {
   final _nameController = TextEditingController();
   final _weightController = TextEditingController();
   final _countController = TextEditingController();
-  final _carbsController = TextEditingController();
-  final _fatsController = TextEditingController();
-  final _proteinController = TextEditingController();
   final _kcalController = TextEditingController();
 
   final List<Ingredient> _selectedIngredients = [];
@@ -63,15 +60,6 @@ class _BatchFormViewState extends State<BatchFormView> {
       }
 
       // Set nutrition data if available
-      if (product.carbohydrates100g != null) {
-        _carbsController.text = product.carbohydrates100g!.toStringAsFixed(1);
-      }
-      if (product.fat100g != null) {
-        _fatsController.text = product.fat100g!.toStringAsFixed(1);
-      }
-      if (product.proteins100g != null) {
-        _proteinController.text = product.proteins100g!.toStringAsFixed(1);
-      }
       if (product.energyKcal100g != null) {
         _kcalController.text = product.energyKcal100g!.toStringAsFixed(1);
       }
@@ -84,9 +72,6 @@ class _BatchFormViewState extends State<BatchFormView> {
       // Default values for manual entry
       _weightController.text = '100';
       _countController.text = '1';
-      _carbsController.text = '0';
-      _fatsController.text = '0';
-      _proteinController.text = '0';
       _kcalController.text = '0';
     }
 
@@ -131,9 +116,6 @@ class _BatchFormViewState extends State<BatchFormView> {
     _nameController.dispose();
     _weightController.dispose();
     _countController.dispose();
-    _carbsController.dispose();
-    _fatsController.dispose();
-    _proteinController.dispose();
     _kcalController.dispose();
     super.dispose();
   }
@@ -182,16 +164,13 @@ class _BatchFormViewState extends State<BatchFormView> {
       return;
     }
 
-    // Validate nutrition data is provided
-    final carbs = double.tryParse(_carbsController.text) ?? 0;
-    final fats = double.tryParse(_fatsController.text) ?? 0;
-    final protein = double.tryParse(_proteinController.text) ?? 0;
+    // Validate calories are provided
     final kcal = double.tryParse(_kcalController.text) ?? 0;
 
-    if (carbs == 0 && fats == 0 && protein == 0 && kcal == 0) {
+    if (kcal == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please provide at least some nutrition information'),
+          content: const Text('Please provide calories per 100g'),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -208,9 +187,6 @@ class _BatchFormViewState extends State<BatchFormView> {
             : DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text,
         weightPerItemGrams: double.parse(_weightController.text),
-        carbohydratesPerHundredGrams: carbs,
-        fatsPerHundredGrams: fats,
-        proteinPerHundredGrams: protein,
         kcalPerHundredGrams: kcal,
         ingredientIds: _selectedIngredients.map((i) => i.id!).toList(),
       );
@@ -395,88 +371,23 @@ class _BatchFormViewState extends State<BatchFormView> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: _carbsController,
-                    decoration: const InputDecoration(
-                      labelText: 'Carbs (g)',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value != null && value.isNotEmpty) {
-                        if (double.tryParse(value) == null) {
-                          return 'Invalid';
-                        }
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: TextFormField(
-                    controller: _fatsController,
-                    decoration: const InputDecoration(
-                      labelText: 'Fats (g)',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value != null && value.isNotEmpty) {
-                        if (double.tryParse(value) == null) {
-                          return 'Invalid';
-                        }
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: _proteinController,
-                    decoration: const InputDecoration(
-                      labelText: 'Protein (g)',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value != null && value.isNotEmpty) {
-                        if (double.tryParse(value) == null) {
-                          return 'Invalid';
-                        }
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: TextFormField(
-                    controller: _kcalController,
-                    decoration: const InputDecoration(
-                      labelText: 'Calories (kcal)',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value != null && value.isNotEmpty) {
-                        if (double.tryParse(value) == null) {
-                          return 'Invalid';
-                        }
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ],
+            TextFormField(
+              controller: _kcalController,
+              decoration: const InputDecoration(
+                labelText: 'Calories (kcal) *',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.local_fire_department),
+              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter calories';
+                }
+                if (double.tryParse(value) == null) {
+                  return 'Invalid number';
+                }
+                return null;
+              },
             ),
 
             const SizedBox(height: 32),

@@ -12,7 +12,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<LoadSettings>(_onLoadSettings);
     on<ToggleNotifications>(_onToggleNotifications);
     on<ChangeThemeMode>(_onChangeThemeMode);
-    on<UpdateExpirationWarningDays>(_onUpdateExpirationWarningDays);
     on<UpdateExpirationNotifications>(_onUpdateExpirationNotifications);
     on<UpdateQuotaGenerationNotifications>(_onUpdateQuotaGenerationNotifications);
     on<UpdatePreferredQuotaInterval>(_onUpdatePreferredQuotaInterval);
@@ -68,25 +67,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         emit(SettingsLoaded(updatedSettings));
       } catch (e) {
         emit(SettingsError('Failed to update theme: $e'));
-      }
-    }
-  }
-
-  // Update expiration warning days
-  Future<void> _onUpdateExpirationWarningDays(
-    UpdateExpirationWarningDays event,
-    Emitter<SettingsState> emit,
-  ) async {
-    if (state is SettingsLoaded) {
-      final currentState = state as SettingsLoaded;
-      try {
-        final updatedSettings = currentState.settings.copyWith(
-          expirationWarningDays: event.days,
-        );
-        await repository.saveSettings(updatedSettings);
-        emit(SettingsLoaded(updatedSettings));
-      } catch (e) {
-        emit(SettingsError('Failed to update expiration warning: $e'));
       }
     }
   }

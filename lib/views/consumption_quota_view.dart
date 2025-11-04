@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barrel.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
-import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/widgets/consumption_quota_card.dart';
 import 'package:inventory_manager/widgets/outlined_card.dart';
 
@@ -14,15 +13,42 @@ class ConsumptionQuotaView extends StatefulWidget {
 }
 
 class _ConsumptionQuotaViewState extends State<ConsumptionQuotaView> {
+  final ScrollController _scrollController = ScrollController();
+  bool _showScrollToTop = false;
+
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
     // Load quotas when view is first created
     Future.microtask(() {
       if (mounted) {
         context.read<ConsumptionQuotaBloc>().add(const LoadConsumptionQuotas());
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    // Show FAB when scrolled down more than 200 pixels
+    final shouldShow = _scrollController.offset > 200;
+    if (shouldShow != _showScrollToTop) {
+      setState(() => _showScrollToTop = shouldShow);
+    }
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOut,
+    );
   }
 
   void _showRegenerateDialog(BuildContext context) {
@@ -93,25 +119,27 @@ class _ConsumptionQuotaViewState extends State<ConsumptionQuotaView> {
           ),
         ],
       ),
-      body: BlocListener<ConsumptionQuotaBloc, ConsumptionQuotaState>(
-        listener: (context, state) {
-          // Show error messages
-          if (state is ConsumptionQuotaError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Theme.of(context).colorScheme.error,
-                duration: const Duration(seconds: 4),
-              ),
-            );
-          }
+      body: Stack(
+        children: [
+          BlocListener<ConsumptionQuotaBloc, ConsumptionQuotaState>(
+            listener: (context, state) {
+              // Show error messages
+              if (state is ConsumptionQuotaError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    duration: const Duration(seconds: 4),
+                  ),
+                );
+              }
 
-          // When quotas are updated, reload inventory to reflect changes
-          if (state is ConsumptionQuotaLoaded) {
-            context.read<InventoryBloc>().add(const LoadInventory());
-          }
-        },
-        child: BlocBuilder<ConsumptionQuotaBloc, ConsumptionQuotaState>(
+              // When quotas are updated, reload inventory to reflect changes
+              if (state is ConsumptionQuotaLoaded) {
+                context.read<InventoryBloc>().add(const LoadInventory());
+              }
+            },
+            child: BlocBuilder<ConsumptionQuotaBloc, ConsumptionQuotaState>(
           builder: (context, state) {
           if (state is ConsumptionQuotaInitial || state is ConsumptionQuotaLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -177,85 +205,76 @@ class _ConsumptionQuotaViewState extends State<ConsumptionQuotaView> {
               );
             }
 
-            return Column(
-              children: [
-                _PeriodSelector(selectedPeriod: state.selectedPeriod),
-                _ProgressOverview(state: state),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: state.quotasByFoodItem.length,
-                    itemBuilder: (context, index) {
-                      final foodItemName = state.quotasByFoodItem.keys.elementAt(index);
-                      final quotas = state.quotasByFoodItem[foodItemName]!;
+            return ListView.builder(
+              controller: _scrollController,
+              itemCount: state.quotasByFoodItem.length + 2, // +2 for summary and header
+              itemBuilder: (context, index) {
+                // Summary card (Progress Overview)
+                if (index == 0) {
+                  return _ProgressOverview(state: state);
+                }
 
-                      return FoodItemQuotaCard(
-                        foodItemName: foodItemName,
-                        quotas: quotas,
-                      );
-                    },
+                // Header with spacing
+                if (index == 1) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('Quotas', style: Theme.of(context).textTheme.headlineSmall),
+                      ),
+                    ],
+                  );
+                }
+
+                // List items
+                final itemIndex = index - 2;
+                final foodItemName = state.quotasByFoodItem.keys.elementAt(itemIndex);
+                final quotas = state.quotasByFoodItem[foodItemName]!;
+
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                  child: FoodItemQuotaCard(
+                    foodItemName: foodItemName,
+                    quotas: quotas,
                   ),
-                ),
-              ],
+                );
+              },
             );
           }
 
           return const SizedBox();
         },
-        ),
-      ),
-    );
-  }
-}
-
-class _PeriodSelector extends StatelessWidget {
-  final ConsumptionPeriod selectedPeriod;
-
-  const _PeriodSelector({required this.selectedPeriod});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.schedule, size: 20),
-          const SizedBox(width: 12),
-          const Text(
-            'Period:',
-            style: TextStyle(fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: DropdownButton<ConsumptionPeriod>(
-              value: selectedPeriod,
-              isExpanded: true,
-              underline: const SizedBox(),
-              items: ConsumptionPeriod.values.map((period) {
-                return DropdownMenuItem(
-                  value: period,
-                  child: Text(period.displayName),
-                );
-              }).toList(),
-              onChanged: (newPeriod) {
-                if (newPeriod != null && newPeriod != selectedPeriod) {
-                  context.read<ConsumptionQuotaBloc>().add(
-                        ChangePreferredPeriod(newPeriod),
-                      );
-                }
-              },
             ),
           ),
+          // Scroll-to-top FAB
+          if (_showScrollToTop)
+            Positioned(
+              top: 8,
+              left: MediaQuery.of(context).size.width / 2 - 20,
+              child: Material(
+                elevation: 4,
+                borderRadius: BorderRadius.circular(20),
+                child: InkWell(
+                  onTap: _scrollToTop,
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Icon(
+                      Icons.keyboard_arrow_up,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

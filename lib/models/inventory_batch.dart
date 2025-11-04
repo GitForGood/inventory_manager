@@ -48,21 +48,9 @@ class InventoryBatch {
     return expirationDate.difference(now).inDays;
   }
 
-  // Check if batch is expiring soon (within specified days)
-  bool isExpiringSoon({int daysThreshold = 7, DateTime? currentDate}) {
-    final days = daysUntilExpiration(currentDate);
-    return days >= 0 && days <= daysThreshold;
-  }
-
-  // Get total nutrition for entire batch
-  Map<String, double> getTotalNutrition() {
-    final nutritionPerItem = item.getNutritionForWeight(100.0);
-    return {
-      'carbohydrates': nutritionPerItem['carbohydrates']! * count,
-      'fats': nutritionPerItem['fats']! * count,
-      'protein': nutritionPerItem['protein']! * count,
-      'kcal': nutritionPerItem['kcal']! * count,
-    };
+  // Get total calories for entire batch
+  double getTotalCalories() {
+    return item.getKcalForItems(count);
   }
 
   // Equality operator for comparison

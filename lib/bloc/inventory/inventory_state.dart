@@ -35,11 +35,8 @@ class InventoryLoaded extends InventoryState {
   List<InventoryBatch> get expiredBatches =>
       batches.where((batch) => batch.isExpired()).toList();
 
-  List<InventoryBatch> get expiringSoonBatches =>
-      batches.where((batch) => batch.isExpiringSoon()).toList();
-
   List<InventoryBatch> get freshBatches =>
-      batches.where((batch) => !batch.isExpired() && !batch.isExpiringSoon()).toList();
+      batches.where((batch) => !batch.isExpired()).toList();
 
   int get totalItemCount =>
       batches.fold(0, (sum, batch) => sum + batch.count);
@@ -49,8 +46,6 @@ class InventoryLoaded extends InventoryState {
     switch (currentFilter) {
       case InventoryFilter.expired:
         return expiredBatches;
-      case InventoryFilter.expiringSoon:
-        return expiringSoonBatches;
       case InventoryFilter.fresh:
         return freshBatches;
       case InventoryFilter.all:

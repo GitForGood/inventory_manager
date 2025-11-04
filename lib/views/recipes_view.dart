@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/recipes/recipes_barrel.dart';
 import 'package:inventory_manager/models/recipe.dart';
+import 'package:inventory_manager/services/recipe_import_service.dart';
 import 'package:inventory_manager/widgets/recipe_form_view.dart';
 
 class RecipesView extends StatefulWidget {
@@ -38,6 +39,13 @@ class _RecipesViewState extends State<RecipesView>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recipes'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: () => _showRecipeImportDialog(context),
+            tooltip: 'Import recipes',
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -241,6 +249,141 @@ class _RecipesViewState extends State<RecipesView>
             scrollController: scrollController,
           );
         },
+      ),
+    );
+  }
+
+  void _showRecipeImportDialog(BuildContext context) {
+    // Hardcoded URL to the official recipe repository
+    const recipeUrl = 'https://raw.githubusercontent.com/GitForGood/inventory_manager/refs/heads/main/data/recipes.json';
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Import Recipes'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'This will import recipes from the official repository and add them to your local database.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Any existing recipes with the same name will be skipped.',
+              style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+
+              // Show loading
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 16),
+                      Text('Importing recipes...'),
+                    ],
+                  ),
+                  duration: Duration(seconds: 30),
+                ),
+              );
+
+              try {
+                final importService = RecipeImportService();
+                final result = await importService.importRecipesFromUrl(recipeUrl);
+
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                if (result.success) {
+                  // Reload recipes to show newly imported ones
+                  if (!mounted) return;
+                  context.read<RecipesBloc>().add(const LoadAllRecipes());
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result.message),
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                      duration: const Duration(seconds: 5),
+                    ),
+                  );
+
+                  if (result.hasErrors) {
+                    // Show detailed errors in a dialog
+                    _showImportErrorsDialog(context, result);
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result.message),
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      duration: const Duration(seconds: 5),
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error importing recipes: $e'),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    duration: const Duration(seconds: 5),
+                  ),
+                );
+              }
+            },
+            child: const Text('Import'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showImportErrorsDialog(BuildContext context, ImportResult result) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Import Warnings'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Some recipes failed to import:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              ...result.errors.map((error) => Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Text('• $error', style: const TextStyle(fontSize: 12)),
+                  )),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }

@@ -1,20 +1,14 @@
 import 'package:inventory_manager/models/inventory_batch.dart';
 
 class StorageCalculatorService {
-  // Calculate total nutrition across all batches
-  static Map<String, double> calculateTotalNutrition(
+  // Calculate total calories across all batches
+  static double calculateTotalCalories(
     List<InventoryBatch> batches,
   ) {
-
-    double totalKcal = 0;
-
-    for (final batch in batches) {
-      final nutrition = batch.getTotalNutrition();
-      totalKcal += nutrition['kcal']!;
-    }
-    return {
-      'kcal': totalKcal,
-    };
+    return batches.fold(
+      0.0,
+      (sum, batch) => sum + batch.getTotalCalories(),
+    );
   }
 
   static double? calculateDaysOfStorage(
@@ -26,7 +20,7 @@ class StorageCalculatorService {
       return null;
     }
 
-    final calories = batches.fold(0.0, (sum, batch) => sum + (batch.getTotalNutrition()['kcal'] ?? 0));
+    final calories = calculateTotalCalories(batches);
     return calories / dailyCalorieConsumption;
   }
 
@@ -35,7 +29,7 @@ class StorageCalculatorService {
     required List<InventoryBatch> batches,
     int? dailyCalorieConsumption,
   }) {
-    final totalNutrition = calculateTotalNutrition(batches);
+    final totalCalories = calculateTotalCalories(batches);
     final daysOfStorage = calculateDaysOfStorage(
       batches,
       dailyCalorieConsumption: dailyCalorieConsumption,
@@ -44,7 +38,7 @@ class StorageCalculatorService {
     return StorageStatus(
       totalItems: batches.fold(0, (sum, batch) => sum + batch.count),
       totalBatches: batches.length,
-      totalNutrition: totalNutrition,
+      totalCalories: totalCalories,
       estimatedDays: daysOfStorage,
       limitingFactor: '',
     );
@@ -55,14 +49,14 @@ class StorageCalculatorService {
 class StorageStatus {
   final int totalItems;
   final int totalBatches;
-  final Map<String, double> totalNutrition;
+  final double totalCalories;
   final double? estimatedDays; // Nullable - only calculated when daily consumption is configured
   final String limitingFactor;
 
   StorageStatus({
     required this.totalItems,
     required this.totalBatches,
-    required this.totalNutrition,
+    required this.totalCalories,
     required this.estimatedDays,
     required this.limitingFactor,
   });

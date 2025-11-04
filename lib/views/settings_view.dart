@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/models/daily_calorie_target.dart';
@@ -106,16 +107,6 @@ class SettingsView extends StatelessWidget {
                     settings.preferredQuotaInterval,
                   ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.warning_amber_outlined),
-                  title: const Text('Expiration Warning'),
-                  subtitle: Text('${settings.expirationWarningDays} days before expiration'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showExpirationWarningDialog(
-                    context,
-                    settings.expirationWarningDays,
-                  ),
-                ),
                 const Divider(),
                 const Padding(
                   padding: EdgeInsets.all(16.0),
@@ -157,6 +148,31 @@ class SettingsView extends StatelessWidget {
                   onTap: () => _showResetDialog(context),
                 ),
                 ListTile(
+                  leading: const Icon(Icons.restaurant_menu_outlined),
+                  title: const Text('Import Recipes'),
+                  subtitle: const Text('Load recipes from GitHub repository'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _showRecipeImportDialog(context),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete_sweep_outlined),
+                  title: const Text('Clear Database'),
+                  subtitle: const Text('Delete recipes, inventory, or all data'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _showClearDataDialog(context),
+                ),
+                const Divider(),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Backup',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                ListTile(
                   leading: const Icon(Icons.upload_outlined),
                   title: const Text('Export Data'),
                   subtitle: const Text('Backup your inventory'),
@@ -177,20 +193,6 @@ class SettingsView extends StatelessWidget {
                       const SnackBar(content: Text('Import feature coming soon!')),
                     );
                   },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.restaurant_menu_outlined),
-                  title: const Text('Import Recipes'),
-                  subtitle: const Text('Load recipes from GitHub repository'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showRecipeImportDialog(context),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.delete_sweep_outlined),
-                  title: const Text('Clear Database'),
-                  subtitle: const Text('Delete recipes, inventory, or all data'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showClearDataDialog(context),
                 ),
                 const Divider(),
                 const Padding(
@@ -213,11 +215,7 @@ class SettingsView extends StatelessWidget {
                   title: const Text('Open Source'),
                   subtitle: const Text('View on GitHub'),
                   trailing: const Icon(Icons.open_in_new),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('GitHub link coming soon!')),
-                    );
-                  },
+                  onTap: _openGithub
                 ),
               ],
             );
@@ -225,43 +223,6 @@ class SettingsView extends StatelessWidget {
 
           return const Center(child: Text('Loading settings...'));
         },
-      ),
-    );
-  }
-
-  void _showExpirationWarningDialog(BuildContext context, int currentDays) {
-    final controller = TextEditingController(text: currentDays.toString());
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Expiration Warning'),
-        content: TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Days before expiration',
-            suffixText: 'days',
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              final days = int.tryParse(controller.text);
-              if (days != null && days > 0) {
-                context.read<SettingsBloc>().add(
-                      UpdateExpirationWarningDays(days),
-                    );
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
       ),
     );
   }
@@ -286,6 +247,12 @@ class SettingsView extends StatelessWidget {
     );
   }
 
+  void _openGithub() async {
+    final Uri _url = Uri.parse("https://github.com/GitForGood/inventory_manager");
+    if (!await launchUrl(_url)){
+      throw Exception('could not launch $_url');
+    }
+  }
   void _showQuotaIntervalDialog(BuildContext context, ConsumptionPeriod currentPeriod) {
     showDialog(
       context: context,
@@ -371,9 +338,8 @@ class SettingsView extends StatelessWidget {
   }
 
   void _showRecipeImportDialog(BuildContext context) {
-    final urlController = TextEditingController(
-      text: 'https://raw.githubusercontent.com/GitForGood/inventory_manager/main/data/recipes.json',
-    );
+    // Hardcoded URL to the official recipe repository
+    const recipeUrl = 'https://raw.githubusercontent.com/GitForGood/inventory_manager/refs/heads/main/data/recipes.json';
 
     showDialog(
       context: context,
@@ -384,22 +350,12 @@ class SettingsView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Enter the URL to your recipes JSON file:',
+              'This will import recipes from the official repository and add them to your local database.',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: urlController,
-              decoration: const InputDecoration(
-                labelText: 'GitHub Raw URL',
-                hintText: 'https://raw.githubusercontent.com/...',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 8),
             Text(
-              'This will add recipes from the JSON file to your local database.',
+              'Any existing recipes with the same name will be skipped.',
               style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
@@ -411,14 +367,6 @@ class SettingsView extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              final url = urlController.text.trim();
-              if (url.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please enter a URL')),
-                );
-                return;
-              }
-
               Navigator.pop(dialogContext);
 
               // Show loading
@@ -441,7 +389,7 @@ class SettingsView extends StatelessWidget {
 
               try {
                 final importService = RecipeImportService();
-                final result = await importService.importRecipesFromUrl(url);
+                final result = await importService.importRecipesFromUrl(recipeUrl);
 
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
 

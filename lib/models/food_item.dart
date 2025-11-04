@@ -3,11 +3,7 @@ class FoodItem {
   final String id;
   final String name;
   final double weightPerItemGrams; // Weight of one item in grams
-  //nutrition
-  final double carbohydratesPerHundredGrams;
-  final double fatsPerHundredGrams;
-  final double proteinPerHundredGrams;
-  final double kcalPerHundredGrams;
+  final double kcalPerHundredGrams; // Calories per 100g
   // ingredient tags for recipe lookup
   final List<int> ingredientIds; // IDs of ingredients this food item corresponds to
 
@@ -15,9 +11,6 @@ class FoodItem {
     required this.id,
     required this.name,
     this.weightPerItemGrams = 100.0, // Default 100g per item
-    required this.carbohydratesPerHundredGrams,
-    required this.fatsPerHundredGrams,
-    required this.proteinPerHundredGrams,
     required this.kcalPerHundredGrams,
     this.ingredientIds = const [],
   });
@@ -27,9 +20,6 @@ class FoodItem {
     String? id,
     String? name,
     double? weightPerItemGrams,
-    double? carbohydratesPerHundredGrams,
-    double? fatsPerHundredGrams,
-    double? proteinPerHundredGrams,
     double? kcalPerHundredGrams,
     List<int>? ingredientIds,
   }) {
@@ -37,29 +27,21 @@ class FoodItem {
       id: id ?? this.id,
       name: name ?? this.name,
       weightPerItemGrams: weightPerItemGrams ?? this.weightPerItemGrams,
-      carbohydratesPerHundredGrams: carbohydratesPerHundredGrams ?? this.carbohydratesPerHundredGrams,
-      fatsPerHundredGrams: fatsPerHundredGrams ?? this.fatsPerHundredGrams,
-      proteinPerHundredGrams: proteinPerHundredGrams ?? this.proteinPerHundredGrams,
       kcalPerHundredGrams: kcalPerHundredGrams ?? this.kcalPerHundredGrams,
       ingredientIds: ingredientIds ?? this.ingredientIds,
     );
   }
 
-  // Calculate nutrition for a number of items
-  Map<String, double> getNutritionForItems(int itemCount) {
+  // Calculate calories for a number of items
+  double getKcalForItems(int itemCount) {
     final totalGrams = itemCount * weightPerItemGrams;
-    return getNutritionForWeight(totalGrams);
+    return getKcalForWeight(totalGrams);
   }
 
-  // Calculate nutrition for specific weight in grams
-  Map<String, double> getNutritionForWeight(double grams) {
+  // Calculate calories for specific weight in grams
+  double getKcalForWeight(double grams) {
     final multiplier = grams / 100.0;
-    return {
-      'carbohydrates': carbohydratesPerHundredGrams * multiplier,
-      'fats': fatsPerHundredGrams * multiplier,
-      'protein': proteinPerHundredGrams * multiplier,
-      'kcal': kcalPerHundredGrams * multiplier,
-    };
+    return kcalPerHundredGrams * multiplier;
   }
 
   // Equality operator for comparison
@@ -70,9 +52,6 @@ class FoodItem {
         other.id == id &&
         other.name == name &&
         other.weightPerItemGrams == weightPerItemGrams &&
-        other.carbohydratesPerHundredGrams == carbohydratesPerHundredGrams &&
-        other.fatsPerHundredGrams == fatsPerHundredGrams &&
-        other.proteinPerHundredGrams == proteinPerHundredGrams &&
         other.kcalPerHundredGrams == kcalPerHundredGrams &&
         _listEquals(other.ingredientIds, ingredientIds);
   }
@@ -92,9 +71,6 @@ class FoodItem {
       id,
       name,
       weightPerItemGrams,
-      carbohydratesPerHundredGrams,
-      fatsPerHundredGrams,
-      proteinPerHundredGrams,
       kcalPerHundredGrams,
       Object.hashAll(ingredientIds),
     );
@@ -103,8 +79,6 @@ class FoodItem {
   // ToString for debugging
   @override
   String toString() {
-    return 'FoodItem(id: $id, name: $name, weight: ${weightPerItemGrams}g/item, '
-           'carbs: ${carbohydratesPerHundredGrams}g, fats: ${fatsPerHundredGrams}g, '
-           'protein: ${proteinPerHundredGrams}g, kcal: $kcalPerHundredGrams)';
+    return 'FoodItem(id: $id, name: $name, weight: ${weightPerItemGrams}g/item, kcal: $kcalPerHundredGrams/100g)';
   }
 }

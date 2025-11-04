@@ -6,7 +6,6 @@ class AppSettings {
   final bool expirationNotificationsEnabled;
   final bool quotaGenerationNotificationsEnabled;
   final bool highContrast;
-  final int expirationWarningDays;
   final ConsumptionPeriod preferredQuotaInterval;
   final DailyCalorieTarget? dailyCalorieTarget;
 
@@ -15,7 +14,6 @@ class AppSettings {
     this.expirationNotificationsEnabled = true,
     this.quotaGenerationNotificationsEnabled = true,
     this.highContrast = false,
-    this.expirationWarningDays = 7,
     this.preferredQuotaInterval = ConsumptionPeriod.weekly,
     this.dailyCalorieTarget,
   });
@@ -26,7 +24,6 @@ class AppSettings {
     bool? expirationNotificationsEnabled,
     bool? quotaGenerationNotificationsEnabled,
     bool? highContrast,
-    int? expirationWarningDays,
     ConsumptionPeriod? preferredQuotaInterval,
     Object? dailyCalorieTarget = _undefined,
   }) {
@@ -35,7 +32,6 @@ class AppSettings {
       expirationNotificationsEnabled: expirationNotificationsEnabled ?? this.expirationNotificationsEnabled,
       quotaGenerationNotificationsEnabled: quotaGenerationNotificationsEnabled ?? this.quotaGenerationNotificationsEnabled,
       highContrast: highContrast ?? this.highContrast,
-      expirationWarningDays: expirationWarningDays ?? this.expirationWarningDays,
       preferredQuotaInterval: preferredQuotaInterval ?? this.preferredQuotaInterval,
       dailyCalorieTarget: dailyCalorieTarget == _undefined
           ? this.dailyCalorieTarget
@@ -54,7 +50,6 @@ class AppSettings {
         other.expirationNotificationsEnabled == expirationNotificationsEnabled &&
         other.quotaGenerationNotificationsEnabled == quotaGenerationNotificationsEnabled &&
         other.highContrast == highContrast &&
-        other.expirationWarningDays == expirationWarningDays &&
         other.preferredQuotaInterval == preferredQuotaInterval &&
         _calorieTargetsEqual(other.dailyCalorieTarget, dailyCalorieTarget);
   }
@@ -83,7 +78,6 @@ class AppSettings {
       expirationNotificationsEnabled,
       quotaGenerationNotificationsEnabled,
       highContrast,
-      expirationWarningDays,
       preferredQuotaInterval,
       dailyCalorieTarget?.target,
     );
@@ -97,7 +91,6 @@ class AppSettings {
            'expirationNotifications: $expirationNotificationsEnabled, '
            'quotaGenerationNotifications: $quotaGenerationNotificationsEnabled, '
            'highContrast: $highContrast, '
-           'warningDays: $expirationWarningDays, '
            'quotaInterval: $preferredQuotaInterval, ';
   }
 
@@ -127,7 +120,6 @@ class AppSettings {
       'expirationNotificationsEnabled': expirationNotificationsEnabled,
       'quotaGenerationNotificationsEnabled': quotaGenerationNotificationsEnabled,
       'highContrast': highContrast,
-      'expirationWarningDays': expirationWarningDays,
       'preferredQuotaInterval': preferredQuotaInterval.index,
       if (calorieTargetJson != null) 'dailyCalorieTarget': calorieTargetJson,
     };
@@ -157,7 +149,6 @@ class AppSettings {
       expirationNotificationsEnabled: json['expirationNotificationsEnabled'] as bool? ?? true,
       quotaGenerationNotificationsEnabled: json['quotaGenerationNotificationsEnabled'] as bool? ?? true,
       highContrast: json['highContrast'] as bool? ?? false,
-      expirationWarningDays: json['expirationWarningDays'] as int? ?? 7,
       preferredQuotaInterval: ConsumptionPeriod.values[json['preferredQuotaInterval'] as int? ?? ConsumptionPeriod.weekly.index],
       dailyCalorieTarget: dailyCalorieTarget,
     );

@@ -33,16 +33,6 @@ class ChangeThemeMode extends SettingsEvent {
   List<Object?> get props => [highContrast];
 }
 
-// Update expiration warning days
-class UpdateExpirationWarningDays extends SettingsEvent {
-  final int days;
-
-  const UpdateExpirationWarningDays(this.days);
-
-  @override
-  List<Object?> get props => [days];
-}
-
 // Update expiration notifications
 class UpdateExpirationNotifications extends SettingsEvent {
   final bool enabled;
