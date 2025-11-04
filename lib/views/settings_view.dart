@@ -6,6 +6,7 @@ import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/models/daily_calorie_target.dart';
 import 'package:inventory_manager/services/recipe_database.dart';
 import 'package:inventory_manager/services/recipe_import_service.dart';
+import 'package:inventory_manager/services/backup_service.dart';
 import 'package:inventory_manager/widgets/calorie_target_bottom_sheet.dart';
 import 'package:inventory_manager/widgets/notification_settings_view.dart';
 import 'package:inventory_manager/views/theme_swatch_view.dart';
@@ -177,22 +178,14 @@ class SettingsView extends StatelessWidget {
                   title: const Text('Export Data'),
                   subtitle: const Text('Backup your inventory'),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Export feature coming soon!')),
-                    );
-                  },
+                  onTap: () => _showExportDialog(context),
                 ),
                 ListTile(
                   leading: const Icon(Icons.download_outlined),
                   title: const Text('Import Data'),
                   subtitle: const Text('Restore from backup'),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Import feature coming soon!')),
-                    );
-                  },
+                  onTap: () => _showImportDialog(context),
                 ),
                 const Divider(),
                 const Padding(
@@ -215,7 +208,7 @@ class SettingsView extends StatelessWidget {
                   title: const Text('Open Source'),
                   subtitle: const Text('View on GitHub'),
                   trailing: const Icon(Icons.open_in_new),
-                  onTap: _openGithub
+                  onTap: () => _launchGithubInBrowser(context)
                 ),
               ],
             );
@@ -226,6 +219,16 @@ class SettingsView extends StatelessWidget {
       ),
     );
   }
+  Future<void> _launchGithubInBrowser(BuildContext context) async {
+  final uri = Uri.parse("https://github.com/GitForGood/inventory_manager");
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("https://github.com/GitForGood/inventory_manager"))
+    );
+  }
+}
 
   String _getIntervalName(ConsumptionPeriod period) {
     switch (period) {
@@ -247,12 +250,6 @@ class SettingsView extends StatelessWidget {
     );
   }
 
-  void _openGithub() async {
-    final Uri _url = Uri.parse("https://github.com/GitForGood/inventory_manager");
-    if (!await launchUrl(_url)){
-      throw Exception('could not launch $_url');
-    }
-  }
   void _showQuotaIntervalDialog(BuildContext context, ConsumptionPeriod currentPeriod) {
     showDialog(
       context: context,
@@ -633,6 +630,196 @@ class SettingsView extends StatelessWidget {
     return number.toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]},',
+    );
+  }
+
+  void _showExportDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Export Data'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'This will create a compressed backup file containing:',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 12),
+            const Text('• All recipes'),
+            const Text('• All food items'),
+            const Text('• All inventory batches'),
+            const Text('• All consumption quotas'),
+            const Text('• All settings'),
+            const SizedBox(height: 12),
+            Text(
+              'The backup will be saved as a .gz file.',
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+
+              // Show loading
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 16),
+                      Text('Exporting data...'),
+                    ],
+                  ),
+                  duration: Duration(seconds: 30),
+                ),
+              );
+
+              try {
+                final backupService = BackupService();
+                final result = await backupService.exportData();
+
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(result.message),
+                    backgroundColor: result.success
+                        ? Theme.of(context).colorScheme.tertiary
+                        : Theme.of(context).colorScheme.error,
+                    duration: const Duration(seconds: 5),
+                  ),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error exporting data: $e'),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    duration: const Duration(seconds: 5),
+                  ),
+                );
+              }
+            },
+            child: const Text('Export'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showImportDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Import Data'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'This will import data from a backup file.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.warning_outlined,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Existing data with the same IDs will be kept. No data will be deleted.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onErrorContainer,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+
+              // Show loading
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 16),
+                      Text('Importing data...'),
+                    ],
+                  ),
+                  duration: Duration(seconds: 30),
+                ),
+              );
+
+              try {
+                final backupService = BackupService();
+                final result = await backupService.importData();
+
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(result.message),
+                    backgroundColor: result.success
+                        ? Theme.of(context).colorScheme.tertiary
+                        : Theme.of(context).colorScheme.error,
+                    duration: const Duration(seconds: 5),
+                  ),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error importing data: $e'),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    duration: const Duration(seconds: 5),
+                  ),
+                );
+              }
+            },
+            child: const Text('Select File'),
+          ),
+        ],
+      ),
     );
   }
 }

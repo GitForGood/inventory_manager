@@ -64,6 +64,10 @@ dependencies:
   timezone: ^0.9.4
   url_launcher: ^6.3.2
 
+  # File operations
+  file_picker: ^8.1.4
+  path_provider: ^2.1.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,6 +79,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
+  # For generating launcher icons
+  flutter_launcher_icons: ^0.14.2
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -85,6 +92,25 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # Add your app icon here
+  # assets:
+  #   - assets/icon/app_icon.png
+
+# Configuration for flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: false
+  # Path to your app icon image file (1024x1024 recommended)
+  # Uncomment and set the path after adding your icon
+  image_path: "assets/icon/app_icon.png"
+
+  # For a more modern look with adaptive icons on Android
+  # adaptive_icon_background: "#FFFFFF"
+  # adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"
+
+  # Remove the default Flutter launcher icon
+  remove_alpha_ios: true
 
   # To add assets to your application, add an assets section, like this:
   # assets:

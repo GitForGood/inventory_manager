@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/recipes/recipes_barrel.dart';
 import 'package:inventory_manager/models/recipe.dart';
 import 'package:inventory_manager/services/recipe_import_service.dart';
+import 'package:inventory_manager/views/recipe_view.dart';
 import 'package:inventory_manager/widgets/recipe_form_view.dart';
 
 class RecipesView extends StatefulWidget {
@@ -206,7 +207,12 @@ class _RecipesViewState extends State<RecipesView>
         return _RecipeCard(
           recipe: recipe,
           isFavorite: isFavorite,
-          onTap: () => _showRecipeDetails(recipe, isFavorite),
+          onTap: () => Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (_) => RecipeView(recipe: recipe)
+              )
+            ),
           onFavoriteToggle: () {
             context.read<RecipesBloc>().add(ToggleFavorite(recipe));
           },
@@ -229,26 +235,6 @@ class _RecipesViewState extends State<RecipesView>
           const SizedBox(height: 8),
           const Text('Try a different search or create a new recipe'),
         ],
-      ),
-    );
-  }
-
-  void _showRecipeDetails(Recipe recipe, bool isFavorite) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (context, scrollController) {
-          return _RecipeDetailsSheet(
-            recipe: recipe,
-            isFavorite: isFavorite,
-            scrollController: scrollController,
-          );
-        },
       ),
     );
   }

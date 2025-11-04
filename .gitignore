@@ -117,3 +117,9 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+APK_DISTRIBUTION_GUIDE.md
+APK_SIZE_EXPLAINED.md
+build_apk.bat
+build_release.bat
+create_keystore.bat
+RELEASE_GUIDE.md
