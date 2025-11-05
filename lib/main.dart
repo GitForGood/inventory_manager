@@ -12,6 +12,7 @@ import 'package:inventory_manager/themes/nixie_theme.dart';
 import 'package:inventory_manager/views/home_view.dart';
 import 'package:inventory_manager/views/recipes_view.dart';
 import 'package:inventory_manager/views/consumption_quota_view.dart';
+import 'package:inventory_manager/views/upkeep_view.dart';
 import 'package:inventory_manager/views/settings_view.dart';
 
 // Global key for navigation
@@ -105,6 +106,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     HomeView(),
     ConsumptionQuotaView(),
+    UpkeepView(),
     RecipesView(),
     SettingsView(),
   ];
@@ -129,6 +131,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       icon: Icon(Icons.track_changes_outlined),
       selectedIcon: Icon(Icons.track_changes),
       label: 'Quota',
+    ),
+    NavigationDestination(
+      icon: Icon(Icons.import_export),
+      selectedIcon: Icon(Icons.import_export),
+      label: 'Upkeep',
     ),
     NavigationDestination(
       icon: Icon(Icons.restaurant_menu_outlined),
