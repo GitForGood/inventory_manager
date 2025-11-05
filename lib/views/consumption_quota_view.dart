@@ -327,73 +327,9 @@ class _ProgressOverview extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(colorScheme.secondary),
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _StatusChip(
-                icon: Icons.check_circle,
-                label: 'Completed',
-                count: state.completedQuotas.length,
-                color: colorScheme.tertiary,
-              ),
-              _StatusChip(
-                icon: Icons.warning,
-                label: 'Overdue',
-                count: state.overdueQuotas.length,
-                color: colorScheme.error,
-              ),
-              _StatusChip(
-                icon: Icons.access_time,
-                label: 'Due Soon',
-                count: state.dueSoonQuotas.length,
-                color: colorScheme.secondary,
-              ),
-            ],
-          ),
         ],
         ),
       ),
-    );
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final int count;
-  final Color color;
-
-  const _StatusChip({
-    required this.icon,
-    required this.label,
-    required this.count,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(height: 4),
-        Text(
-          count.toString(),
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontSize: 11,
-          ),
-        ),
-      ],
     );
   }
 }
