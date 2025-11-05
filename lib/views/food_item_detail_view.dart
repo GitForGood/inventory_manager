@@ -10,7 +10,7 @@ import 'package:inventory_manager/repositories/recipe_repository.dart';
 import 'package:inventory_manager/widgets/assist_chip.dart';
 import 'package:inventory_manager/widgets/outlined_card.dart';
 import 'package:inventory_manager/widgets/recipe_carousel.dart';
-import 'package:inventory_manager/widgets/food_item_edit_view.dart';
+import 'package:inventory_manager/views/food_item_edit_view.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 /// Detailed view showing all batches for a specific food item
@@ -146,7 +146,7 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
   ) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(currentGroup.foodItem.name),
+        title: Text(currentGroup.foodItem.name, style: Theme.of(context).textTheme.headlineMedium),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_outline),

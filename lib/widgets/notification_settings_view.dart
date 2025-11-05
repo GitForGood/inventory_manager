@@ -9,7 +9,7 @@ class NotificationSettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notification Settings'),
+        title: Text('Notification Settings', style: Theme.of(context).textTheme.titleLarge),
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {

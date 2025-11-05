@@ -83,7 +83,7 @@ class _ConsumptionQuotaViewState extends State<ConsumptionQuotaView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Consumption Quotas'),
+        title: Text('Consumption Quotas', style: Theme.of(context).textTheme.headlineMedium,),
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -8,10 +9,16 @@ class OpenFoodFactsService {
 
   /// Fetches product information by barcode
   /// Returns null if product not found or API error occurs
+  /// Timeout: 10 seconds
   static Future<OpenFoodFactsProduct?> getProductByBarcode(String barcode) async {
     try {
       final url = Uri.parse('$_baseUrl/product/$barcode');
-      final response = await http.get(url);
+      final response = await http.get(url).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException('Request timed out after 10 seconds');
+        },
+      );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -31,6 +38,7 @@ class OpenFoodFactsService {
 
   /// Searches for products by name
   /// Returns list of matching products
+  /// Timeout: 10 seconds
   static Future<List<OpenFoodFactsProduct>> searchProducts(String query, {int pageSize = 10}) async {
     try {
       final url = Uri.parse('$_baseUrl/search').replace(queryParameters: {
@@ -39,7 +47,12 @@ class OpenFoodFactsService {
         'json': '1',
       });
 
-      final response = await http.get(url);
+      final response = await http.get(url).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException('Request timed out after 10 seconds');
+        },
+      );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -60,45 +73,21 @@ class OpenFoodFactsService {
 }
 
 /// Model for Open Food Facts product data
+/// Only imports essential data: name, weight, and kcal per 100g
 class OpenFoodFactsProduct {
-  final String? code;
   final String? productName;
-  final String? brands;
-  final double? energyKcal100g;
-  final double? carbohydrates100g;
-  final double? fat100g;
-  final double? proteins100g;
-  final String? imageUrl;
-  final List<String> ingredientTags;
   final double? productQuantityGrams;
+  final double? energyKcal100g;
 
   OpenFoodFactsProduct({
-    this.code,
     this.productName,
-    this.brands,
-    this.energyKcal100g,
-    this.carbohydrates100g,
-    this.fat100g,
-    this.proteins100g,
-    this.imageUrl,
-    this.ingredientTags = const [],
     this.productQuantityGrams,
+    this.energyKcal100g,
   });
 
   factory OpenFoodFactsProduct.fromJson(Map<String, dynamic> json) {
     // Extract nutriments
     final nutriments = json['nutriments'] as Map<String, dynamic>?;
-
-    // Extract ingredient tags and clean them up
-    List<String> tags = [];
-    if (json['ingredients_tags'] != null) {
-      final rawTags = json['ingredients_tags'] as List<dynamic>;
-      tags = rawTags
-          .map((tag) => tag.toString())
-          .map((tag) => _cleanIngredientTag(tag))
-          .where((tag) => tag.isNotEmpty)
-          .toList();
-    }
 
     // Try to get product quantity in grams
     double? quantityGrams;
@@ -110,16 +99,9 @@ class OpenFoodFactsProduct {
     }
 
     return OpenFoodFactsProduct(
-      code: json['code']?.toString(),
       productName: json['product_name']?.toString() ?? json['product_name_en']?.toString(),
-      brands: json['brands']?.toString(),
-      energyKcal100g: nutriments != null ? _parseDouble(nutriments['energy-kcal_100g']) : null,
-      carbohydrates100g: nutriments != null ? _parseDouble(nutriments['carbohydrates_100g']) : null,
-      fat100g: nutriments != null ? _parseDouble(nutriments['fat_100g']) : null,
-      proteins100g: nutriments != null ? _parseDouble(nutriments['proteins_100g']) : null,
-      imageUrl: json['image_url']?.toString() ?? json['image_front_url']?.toString(),
-      ingredientTags: tags,
       productQuantityGrams: quantityGrams,
+      energyKcal100g: nutriments != null ? _parseDouble(nutriments['energy-kcal_100g']) : null,
     );
   }
 
@@ -165,45 +147,18 @@ class OpenFoodFactsProduct {
     return null;
   }
 
-  /// Clean up ingredient tags from Open Food Facts format
-  /// e.g., "en:milk" -> "milk", "en:wheat-flour" -> "wheat flour"
-  static String _cleanIngredientTag(String tag) {
-    // Remove language prefix (e.g., "en:", "fr:")
-    tag = tag.replaceFirst(RegExp(r'^[a-z]{2}:'), '');
-
-    // Replace hyphens with spaces
-    tag = tag.replaceAll('-', ' ');
-
-    // Capitalize first letter of each word
-    tag = tag.split(' ')
-        .map((word) => word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1))
-        .join(' ');
-
-    return tag.trim();
-  }
-
-  /// Check if the product has sufficient nutrition data
+  /// Check if the product has nutrition data
   bool get hasNutritionData {
-    return energyKcal100g != null &&
-        carbohydrates100g != null &&
-        fat100g != null &&
-        proteins100g != null;
+    return energyKcal100g != null;
   }
 
   /// Get a display name for the product
   String get displayName {
-    if (productName != null && productName!.isNotEmpty) {
-      if (brands != null && brands!.isNotEmpty) {
-        return '$brands - $productName';
-      }
-      return productName!;
-    }
-    return 'Unknown Product';
+    return productName ?? 'Unknown Product';
   }
 
   @override
   String toString() {
-    return 'OpenFoodFactsProduct(code: $code, name: $productName, brands: $brands, '
-           'kcal: $energyKcal100g, carbs: $carbohydrates100g, fat: $fat100g, protein: $proteins100g)';
+    return 'OpenFoodFactsProduct(name: $productName, weight: $productQuantityGrams g, kcal: $energyKcal100g)';
   }
 }

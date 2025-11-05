@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Theme extension for custom card variants (filled and outlined)
 class CardVariants extends ThemeExtension<CardVariants> {
@@ -128,9 +129,9 @@ class NixieTubeTheme {
         elevation: elevationNone,
         centerTitle: false,
         toolbarHeight: appBarHeight,
-        titleTextStyle: TextStyle(
+        titleTextStyle: GoogleFonts.nixieOne(
           fontSize: 22,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
           color: colorScheme.onSurface,
         ),
         iconTheme: IconThemeData(
@@ -161,7 +162,7 @@ class NixieTubeTheme {
             side: BorderSide(color: colorScheme.onSurface, width: hcBorderWidth),
           ),
           elevation: elevationMedium,
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w800),
         ),
       ),
 
@@ -176,7 +177,7 @@ class NixieTubeTheme {
             borderRadius: BorderRadius.circular(radiusLg),
             side: BorderSide(color: colorScheme.onSurface, width: hcBorderWidth),
           ),
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w800),
         ),
       ),
 
@@ -191,9 +192,9 @@ class NixieTubeTheme {
             borderRadius: BorderRadius.circular(radiusLg),
             side: BorderSide(color: colorScheme.primary, width: hcBorderWidth),
           ),
-          textStyle: const TextStyle(
+          textStyle: GoogleFonts.roboto(
             fontSize: 16,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w800,
             decoration: TextDecoration.underline,
           ),
         ),
@@ -210,7 +211,7 @@ class NixieTubeTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusLg),
           ),
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w800),
         ),
       ),
 
@@ -262,9 +263,9 @@ class NixieTubeTheme {
             width: hcBorderWidth,
           ),
         ),
-        labelStyle: TextStyle(
+        labelStyle: GoogleFonts.roboto(
           fontSize: 16,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: colorScheme.onSurface,
         ),
       ),
@@ -297,82 +298,82 @@ class NixieTubeTheme {
         thickness: hcBorderWidth,
       ),
 
-      // Text theme with heavier weights
+      // Text theme with Nixie One for display/headline/title and Roboto for body/label
       textTheme: TextTheme(
-        displayLarge: TextStyle(
+        displayLarge: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 57,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
-        displayMedium: TextStyle(
+        displayMedium: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 45,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
-        displaySmall: TextStyle(
+        displaySmall: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 36,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
-        headlineLarge: TextStyle(
+        headlineLarge: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 32,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
-        headlineMedium: TextStyle(
+        headlineMedium: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 28,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
-        headlineSmall: TextStyle(
+        headlineSmall: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 24,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
-        titleLarge: TextStyle(
+        titleLarge: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 22,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
-        titleMedium: TextStyle(
+        titleMedium: GoogleFonts.nixieOne(
+          color: colorScheme.onSurface,
+          fontSize: 16,
+          fontWeight: FontWeight.w800,
+        ),
+        titleSmall: GoogleFonts.nixieOne(
+          color: colorScheme.onSurface,
+          fontSize: 14,
+          fontWeight: FontWeight.w800,
+        ),
+        bodyLarge: GoogleFonts.roboto(
           color: colorScheme.onSurface,
           fontSize: 16,
           fontWeight: FontWeight.w700,
         ),
-        titleSmall: TextStyle(
+        bodyMedium: GoogleFonts.roboto(
           color: colorScheme.onSurface,
           fontSize: 14,
           fontWeight: FontWeight.w700,
         ),
-        bodyLarge: TextStyle(
-          color: colorScheme.onSurface,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-        bodyMedium: TextStyle(
-          color: colorScheme.onSurface,
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
-        bodySmall: TextStyle(
+        bodySmall: GoogleFonts.roboto(
           color: colorScheme.onSurfaceVariant,
           fontSize: 12,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
         ),
-        labelLarge: TextStyle(
+        labelLarge: GoogleFonts.roboto(
           color: colorScheme.onSurface,
           fontSize: 14,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
-        labelMedium: TextStyle(
+        labelMedium: GoogleFonts.roboto(
           color: colorScheme.onSurface,
           fontSize: 12,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
-        labelSmall: TextStyle(
+        labelSmall: GoogleFonts.roboto(
           color: colorScheme.onSurfaceVariant,
           fontSize: 11,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
       ),
 
@@ -424,9 +425,9 @@ class NixieTubeTheme {
         elevation: elevationNone,
         centerTitle: false,
         toolbarHeight: appBarHeight,
-        titleTextStyle: TextStyle(
+        titleTextStyle: GoogleFonts.nixieOne(
           fontSize: 22,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w700,
           color: colorScheme.onSurface,
         ),
       ),
@@ -557,82 +558,82 @@ class NixieTubeTheme {
         thickness: 1,
       ),
 
-      // Text theme
+      // Text theme with Nixie One for display/headline/title and Roboto for body/label
       textTheme: TextTheme(
-        displayLarge: TextStyle(
+        displayLarge: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 57,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w600,
         ),
-        displayMedium: TextStyle(
+        displayMedium: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 45,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w600,
         ),
-        displaySmall: TextStyle(
+        displaySmall: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 36,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w600,
         ),
-        headlineLarge: TextStyle(
+        headlineLarge: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 32,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w600,
         ),
-        headlineMedium: TextStyle(
+        headlineMedium: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 28,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w600,
         ),
-        headlineSmall: TextStyle(
+        headlineSmall: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 24,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w600,
         ),
-        titleLarge: TextStyle(
+        titleLarge: GoogleFonts.nixieOne(
           color: colorScheme.onSurface,
           fontSize: 22,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w700,
         ),
-        titleMedium: TextStyle(
+        titleMedium: GoogleFonts.nixieOne(
+          color: colorScheme.onSurface,
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+        ),
+        titleSmall: GoogleFonts.nixieOne(
+          color: colorScheme.onSurface,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+        ),
+        bodyLarge: GoogleFonts.roboto(
           color: colorScheme.onSurface,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
-        titleSmall: TextStyle(
+        bodyMedium: GoogleFonts.roboto(
           color: colorScheme.onSurface,
           fontSize: 14,
           fontWeight: FontWeight.w500,
         ),
-        bodyLarge: TextStyle(
-          color: colorScheme.onSurface,
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-        ),
-        bodyMedium: TextStyle(
-          color: colorScheme.onSurface,
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
-        bodySmall: TextStyle(
+        bodySmall: GoogleFonts.roboto(
           color: colorScheme.onSurfaceVariant,
           fontSize: 12,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w500,
         ),
-        labelLarge: TextStyle(
+        labelLarge: GoogleFonts.roboto(
           color: colorScheme.onSurface,
           fontSize: 14,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
-        labelMedium: TextStyle(
+        labelMedium: GoogleFonts.roboto(
           color: colorScheme.onSurface,
           fontSize: 12,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
-        labelSmall: TextStyle(
+        labelSmall: GoogleFonts.roboto(
           color: colorScheme.onSurfaceVariant,
           fontSize: 11,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

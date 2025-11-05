@@ -39,7 +39,7 @@ class _RecipeFormViewState extends State<RecipeFormView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Recipe'),
+        title: Text('Create Recipe', style: Theme.of(context).textTheme.headlineMedium),
         actions: [
           if (_isSaving)
             const Center(

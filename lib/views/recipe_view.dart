@@ -13,7 +13,7 @@ class RecipeView extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(recipe.title),
+        title: Text(recipe.title, style: Theme.of(context).textTheme.headlineMedium),
         leading: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back)),
         actions: [
           BlocBuilder<RecipesBloc, RecipesState>(

@@ -128,7 +128,7 @@ class _FoodItemEditViewState extends State<FoodItemEditView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Food Item'),
+        title: Text('Edit Food Item', style: Theme.of(context).textTheme.headlineMedium),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [

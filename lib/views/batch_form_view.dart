@@ -33,7 +33,6 @@ class _BatchFormViewState extends State<BatchFormView> {
   final List<Ingredient> _selectedIngredients = [];
   DateTime _expirationDate = DateTime.now().add(const Duration(days: 7));
   bool _isSaving = false;
-  bool _isLoadingIngredients = false;
 
   @override
   void initState() {
@@ -63,11 +62,6 @@ class _BatchFormViewState extends State<BatchFormView> {
       if (product.energyKcal100g != null) {
         _kcalController.text = product.energyKcal100g!.toStringAsFixed(1);
       }
-
-      // Load ingredient tags
-      if (product.ingredientTags.isNotEmpty) {
-        _loadIngredientsFromTags(product.ingredientTags);
-      }
     } else {
       // Default values for manual entry
       _weightController.text = '100';
@@ -78,35 +72,6 @@ class _BatchFormViewState extends State<BatchFormView> {
     // Default count
     if (_countController.text.isEmpty) {
       _countController.text = '1';
-    }
-  }
-
-  Future<void> _loadIngredientsFromTags(List<String> tags) async {
-    setState(() => _isLoadingIngredients = true);
-
-    try {
-      final repository = RepositoryProvider.of<RecipeRepository>(context, listen: false);
-
-      for (final tagName in tags) {
-        // Get or create ingredient in database
-        final ingredient = await repository.getOrCreateIngredient(tagName);
-        if (!_selectedIngredients.any((i) => i.id == ingredient.id)) {
-          _selectedIngredients.add(ingredient);
-        }
-      }
-
-      setState(() {});
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to load ingredient tags: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-      }
-    } finally {
-      setState(() => _isLoadingIngredients = false);
     }
   }
 
@@ -239,7 +204,7 @@ class _BatchFormViewState extends State<BatchFormView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Batch'),
+        title: Text('Add Batch', style: Theme.of(context).textTheme.headlineMedium),
         actions: [
           if (_isSaving)
             const Center(
@@ -338,6 +303,25 @@ class _BatchFormViewState extends State<BatchFormView> {
               ],
             ),
             const SizedBox(height: 16),
+            TextFormField(
+              controller: _kcalController,
+              decoration: const InputDecoration(
+                labelText: 'Calories (kcal) *',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.local_fire_department),
+              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter calories';
+                }
+                if (double.tryParse(value) == null) {
+                  return 'Invalid number';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16,),
             Card(
               child: InkWell(
                 onTap: _selectExpirationDate,
@@ -365,33 +349,6 @@ class _BatchFormViewState extends State<BatchFormView> {
 
             const SizedBox(height: 32),
 
-            // Nutrition Information Section
-            Text(
-              'Nutrition (per 100g)',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _kcalController,
-              decoration: const InputDecoration(
-                labelText: 'Calories (kcal) *',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.local_fire_department),
-              ),
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter calories';
-                }
-                if (double.tryParse(value) == null) {
-                  return 'Invalid number';
-                }
-                return null;
-              },
-            ),
-
-            const SizedBox(height: 32),
-
             // Ingredient Tags Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -401,14 +358,8 @@ class _BatchFormViewState extends State<BatchFormView> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 TextButton.icon(
-                  onPressed: _isLoadingIngredients ? null : _addIngredientTag,
-                  icon: _isLoadingIngredients
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.add),
+                  onPressed: _addIngredientTag,
+                  icon: const Icon(Icons.add),
                   label: const Text('Add'),
                 ),
               ],

@@ -6,7 +6,7 @@ import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/models/daily_calorie_target.dart';
 import 'package:inventory_manager/services/storage_calculator_service.dart';
 import 'package:inventory_manager/views/barcode_scanner_view.dart';
-import 'package:inventory_manager/widgets/batch_form_view.dart';
+import 'package:inventory_manager/views/batch_form_view.dart';
 import 'package:inventory_manager/views/food_item_detail_view.dart';
 import 'package:inventory_manager/widgets/storage_summary_card.dart';
 import 'package:inventory_manager/models/food_item_group.dart';
@@ -56,7 +56,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inventory'),
+        title: Text('Inventory', style: Theme.of(context).textTheme.headlineMedium),
         actions: [
           PopupMenuButton<InventorySortCriteria>(
             icon: const Icon(Icons.sort),

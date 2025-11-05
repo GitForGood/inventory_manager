@@ -12,7 +12,7 @@ class ThemeSwatchView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Theme Color Swatch'),
+        title: Text('Theme Color Swatch', style: Theme.of(context).textTheme.headlineMedium),
         actions: [
           IconButton(
             icon: const Icon(Icons.close),

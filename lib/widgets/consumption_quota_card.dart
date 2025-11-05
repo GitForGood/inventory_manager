@@ -381,14 +381,26 @@ class _FoodItemQuotaCardState extends State<FoodItemQuotaCard> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Slider
-                Slider(
-                  value: sliderValue,
-                  min: 1.0,
-                  max: remainingCount.toDouble(),
-                  divisions: remainingCount > 1 ? remainingCount - 1 : 1,
-                  label: sliderValue.round().toString(),
-                  onChanged: updateValue,
+                // Slider with increased hitbox
+                SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    trackHeight: 8.0,
+                    thumbShape: const RoundSliderThumbShape(
+                      enabledThumbRadius: 14.0,
+                    ),
+                    overlayShape: const RoundSliderOverlayShape(
+                      overlayRadius: 28.0,
+                    ),
+                    trackShape: const RoundedRectSliderTrackShape(),
+                  ),
+                  child: Slider(
+                    value: sliderValue,
+                    min: 1.0,
+                    max: remainingCount.toDouble(),
+                    divisions: remainingCount > 1 ? remainingCount - 1 : 1,
+                    label: sliderValue.round().toString(),
+                    onChanged: updateValue,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Row(

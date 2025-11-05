@@ -4,7 +4,7 @@ import 'package:inventory_manager/bloc/recipes/recipes_barrel.dart';
 import 'package:inventory_manager/models/recipe.dart';
 import 'package:inventory_manager/services/recipe_import_service.dart';
 import 'package:inventory_manager/views/recipe_view.dart';
-import 'package:inventory_manager/widgets/recipe_form_view.dart';
+import 'package:inventory_manager/views/recipe_form_view.dart';
 
 class RecipesView extends StatefulWidget {
   const RecipesView({super.key});
@@ -39,7 +39,7 @@ class _RecipesViewState extends State<RecipesView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Recipes'),
+        title: Text('Recipes', style: Theme.of(context).textTheme.headlineMedium),
         actions: [
           IconButton(
             icon: const Icon(Icons.download),
