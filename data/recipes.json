@@ -526,7 +526,7 @@
             "readyInMinutes": 25,
             "ingredients": [
                 {
-                    "ingredient": "cooked rice",
+                    "ingredient": "rice",
                     "amount": 600,
                     "unit": "g"
                 },
@@ -2892,7 +2892,7 @@
             "readyInMinutes": 60,
             "ingredients": [
                 {
-                    "ingredient": "white rice",
+                    "ingredient": "rice",
                     "amount": 200,
                     "unit": "g"
                 },

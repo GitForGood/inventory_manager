@@ -360,6 +360,7 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
               ),
               const SizedBox(height: 16),
               Card(
+                margin: EdgeInsets.all(0),
                 child: InkWell(
                   onTap: () async {
                     final picked = await showDatePicker(
@@ -379,12 +380,14 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Expiration Date'),
+                        Text('Expiration Date:', style: Theme.of(context).textTheme.labelSmall?.copyWith(fontStyle: FontStyle.normal)),
+                        const SizedBox(width: 8),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
                               _formatDate(expirationDate),
-                              style: Theme.of(context).textTheme.titleMedium,
+                              style: Theme.of(context).textTheme.titleSmall,
                             ),
                             const SizedBox(width: 8),
                             const Icon(Icons.calendar_today),
@@ -454,7 +457,7 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: 64),
+          insetPadding: EdgeInsets.symmetric(horizontal: 48),
           title: const Text('Edit Batch'),
           content: Column(
             mainAxisSize: MainAxisSize.min,

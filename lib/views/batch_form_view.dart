@@ -323,6 +323,7 @@ class _BatchFormViewState extends State<BatchFormView> {
             ),
             const SizedBox(height: 16,),
             Card(
+              margin: EdgeInsets.all(0),
               child: InkWell(
                 onTap: _selectExpirationDate,
                 child: Padding(
