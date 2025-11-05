@@ -26,9 +26,8 @@ class RecipeDatabase {
 
     return await openDatabase(
       path,
-      version: 5,
+      version: 1,
       onCreate: _createDB,
-      onUpgrade: _upgradeDB,
     );
   }
 
@@ -152,149 +151,24 @@ class RecipeDatabase {
     await _insertCommonUnits(db);
   }
 
-  Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      // Add food_items table (with nutrition columns for migration compatibility)
-      // These will be removed in version 5 migration
-      await db.execute('''
-        CREATE TABLE IF NOT EXISTS food_items (
-          id TEXT PRIMARY KEY,
-          name TEXT NOT NULL,
-          weightPerItemGrams REAL NOT NULL,
-          carbohydratesPerHundredGrams REAL NOT NULL DEFAULT 0,
-          fatsPerHundredGrams REAL NOT NULL DEFAULT 0,
-          proteinPerHundredGrams REAL NOT NULL DEFAULT 0,
-          kcalPerHundredGrams REAL NOT NULL
-        )
-      ''');
+  /// Recreate all database tables from scratch (destructive!)
+  /// This drops all existing tables and recreates them
+  Future<void> recreateAllTables() async {
+    final db = await database;
 
-      // Add inventory_batches table
-      await db.execute('''
-        CREATE TABLE IF NOT EXISTS inventory_batches (
-          id TEXT PRIMARY KEY,
-          foodItemId TEXT NOT NULL,
-          count INTEGER NOT NULL,
-          initialCount INTEGER NOT NULL,
-          expirationDate TEXT NOT NULL,
-          FOREIGN KEY (foodItemId) REFERENCES food_items (id) ON DELETE CASCADE
-        )
-      ''');
+    // Drop all tables
+    await db.execute('DROP TABLE IF EXISTS recipe_steps');
+    await db.execute('DROP TABLE IF EXISTS recipe_ingredients');
+    await db.execute('DROP TABLE IF EXISTS recipes');
+    await db.execute('DROP TABLE IF EXISTS consumption_quotas');
+    await db.execute('DROP TABLE IF EXISTS inventory_batches');
+    await db.execute('DROP TABLE IF EXISTS food_item_ingredients');
+    await db.execute('DROP TABLE IF EXISTS food_items');
+    await db.execute('DROP TABLE IF EXISTS ingredients');
+    await db.execute('DROP TABLE IF EXISTS units');
 
-      // Add indexes
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_inventory_batches_food_item ON inventory_batches(foodItemId)');
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_inventory_batches_expiration ON inventory_batches(expirationDate)');
-    }
-
-    if (oldVersion < 3) {
-      // Add dateAdded column to inventory_batches
-      // For existing batches, estimate dateAdded as 30 days before expiration
-      await db.execute('''
-        ALTER TABLE inventory_batches
-        ADD COLUMN dateAdded TEXT NOT NULL DEFAULT '${DateTime.now().toIso8601String()}'
-      ''');
-
-      // Update existing batches to have a reasonable dateAdded
-      // Set to 30 days before expiration date
-      final batches = await db.query('inventory_batches');
-      for (final batch in batches) {
-        final expirationDate = DateTime.parse(batch['expirationDate'] as String);
-        final estimatedDateAdded = expirationDate.subtract(const Duration(days: 30));
-        await db.update(
-          'inventory_batches',
-          {'dateAdded': estimatedDateAdded.toIso8601String()},
-          where: 'id = ?',
-          whereArgs: [batch['id']],
-        );
-      }
-
-      // Create consumption_quotas table
-      await db.execute('''
-        CREATE TABLE consumption_quotas (
-          id TEXT PRIMARY KEY,
-          batchId TEXT NOT NULL,
-          foodItemId TEXT NOT NULL,
-          foodItemName TEXT NOT NULL,
-          targetDate TEXT NOT NULL,
-          targetCount INTEGER NOT NULL,
-          consumedCount INTEGER NOT NULL DEFAULT 0,
-          lastConsumed TEXT,
-          isSnoozed INT NOT NULL DEFAULT 0,
-          FOREIGN KEY (batchId) REFERENCES inventory_batches (id) ON DELETE CASCADE
-        )
-      ''');
-
-      // Add indexes for consumption quotas
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_batch ON consumption_quotas(batchId)');
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_food_item ON consumption_quotas(foodItemId)');
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_target_date ON consumption_quotas(targetDate)');
-    }
-
-    if (oldVersion < 4) {
-      // Remove isSnoozed column from consumption_quotas
-      // SQLite doesn't support DROP COLUMN directly, so we need to recreate the table
-
-      // 1. Create new table without isSnoozed
-      await db.execute('''
-        CREATE TABLE consumption_quotas_new (
-          id TEXT PRIMARY KEY,
-          batchId TEXT NOT NULL,
-          foodItemId TEXT NOT NULL,
-          foodItemName TEXT NOT NULL,
-          targetDate TEXT NOT NULL,
-          targetCount INTEGER NOT NULL,
-          consumedCount INTEGER NOT NULL DEFAULT 0,
-          lastConsumed TEXT,
-          FOREIGN KEY (batchId) REFERENCES inventory_batches (id) ON DELETE CASCADE
-        )
-      ''');
-
-      // 2. Copy data from old table (excluding isSnoozed and any snoozed quotas)
-      await db.execute('''
-        INSERT INTO consumption_quotas_new (id, batchId, foodItemId, foodItemName, targetDate, targetCount, consumedCount, lastConsumed)
-        SELECT id, batchId, foodItemId, foodItemName, targetDate, targetCount, consumedCount, lastConsumed
-        FROM consumption_quotas
-        WHERE isSnoozed = 0
-      ''');
-
-      // 3. Drop old table
-      await db.execute('DROP TABLE consumption_quotas');
-
-      // 4. Rename new table
-      await db.execute('ALTER TABLE consumption_quotas_new RENAME TO consumption_quotas');
-
-      // 5. Recreate indexes
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_batch ON consumption_quotas(batchId)');
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_food_item ON consumption_quotas(foodItemId)');
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_consumption_quotas_target_date ON consumption_quotas(targetDate)');
-    }
-
-    if (oldVersion < 5) {
-      // Remove unused nutrition columns from food_items
-      // SQLite doesn't support DROP COLUMN directly, so we need to recreate the table
-
-      // 1. Create new table without nutrition columns
-      await db.execute('''
-        CREATE TABLE food_items_new (
-          id TEXT PRIMARY KEY,
-          name TEXT NOT NULL,
-          weightPerItemGrams REAL NOT NULL,
-          kcalPerHundredGrams REAL NOT NULL
-        )
-      ''');
-
-      // 2. Copy data from old table (keeping only relevant columns)
-      await db.execute('''
-        INSERT INTO food_items_new (id, name, weightPerItemGrams, kcalPerHundredGrams)
-        SELECT id, name, weightPerItemGrams, kcalPerHundredGrams
-        FROM food_items
-      ''');
-
-      // 3. Drop old table
-      await db.execute('DROP TABLE food_items');
-
-      // 4. Rename new table
-      await db.execute('ALTER TABLE food_items_new RENAME TO food_items');
-    }
+    // Recreate all tables
+    await _createDB(db, 1);
   }
 
   Future<void> _insertCommonUnits(Database db) async {

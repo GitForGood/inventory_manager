@@ -149,6 +149,13 @@ class SettingsView extends StatelessWidget {
                   onTap: () => _showResetDialog(context),
                 ),
                 ListTile(
+                  leading: const Icon(Icons.build_outlined),
+                  title: const Text('Recreate Database Tables'),
+                  subtitle: const Text('Reset database structure (keeps data)'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _showRecreateTablesDialog(context),
+                ),
+                ListTile(
                   leading: const Icon(Icons.restaurant_menu_outlined),
                   title: const Text('Import Recipes'),
                   subtitle: const Text('Load recipes from GitHub repository'),
@@ -630,6 +637,114 @@ class SettingsView extends StatelessWidget {
     return number.toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]},',
+    );
+  }
+
+  void _showRecreateTablesDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Recreate Database Tables'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'This will drop and recreate all database tables with empty structures.',
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.warning_outlined,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'This will delete ALL data including recipes, inventory, and quotas!',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onErrorContainer,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Use this only if:',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+            ),
+            const Text('• Database is corrupted', style: TextStyle(fontSize: 12)),
+            const Text('• Tables are missing or broken', style: TextStyle(fontSize: 12)),
+            const Text('• App won\'t load properly', style: TextStyle(fontSize: 12)),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+
+              // Show loading
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 16),
+                      Text('Recreating database tables...'),
+                    ],
+                  ),
+                  duration: Duration(seconds: 10),
+                ),
+              );
+
+              try {
+                await RecipeDatabase.instance.recreateAllTables();
+
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Database tables recreated successfully!'),
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    duration: const Duration(seconds: 3),
+                  ),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error recreating tables: $e'),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    duration: const Duration(seconds: 5),
+                  ),
+                );
+              }
+            },
+            child: Text(
+              'Recreate Tables',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
