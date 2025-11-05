@@ -33,9 +33,6 @@ class RecipeDatabase {
   }
 
   Future<void> _createDB(Database db, int version) async {
-    await db.execute('''
-    DROP TABLE consumption_quotas
-    ''');
     // Recipes table
     await db.execute('''
       CREATE TABLE recipes (
