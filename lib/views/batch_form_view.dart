@@ -90,7 +90,7 @@ class _BatchFormViewState extends State<BatchFormView> {
       context: context,
       initialDate: _expirationDate,
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 15)),
     );
 
     if (picked != null) {
