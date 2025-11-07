@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
             }
 
             return MaterialApp(
-              title: 'Inventory Manager',
+              title: 'Lazy Prepper',
               theme: currentTheme,
               themeMode: ThemeMode.dark,
               navigatorKey: navigatorKey,
