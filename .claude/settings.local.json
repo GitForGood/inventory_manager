@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(flutter analyze:*)"
+      "Bash(flutter analyze:*)",
+      "Bash(dir /B \"c:\\Users\\swegr\\Documents\\GitHub\\inventory_manager\\lib\\widgets\"\" 2)",
+      "Bash(nul)"
     ],
     "deny": [],
     "ask": []
