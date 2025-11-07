@@ -51,11 +51,6 @@ class ConsumptionQuotaRepository {
     return await _database.getAllConsumptionQuotas();
   }
 
-  /// Get quotas for a specific batch
-  Future<List<ConsumptionQuota>> getQuotasForBatch(String batchId) async {
-    return await _database.getConsumptionQuotasForBatch(batchId);
-  }
-
   /// Get quotas for a specific food item
   Future<List<ConsumptionQuota>> getQuotasForFoodItem(String foodItemId) async {
     return await _database.getConsumptionQuotasForFoodItem(foodItemId);
@@ -96,11 +91,6 @@ class ConsumptionQuotaRepository {
   /// Delete a quota
   Future<void> deleteQuota(String id) async {
     await _database.deleteConsumptionQuota(id);
-  }
-
-  /// Delete all quotas for a batch
-  Future<void> deleteQuotasForBatch(String batchId) async {
-    await _database.deleteConsumptionQuotasForBatch(batchId);
   }
 
   /// Delete all quotas for a food item

@@ -1,6 +1,5 @@
 class ConsumptionQuota {
   final String id;
-  final String batchId; // Links to specific batch
   final String foodItemId; // For grouping by food item
   final String foodItemName; // Display name
   final DateTime targetDate; // When to consume by
@@ -10,7 +9,6 @@ class ConsumptionQuota {
 
   const ConsumptionQuota({
     required this.id,
-    required this.batchId,
     required this.foodItemId,
     required this.foodItemName,
     required this.targetDate,
@@ -53,7 +51,6 @@ class ConsumptionQuota {
   // CopyWith method for immutable updates
   ConsumptionQuota copyWith({
     String? id,
-    String? batchId,
     String? foodItemId,
     String? foodItemName,
     DateTime? targetDate,
@@ -63,7 +60,6 @@ class ConsumptionQuota {
   }) {
     return ConsumptionQuota(
       id: id ?? this.id,
-      batchId: batchId ?? this.batchId,
       foodItemId: foodItemId ?? this.foodItemId,
       foodItemName: foodItemName ?? this.foodItemName,
       targetDate: targetDate ?? this.targetDate,
@@ -109,7 +105,6 @@ class ConsumptionQuota {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'batchId': batchId,
       'foodItemId': foodItemId,
       'foodItemName': foodItemName,
       'targetDate': targetDate.toIso8601String(),
@@ -123,7 +118,6 @@ class ConsumptionQuota {
   factory ConsumptionQuota.fromJson(Map<String, dynamic> json) {
     return ConsumptionQuota(
       id: json['id'] as String,
-      batchId: json['batchId'] as String,
       foodItemId: json['foodItemId'] as String,
       foodItemName: json['foodItemName'] as String,
       targetDate: DateTime.parse(json['targetDate'] as String),

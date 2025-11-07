@@ -569,9 +569,6 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
             onPressed: () {
               context.read<InventoryBloc>().add(DeleteInventoryBatch(batchId));
 
-              // Delete quotas for this batch
-              context.read<ConsumptionQuotaBloc>().add(DeleteQuotasForBatch(batchId));
-
               Navigator.pop(dialogContext);
 
               // If this was the last batch, navigate back
@@ -625,8 +622,6 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
               // Delete all batches
               for (final batch in currentBatches) {
                 context.read<InventoryBloc>().add(DeleteInventoryBatch(batch.id));
-                // Delete quotas for this batch
-                context.read<ConsumptionQuotaBloc>().add(DeleteQuotasForBatch(batch.id));
               }
 
               Navigator.pop(dialogContext);

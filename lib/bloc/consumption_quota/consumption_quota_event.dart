@@ -47,13 +47,6 @@ class RegenerateAllQuotas extends ConsumptionQuotaEvent {
   const RegenerateAllQuotas(this.newPeriod);
 }
 
-/// Delete quotas for a specific batch
-class DeleteQuotasForBatch extends ConsumptionQuotaEvent {
-  final String batchId;
-
-  const DeleteQuotasForBatch(this.batchId);
-}
-
 /// Refresh quotas (reload from database)
 class RefreshQuotas extends ConsumptionQuotaEvent {
   const RefreshQuotas();

@@ -123,14 +123,12 @@ class RecipeDatabase {
     await db.execute('''
       CREATE TABLE consumption_quotas (
         id TEXT PRIMARY KEY,
-        batchId TEXT NOT NULL,
         foodItemId TEXT NOT NULL,
         foodItemName TEXT NOT NULL,
         targetDate TEXT NOT NULL,
         targetCount INTEGER NOT NULL,
         consumedCount INTEGER NOT NULL DEFAULT 0,
-        lastConsumed TEXT,
-        FOREIGN KEY (batchId) REFERENCES inventory_batches (id) ON DELETE CASCADE
+        lastConsumed TEXT
       )
     ''');
 
@@ -143,7 +141,6 @@ class RecipeDatabase {
     await db.execute('CREATE INDEX idx_food_item_ingredients_ingredient ON food_item_ingredients(ingredientId)');
     await db.execute('CREATE INDEX idx_inventory_batches_food_item ON inventory_batches(foodItemId)');
     await db.execute('CREATE INDEX idx_inventory_batches_expiration ON inventory_batches(expirationDate)');
-    await db.execute('CREATE INDEX idx_consumption_quotas_batch ON consumption_quotas(batchId)');
     await db.execute('CREATE INDEX idx_consumption_quotas_food_item ON consumption_quotas(foodItemId)');
     await db.execute('CREATE INDEX idx_consumption_quotas_target_date ON consumption_quotas(targetDate)');
 
@@ -780,18 +777,6 @@ class RecipeDatabase {
     return results.map((map) => ConsumptionQuota.fromJson(map)).toList();
   }
 
-  /// Get consumption quotas for a specific batch
-  Future<List<ConsumptionQuota>> getConsumptionQuotasForBatch(String batchId) async {
-    final db = await database;
-    final results = await db.query(
-      'consumption_quotas',
-      where: 'batchId = ?',
-      whereArgs: [batchId],
-      orderBy: 'targetDate ASC',
-    );
-
-    return results.map((map) => ConsumptionQuota.fromJson(map)).toList();
-  }
 
   /// Get consumption quotas for a specific food item
   Future<List<ConsumptionQuota>> getConsumptionQuotasForFoodItem(String foodItemId) async {
@@ -886,15 +871,6 @@ class RecipeDatabase {
     );
   }
 
-  /// Delete all consumption quotas for a specific batch
-  Future<int> deleteConsumptionQuotasForBatch(String batchId) async {
-    final db = await database;
-    return await db.delete(
-      'consumption_quotas',
-      where: 'batchId = ?',
-      whereArgs: [batchId],
-    );
-  }
 
   /// Delete all consumption quotas for a specific food item
   Future<int> deleteConsumptionQuotasForFoodItem(String foodItemId) async {

@@ -20,7 +20,6 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
     on<CompleteQuota>(_onCompleteQuota);
     on<ChangePreferredPeriod>(_onChangePreferredPeriod);
     on<RegenerateAllQuotas>(_onRegenerateAllQuotas);
-    on<DeleteQuotasForBatch>(_onDeleteQuotasForBatch);
     on<RefreshQuotas>(_onRefreshQuotas);
     on<ClearAndRegenerateAllQuotas>(_onClearAndRegenerateAllQuotas);
   }
@@ -156,8 +155,6 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
         // Delete fully consumed batches
         for (final batchId in consumptionResult.consumedBatchIds) {
           await _database.deleteInventoryBatch(batchId);
-          // Also delete quotas for the consumed batch
-          await _repository.deleteQuotasForBatch(batchId);
         }
 
         // Increment quota consumption
@@ -231,26 +228,6 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
       ));
     } catch (e) {
       emit(ConsumptionQuotaError('Failed to regenerate quotas: $e'));
-    }
-  }
-
-  // Delete quotas for a batch
-  Future<void> _onDeleteQuotasForBatch(
-    DeleteQuotasForBatch event,
-    Emitter<ConsumptionQuotaState> emit,
-  ) async {
-    if (state is ConsumptionQuotaLoaded) {
-      final currentState = state as ConsumptionQuotaLoaded;
-
-      try {
-        await _repository.deleteQuotasForBatch(event.batchId);
-
-        // Reload quotas
-        add(const LoadConsumptionQuotas());
-      } catch (e) {
-        emit(ConsumptionQuotaError('Failed to delete quotas for batch: $e'));
-        emit(currentState);
-      }
     }
   }
 

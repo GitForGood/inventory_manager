@@ -22,8 +22,8 @@ class ConsumptionService {
       );
     }
 
-    // Sort by dateAdded (oldest first - FIFO)
-    relevantBatches.sort((a, b) => a.dateAdded.compareTo(b.dateAdded));
+    // Sort by expiry date (closest to expiry first)
+    relevantBatches.sort((a, b) => a.expirationDate.compareTo(b.expirationDate));
 
     int remainingToConsume = itemCount;
     final updatedBatches = List<InventoryBatch>.from(batches);
