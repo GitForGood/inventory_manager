@@ -306,7 +306,7 @@ class _BatchFormViewState extends State<BatchFormView> {
             TextFormField(
               controller: _kcalController,
               decoration: const InputDecoration(
-                labelText: 'Calories (kcal) *',
+                labelText: 'Calories  (kcal/100g) *',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.local_fire_department),
               ),

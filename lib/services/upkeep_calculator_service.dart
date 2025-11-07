@@ -56,7 +56,6 @@ class PurchaseImpact {
   final double monthlyQuotaIncrease;
   final double newTotalCalories;
   final double? newDaysUntilEmpty;
-  final ConsumptionPeriod? suggestedPeriod;
   final ConsumptionRate? currentConsumptionRate;
   final ConsumptionRate? newConsumptionRate;
 
@@ -67,7 +66,6 @@ class PurchaseImpact {
     required this.monthlyQuotaIncrease,
     required this.newTotalCalories,
     this.newDaysUntilEmpty,
-    this.suggestedPeriod,
     this.currentConsumptionRate,
     this.newConsumptionRate,
   });
@@ -195,16 +193,6 @@ class UpkeepCalculatorService {
       newDaysUntilEmpty = newTotalCalories / dailyCalorieTarget;
     }
 
-    // Suggest consumption period based on expiry timeline
-    ConsumptionPeriod? suggestedPeriod;
-    if (daysUntilExpiry <= 14) {
-      suggestedPeriod = ConsumptionPeriod.weekly;
-    } else if (daysUntilExpiry <= 60) {
-      suggestedPeriod = ConsumptionPeriod.monthly;
-    } else {
-      suggestedPeriod = ConsumptionPeriod.quarterly;
-    }
-
     // Calculate current and new consumption rates from quotas
     ConsumptionRate? currentRate;
     ConsumptionRate? newRate;
@@ -231,7 +219,6 @@ class UpkeepCalculatorService {
       monthlyQuotaIncrease: monthlyQuotaIncrease,
       newTotalCalories: newTotalCalories,
       newDaysUntilEmpty: newDaysUntilEmpty,
-      suggestedPeriod: suggestedPeriod,
       currentConsumptionRate: currentRate,
       newConsumptionRate: newRate,
     );

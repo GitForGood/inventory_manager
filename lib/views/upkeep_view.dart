@@ -7,10 +7,24 @@ import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barre
 import 'package:inventory_manager/models/daily_calorie_target.dart';
 import 'package:inventory_manager/models/inventory_batch.dart';
 import 'package:inventory_manager/models/consumption_quota.dart';
+import 'package:inventory_manager/models/food_item.dart';
 import 'package:inventory_manager/services/upkeep_calculator_service.dart';
 import 'package:inventory_manager/widgets/outlined_card.dart';
 import 'package:inventory_manager/widgets/assist_chip.dart';
 import 'package:inventory_manager/widgets/calorie_target_bottom_sheet.dart';
+
+/// Shopping cart item
+class ShoppingCartItem {
+  final FoodItem foodItem;
+  final int quantity;
+
+  const ShoppingCartItem({
+    required this.foodItem,
+    required this.quantity,
+  });
+
+  double get totalCalories => foodItem.getKcalForItems(quantity);
+}
 
 class UpkeepView extends StatefulWidget {
   const UpkeepView({super.key});
@@ -20,14 +34,15 @@ class UpkeepView extends StatefulWidget {
 }
 
 class _UpkeepViewState extends State<UpkeepView> {
-  final TextEditingController _purchaseCaloriesController = TextEditingController();
-  final TextEditingController _daysUntilExpiryController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final List<ShoppingCartItem> _shoppingCart = [];
+  DateTime? _selectedExpiryDate;
   PurchaseImpact? _calculatedImpact;
+  final GlobalKey _impactCardKey = GlobalKey();
 
   @override
   void dispose() {
-    _purchaseCaloriesController.dispose();
-    _daysUntilExpiryController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -45,18 +60,79 @@ class _UpkeepViewState extends State<UpkeepView> {
     );
   }
 
+  void _addToCart(FoodItem foodItem, int quantity) {
+    setState(() {
+      _shoppingCart.add(ShoppingCartItem(
+        foodItem: foodItem,
+        quantity: quantity,
+      ));
+    });
+  }
+
+  void _removeFromCart(int index) {
+    setState(() {
+      _shoppingCart.removeAt(index);
+    });
+  }
+
+  void _clearCart() {
+    setState(() {
+      _shoppingCart.clear();
+    });
+  }
+
+  double _getTotalCartCalories() {
+    return _shoppingCart.fold(0.0, (sum, item) => sum + item.totalCalories);
+  }
+
+  Future<void> _selectExpiryDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedExpiryDate ?? DateTime.now().add(const Duration(days: 365)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 3650)), // 10 years
+      helpText: 'Select expiry date',
+    );
+
+    if (picked != null) {
+      setState(() {
+        _selectedExpiryDate = picked;
+      });
+    }
+  }
+
   void _calculatePurchaseImpact({
     required List<InventoryBatch> batches,
     required int? dailyCalorieTarget,
     Map<String, List<ConsumptionQuota>>? quotasByFoodItem,
   }) {
-    final purchaseCalories = double.tryParse(_purchaseCaloriesController.text);
-    final daysUntilExpiry = int.tryParse(_daysUntilExpiryController.text);
-
-    if (purchaseCalories == null || daysUntilExpiry == null || daysUntilExpiry <= 0) {
+    if (_shoppingCart.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please enter valid values for both fields'),
+          content: const Text('Please add items to your shopping cart'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
+
+    if (_selectedExpiryDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please select an expiry date'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
+
+    final purchaseCalories = _getTotalCartCalories();
+    final daysUntilExpiry = _selectedExpiryDate!.difference(DateTime.now()).inDays;
+
+    if (daysUntilExpiry <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Expiry date must be in the future'),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -72,6 +148,235 @@ class _UpkeepViewState extends State<UpkeepView> {
         quotasByFoodItem: quotasByFoodItem,
       );
     });
+
+    // Scroll to impact card after calculation
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (_impactCardKey.currentContext != null) {
+        Scrollable.ensureVisible(
+          _impactCardKey.currentContext!,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  Future<FoodItem?> _showCreateItemDialog(BuildContext context) async {
+    final nameController = TextEditingController();
+    final caloriesController = TextEditingController();
+
+    return showDialog<FoodItem>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Create New Item'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: 'Item Name',
+                border: OutlineInputBorder(),
+                hintText: 'e.g., Canned Beans',
+              ),
+              textCapitalization: TextCapitalization.words,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: caloriesController,
+              decoration: const InputDecoration(
+                labelText: 'Calories per Item',
+                border: OutlineInputBorder(),
+                hintText: 'e.g., 250',
+                suffixText: 'kcal',
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              final name = nameController.text.trim();
+              final calories = int.tryParse(caloriesController.text);
+
+              if (name.isNotEmpty && calories != null && calories > 0) {
+                // Create a placeholder food item
+                final newItem = FoodItem(
+                  id: 'placeholder_${DateTime.now().millisecondsSinceEpoch}',
+                  name: name,
+                  weightPerItemGrams: 100, // Placeholder weight
+                  kcalPerHundredGrams: calories.toDouble(),
+                  ingredientIds: [],
+                );
+                Navigator.pop(dialogContext, newItem);
+              }
+            },
+            child: const Text('Create'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddItemDialog(BuildContext context, List<InventoryBatch> batches) {
+    // Get unique food items from batches
+    final uniqueFoodItems = <String, FoodItem>{};
+    for (final batch in batches) {
+      uniqueFoodItems[batch.item.id] = batch.item;
+    }
+
+    final foodItems = uniqueFoodItems.values.toList()..sort((a, b) => a.name.compareTo(b.name));
+
+    // Add placeholder for creating new item
+    final createNewPlaceholder = FoodItem(
+      id: '__create_new__',
+      name: 'Create New Item...',
+      weightPerItemGrams: 0,
+      kcalPerHundredGrams: 0,
+      ingredientIds: [],
+    );
+
+    FoodItem? selectedItem;
+    final quantityController = TextEditingController(text: '1');
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Add Item to Cart'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButtonFormField<FoodItem>(
+                  decoration: const InputDecoration(
+                    labelText: 'Select Food Item',
+                    border: OutlineInputBorder(),
+                  ),
+                  initialValue: selectedItem,
+                  items: [
+                    DropdownMenuItem(
+                      value: createNewPlaceholder,
+                      child: Row(
+                        children: [
+                          Icon(Icons.add_circle_outline, size: 20, color: Theme.of(context).colorScheme.primary),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Create New Item...',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (foodItems.isNotEmpty) const DropdownMenuItem(enabled: false, child: Divider()),
+                    ...foodItems.map((item) {
+                      return DropdownMenuItem(
+                        value: item,
+                        child: Text(item.name),
+                      );
+                    }),
+                  ],
+                  onChanged: (value) async {
+                    if (value?.id == '__create_new__') {
+                      // Show create new item dialog
+                      final newItem = await _showCreateItemDialog(context);
+                      if (newItem != null) {
+                        setDialogState(() {
+                          selectedItem = newItem;
+                          foodItems.add(newItem);
+                          foodItems.sort((a, b) => a.name.compareTo(b.name));
+                        });
+                      }
+                    } else {
+                      setDialogState(() {
+                        selectedItem = value;
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: quantityController,
+                  decoration: InputDecoration(
+                    labelText: 'Quantity',
+                    border: const OutlineInputBorder(),
+                    suffixText: selectedItem != null && selectedItem!.id != '__create_new__'
+                        ? '${_formatNumber(selectedItem!.getKcalForItems(int.tryParse(quantityController.text) ?? 1))} kcal'
+                        : 'items',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onChanged: (value) {
+                    setDialogState(() {}); // Refresh to update calorie display
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                if (selectedItem != null && selectedItem!.id != '__create_new__') {
+                  final quantity = int.tryParse(quantityController.text);
+                  if (quantity != null && quantity > 0) {
+                    _addToCart(selectedItem!, quantity);
+                    Navigator.pop(dialogContext);
+                  }
+                }
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _generateCSV() {
+    final buffer = StringBuffer();
+    buffer.writeln('Item,Quantity,Calories per Item,Total Calories');
+
+    for (final item in _shoppingCart) {
+      buffer.writeln(
+        '"${item.foodItem.name}",${item.quantity},${_formatNumber(item.foodItem.getKcalForItems(1))},${_formatNumber(item.totalCalories)}',
+      );
+    }
+
+    buffer.writeln();
+    buffer.writeln('"Total","","",${_formatNumber(_getTotalCartCalories())}');
+
+    if (_selectedExpiryDate != null) {
+      buffer.writeln();
+      buffer.writeln('"Expiry Date","${_selectedExpiryDate!.toLocal().toString().split(' ')[0]}"');
+    }
+
+    return buffer.toString();
+  }
+
+  void _exportAsCSV() {
+    final csv = _generateCSV();
+    // For web/desktop: Copy to clipboard
+    Clipboard.setData(ClipboardData(text: csv));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Shopping list copied to clipboard'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   void _showCalorieTargetSheet(
@@ -131,31 +436,39 @@ class _UpkeepViewState extends State<UpkeepView> {
                         ? (settingsState.settings.dailyCalorieTarget as CalculatedCalorieTarget)
                             .dailyConsumption
                         : null;
+                    final desiredDays = settingsState is SettingsLoaded &&
+                            settingsState.settings.dailyCalorieTarget is CalculatedCalorieTarget
+                        ? (settingsState.settings.dailyCalorieTarget as CalculatedCalorieTarget).days
+                        : 30; // Default fallback
 
                     final storageDeficit = UpkeepCalculatorService.calculateStorageDeficit(
                       batches: batches,
                       dailyCalorieTarget: dailyConsumption,
-                      targetDaysOfStorage: 30,
+                      targetDaysOfStorage: desiredDays,
                     );
 
                     return ListView(
-                      padding: const EdgeInsets.all(16),
+                      controller: _scrollController,
+                      //padding: const EdgeInsets.all(16),
                       children: [
                         _buildStorageStatusCard(
                           context,
                           storageDeficit,
                           calorieTarget,
                           dailyConsumption,
+                          desiredDays,
                         ),
-                        const SizedBox(height: 16),
-                        _buildRefillCalculatorCard(
+                        //const SizedBox(height: 16),
+                        _buildShoppingCartCard(context, batches),
+                        //const SizedBox(height: 16),
+                        _buildCalculatorActionsCard(
                           context,
                           batches,
                           dailyConsumption,
                           quotasByFoodItem,
                         ),
                         if (_calculatedImpact != null) ...[
-                          const SizedBox(height: 16),
+                          //const SizedBox(height: 16),
                           _buildImpactResultCard(context, _calculatedImpact!),
                         ],
                       ],
@@ -177,6 +490,7 @@ class _UpkeepViewState extends State<UpkeepView> {
     StorageDeficit deficit,
     DailyCalorieTarget? calorieTarget,
     int? dailyConsumption,
+    int desiredDays,
   ) {
     final theme = Theme.of(context);
     final hasTarget = deficit.hasTarget;
@@ -260,8 +574,8 @@ class _UpkeepViewState extends State<UpkeepView> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      '30-Day Target: ${_formatNumber(deficit.targetCalories.toInt())} kcal',
-                      style: theme.textTheme.titleSmall,
+                      '$desiredDays-Day Target: ${_formatNumber(deficit.targetCalories.toInt())} kcal',
+                      style: theme.textTheme.bodyLarge,
                     ),
                   ),
                 ],
@@ -283,7 +597,7 @@ class _UpkeepViewState extends State<UpkeepView> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Storage is above 30-day target by ${_formatNumber((deficit.currentCalories - deficit.targetCalories).toInt())} kcal',
+                          'Storage is above $desiredDays-day target by ${_formatNumber((deficit.currentCalories - deficit.targetCalories).toInt())} kcal',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onTertiaryContainer,
                           ),
@@ -308,7 +622,7 @@ class _UpkeepViewState extends State<UpkeepView> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Need ${_formatNumber(deficit.deficitCalories.toInt())} kcal to reach 30-day target',
+                          'Need ${_formatNumber(deficit.deficitCalories.toInt())} kcal to reach $desiredDays-day target',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onErrorContainer,
                             fontWeight: FontWeight.bold,
@@ -333,12 +647,7 @@ class _UpkeepViewState extends State<UpkeepView> {
     );
   }
 
-  Widget _buildRefillCalculatorCard(
-    BuildContext context,
-    List<InventoryBatch> batches,
-    int? dailyConsumption,
-    Map<String, List<ConsumptionQuota>> quotasByFoodItem,
-  ) {
+  Widget _buildShoppingCartCard(BuildContext context, List<InventoryBatch> batches) {
     final theme = Theme.of(context);
 
     return OutlinedCard(
@@ -349,11 +658,142 @@ class _UpkeepViewState extends State<UpkeepView> {
           children: [
             Row(
               children: [
-                Icon(Icons.calculate_outlined, color: theme.colorScheme.primary),
+                Icon(Icons.shopping_cart_outlined, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Purchase Impact Calculator',
+                    'Shopping Cart',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                if (_shoppingCart.isNotEmpty)
+                  FilledButton.tonalIcon(
+                    onPressed: _clearCart,
+                    icon: const Icon(Icons.clear_all, size: 18),
+                    label: const Text('Clear'),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      minimumSize: const Size(0, 36),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (_shoppingCart.isEmpty) ...[
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 48,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'No items in cart',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ] else ...[
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _shoppingCart.length,
+                separatorBuilder: (context, index) => const Divider(),
+                itemBuilder: (context, index) {
+                  final item = _shoppingCart[index];
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(item.foodItem.name),
+                    subtitle: Text(
+                      '${item.quantity} items • ${_formatNumber(item.totalCalories)} kcal',
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete_outline),
+                      onPressed: () => _removeFromCart(index),
+                      tooltip: 'Remove',
+                    ),
+                  );
+                },
+              ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '${_formatNumber(_getTotalCartCalories())} kcal',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _shoppingCart.isNotEmpty ? _exportAsCSV : null,
+                      icon: const Icon(Icons.file_download),
+                      label: const Text('Export CSV'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () => _showAddItemDialog(context, batches),
+                icon: const Icon(Icons.add),
+                label: const Text('Add Item'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCalculatorActionsCard(
+    BuildContext context,
+    List<InventoryBatch> batches,
+    int? dailyConsumption,
+    Map<String, List<ConsumptionQuota>> quotasByFoodItem,
+  ) {
+    final theme = Theme.of(context);
+    final daysUntilExpiry = _selectedExpiryDate?.difference(DateTime.now()).inDays;
+
+    return OutlinedCard(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.date_range_outlined, color: theme.colorScheme.primary),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Expiry Date',
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -362,37 +802,43 @@ class _UpkeepViewState extends State<UpkeepView> {
               ],
             ),
             const SizedBox(height: 16),
-            Text(
-              'Estimate how much you need to consume per day/month to finish items before they expire',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+            InkWell(
+              onTap: () => _selectExpiryDate(context),
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: theme.colorScheme.outline),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.calendar_today, color: theme.colorScheme.primary),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _selectedExpiryDate == null
+                                ? 'Select expiry date'
+                                : 'Expiry: ${_selectedExpiryDate!.toLocal().toString().split(' ')[0]}',
+                            style: theme.textTheme.bodyLarge,
+                          ),
+                          if (daysUntilExpiry != null)
+                            Text(
+                              '$daysUntilExpiry days from today',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.chevron_right, color: theme.colorScheme.onSurfaceVariant),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _purchaseCaloriesController,
-              decoration: InputDecoration(
-                labelText: 'Purchase Calories (kcal)',
-                hintText: 'e.g., 20000',
-                prefixIcon: const Icon(Icons.local_fire_department),
-                border: const OutlineInputBorder(),
-                suffixText: 'kcal',
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _daysUntilExpiryController,
-              decoration: InputDecoration(
-                labelText: 'Days Until Expiry',
-                hintText: 'e.g., 365',
-                prefixIcon: const Icon(Icons.calendar_today),
-                border: const OutlineInputBorder(),
-                suffixText: 'days',
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             ),
             const SizedBox(height: 16),
             SizedBox(
@@ -417,6 +863,7 @@ class _UpkeepViewState extends State<UpkeepView> {
     final theme = Theme.of(context);
 
     return OutlinedCard(
+      key: _impactCardKey,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -565,34 +1012,6 @@ class _UpkeepViewState extends State<UpkeepView> {
                         fontStyle: FontStyle.italic,
                       ),
                       textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            if (impact.suggestedPeriod != null) ...[
-              const Divider(),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.lightbulb_outline,
-                      color: theme.colorScheme.onPrimaryContainer,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Suggested consumption period: ${impact.suggestedPeriod!.name.toUpperCase()}',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onPrimaryContainer,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ),
                   ],
                 ),
