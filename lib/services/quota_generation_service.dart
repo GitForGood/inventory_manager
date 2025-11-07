@@ -49,8 +49,11 @@ class QuotaGenerationService {
     );
     final evaluator = (
       (InventoryBatch batch) => 
-      (batch.count * daysUntilPeriodEnd).toDouble() / 
-      (now.difference(batch.expirationDate).inDays).toDouble()
+      min (
+        (batch.count * daysUntilPeriodEnd).toDouble() / 
+        (batch.expirationDate.difference(now).inDays).toDouble(),
+        batch.count.toDouble()
+      )
     );
 
     return batches
