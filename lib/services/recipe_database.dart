@@ -351,6 +351,18 @@ class RecipeDatabase {
     );
   }
 
+  /// Check if a recipe with the given title already exists
+  Future<bool> recipeExistsByTitle(String title) async {
+    final db = await database;
+    final results = await db.query(
+      'recipes',
+      where: 'LOWER(title) = LOWER(?)',
+      whereArgs: [title],
+      limit: 1,
+    );
+    return results.isNotEmpty;
+  }
+
   Future<List<Recipe>> getAllRecipes() async {
     final db = await database;
     final results = await db.query('recipes', orderBy: 'title ASC');

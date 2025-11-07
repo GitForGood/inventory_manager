@@ -21,7 +21,7 @@ class _RecipesViewState extends State<RecipesView>
   @override
   void initState() {
     super.initState();
-    // Initialize with 2 tabs, Favorites tab is index 0 (default)
+    // Initialize with 2 tabs, All Recipes tab is index 0 (default)
     _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
 
     // Load all recipes when the view is opened (lazy loading)
@@ -50,8 +50,8 @@ class _RecipesViewState extends State<RecipesView>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(icon: Icon(Icons.favorite), text: 'Favorites'),
             Tab(icon: Icon(Icons.restaurant_menu), text: 'All Recipes'),
+            Tab(icon: Icon(Icons.favorite), text: 'Favorites'),
           ],
         ),
       ),
@@ -69,8 +69,8 @@ class _RecipesViewState extends State<RecipesView>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildFavoritesTab(),
             _buildAllRecipesTab(),
+            _buildFavoritesTab(),
           ],
         ),
       ),
@@ -240,8 +240,8 @@ class _RecipesViewState extends State<RecipesView>
   }
 
   void _showRecipeImportDialog(BuildContext context) {
-    // Hardcoded URL to the official recipe repository
-    const recipeUrl = 'https://raw.githubusercontent.com/GitForGood/inventory_manager/refs/heads/main/data/recipes.json';
+    // Path to the local recipe asset
+    const recipeAssetPath = 'assets/data/recipes.json';
 
     showDialog(
       context: context,
@@ -252,7 +252,7 @@ class _RecipesViewState extends State<RecipesView>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'This will import recipes from the official repository and add them to your local database.',
+              'This will import the bundled recipes and add them to your local database.',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
@@ -292,7 +292,7 @@ class _RecipesViewState extends State<RecipesView>
 
               try {
                 final importService = RecipeImportService();
-                final result = await importService.importRecipesFromUrl(recipeUrl);
+                final result = await importService.importRecipesFromAsset(recipeAssetPath);
 
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();

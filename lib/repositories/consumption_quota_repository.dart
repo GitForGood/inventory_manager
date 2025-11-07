@@ -1,31 +1,18 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:inventory_manager/models/consumption_quota.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/services/recipe_database.dart';
+import 'package:inventory_manager/repositories/settings_repository.dart';
 
 class ConsumptionQuotaRepository {
   final RecipeDatabase _database = RecipeDatabase.instance;
-  static const String _periodPreferenceKey = 'consumption_period_preference';
+  final SettingsRepository _settingsRepository = SettingsRepository();
 
   // ===== SETTINGS MANAGEMENT =====
 
-  /// Get user's preferred consumption period
+  /// Get user's preferred consumption period from settings
   Future<ConsumptionPeriod> getPreferredPeriod() async {
-    final prefs = await SharedPreferences.getInstance();
-    final periodString = prefs.getString(_periodPreferenceKey);
-
-    if (periodString != null) {
-      return consumptionPeriodFromJson(periodString);
-    }
-
-    // Default to weekly
-    return ConsumptionPeriod.weekly;
-  }
-
-  /// Set user's preferred consumption period
-  Future<void> setPreferredPeriod(ConsumptionPeriod period) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_periodPreferenceKey, period.toJson());
+    final settings = await _settingsRepository.loadSettings();
+    return settings.preferredQuotaInterval;
   }
 
   // ===== QUOTA CRUD OPERATIONS =====

@@ -3,6 +3,7 @@ import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_event
 import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_state.dart';
 import 'package:inventory_manager/models/consumption_quota.dart';
 import 'package:inventory_manager/repositories/consumption_quota_repository.dart';
+import 'package:inventory_manager/repositories/settings_repository.dart';
 import 'package:inventory_manager/services/quota_generation_service.dart';
 import 'package:inventory_manager/services/recipe_database.dart';
 import 'package:inventory_manager/services/consumption_service.dart';
@@ -11,6 +12,7 @@ import 'package:inventory_manager/services/quota_notification_helper.dart';
 
 class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaState> {
   final ConsumptionQuotaRepository _repository = ConsumptionQuotaRepository();
+  final SettingsRepository _settingsRepository = SettingsRepository();
   final RecipeDatabase _database = RecipeDatabase.instance;
 
   ConsumptionQuotaBloc() : super(const ConsumptionQuotaInitial()) {
@@ -196,7 +198,12 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
     Emitter<ConsumptionQuotaState> emit,
   ) async {
     try {
-      await _repository.setPreferredPeriod(event.newPeriod);
+      // Update the preferred period in settings
+      final currentSettings = await _settingsRepository.loadSettings();
+      final updatedSettings = currentSettings.copyWith(
+        preferredQuotaInterval: event.newPeriod,
+      );
+      await _settingsRepository.saveSettings(updatedSettings);
 
       // Reload quotas with new period
       add(const LoadConsumptionQuotas());
@@ -212,9 +219,12 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
   ) async {
     emit(const ConsumptionQuotaLoading());
     try {
-      // This would require getting all batches and regenerating quotas
-      // For now, just change the period and reload
-      await _repository.setPreferredPeriod(event.newPeriod);
+      // Update the preferred period in settings
+      final currentSettings = await _settingsRepository.loadSettings();
+      final updatedSettings = currentSettings.copyWith(
+        preferredQuotaInterval: event.newPeriod,
+      );
+      await _settingsRepository.saveSettings(updatedSettings);
 
       final quotasByFoodItem = await _repository.getQuotasGroupedByFoodItem();
 

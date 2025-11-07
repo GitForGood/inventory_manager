@@ -1,7 +1,10 @@
+import 'package:inventory_manager/models/food_item.dart';
+
 import '../models/inventory_batch.dart';
 import '../models/consumption_period.dart';
 import '../models/consumption_quota.dart';
 import 'storage_calculator_service.dart';
+import 'quota_generation_service.dart';
 
 /// Result of storage deficit calculations
 class StorageDeficit {
@@ -73,58 +76,44 @@ class PurchaseImpact {
 
 /// Service for calculating storage upkeep metrics and purchase impacts
 class UpkeepCalculatorService {
-  /// Calculate current consumption rate from active quotas
+  /// Calculate current consumption rate based on inventory batches
   ///
-  /// Analyzes all active quotas across different periods to determine
-  /// the average consumption rate in calories per period
+  /// Uses generateQuotasForEntireQuarter to determine what needs to be consumed
+  /// based on batch expiration dates, then calculates consumption rates for different periods
   static ConsumptionRate calculateConsumptionRateFromQuotas({
-    required Map<String, List<ConsumptionQuota>> quotasByFoodItem,
     required List<InventoryBatch> batches,
   }) {
-    // Calculate total calories for each period's quotas
-    double weeklyCalories = 0;
-    double monthlyCalories = 0;
+    // Generate theoretical quotas based on current inventory and expiration dates
+    final quarterlyQuotas = QuotaGenerationService.generateQuotasForEntireQuarter(
+      batches: batches,
+    );
+
+    // Create a map of food item ID to food item for quick lookup
+    final Map<String, FoodItem> foodItemMap = {
+      for (var batch in batches) batch.item.id: batch.item
+    };
+
+    // Calculate total calories for the quarter
     double quarterlyCalories = 0;
 
-    // Get all quotas (flatten the map)
-    final allQuotas = quotasByFoodItem.values.expand((list) => list).toList();
+    for (final quota in quarterlyQuotas) {
+      final foodItem = foodItemMap[quota.foodItemId];
+      if (foodItem == null) continue;
 
-    // Create a map of batch ID to batch for quick lookup
-    final batchMap = {for (var batch in batches) batch.id: batch};
-
-    for (final quota in allQuotas) {
-      // Skip completed quotas
-      if (quota.isCompleted) continue;
-
-      // Find the batch to get calorie information
-      final batch = batchMap[quota.batchId];
-      if (batch == null) continue;
-
-      // Calculate calories for this quota's remaining target
-      final remainingItems = quota.remainingCount;
-      final caloriesPerItem = batch.item.getKcalForItems(1);
-      final quotaCalories = caloriesPerItem * remainingItems;
-
-      // Determine which period this quota belongs to based on target date
-      final now = DateTime.now();
-      final daysUntilTarget = quota.targetDate.difference(now).inDays;
-
-      // Approximate period assignment based on days until target
-      if (daysUntilTarget <= 7) {
-        weeklyCalories += quotaCalories;
-      } else if (daysUntilTarget <= 31) {
-        monthlyCalories += quotaCalories;
-      } else {
-        quarterlyCalories += quotaCalories;
-      }
+      // Calculate calories for this quota's target
+      final caloriesPerItem = foodItem.getKcalForItems(1);
+      final quotaCalories = caloriesPerItem * quota.targetCount;
+      quarterlyCalories += quotaCalories;
     }
 
-    // Calculate daily rate (average across all periods, normalized)
-    // Weekly quotas contribute to daily, monthly spread over ~30 days, quarterly over ~90 days
-    final dailyFromWeekly = weeklyCalories / 7;
-    final dailyFromMonthly = monthlyCalories / 30;
-    final dailyFromQuarterly = quarterlyCalories / 90;
-    final dailyCalories = dailyFromWeekly + dailyFromMonthly + dailyFromQuarterly;
+    // Calculate daily rate (quarterly spread over ~90 days)
+    final dailyCalories = quarterlyCalories / 90;
+
+    // Calculate weekly rate (7 days worth)
+    final weeklyCalories = dailyCalories * 7;
+
+    // Calculate monthly rate (30 days worth)
+    final monthlyCalories = dailyCalories * 30;
 
     return ConsumptionRate(
       dailyCalories: dailyCalories,
@@ -199,7 +188,6 @@ class UpkeepCalculatorService {
 
     if (quotasByFoodItem != null && quotasByFoodItem.isNotEmpty) {
       currentRate = calculateConsumptionRateFromQuotas(
-        quotasByFoodItem: quotasByFoodItem,
         batches: currentBatches,
       );
 

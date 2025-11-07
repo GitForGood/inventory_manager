@@ -178,7 +178,7 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Summary: ${currentGroup.foodItem.name}',
+                          currentGroup.foodItem.name,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         IconButton(
@@ -208,7 +208,7 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
                         ),
                         AssistChip(
                           icon: Icons.local_fire_department,
-                          labelText: '${(currentGroup.totalCount * currentGroup.foodItem.weightPerItemGrams / 1000 * currentGroup.foodItem.kcalPerHundredGrams * 10).toStringAsFixed(0)} kcal',
+                          labelText: '${(currentGroup.totalCount * currentGroup.foodItem.weightPerItemGrams / 1000 * currentGroup.foodItem.kcalPerHundredGrams * 10).toStringAsFixed(0)} total kcal',
                         ),
                         // Ingredient tags
                         if (_ingredients != null && _ingredients!.isNotEmpty)

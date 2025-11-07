@@ -97,8 +97,8 @@ flutter:
   uses-material-design: true
 
   # Add your app icon here
-  # assets:
-  #   - assets/icon/app_icon.png
+  assets:
+    - assets/data/recipes.json
 
 # Configuration for flutter_launcher_icons
 flutter_launcher_icons:

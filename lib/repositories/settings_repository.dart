@@ -68,15 +68,6 @@ class SettingsRepository {
     await saveSettings(settings.copyWith(quotaGenerationNotificationsEnabled: enabled));
   }
 
-  Future<void> updatePreferredQuotaInterval(int intervalIndex) async {
-    final settings = await loadSettings();
-    await saveSettings(settings.copyWith(
-      preferredQuotaInterval: intervalIndex >= 0 && intervalIndex < 3
-          ? [ConsumptionPeriod.weekly, ConsumptionPeriod.monthly, ConsumptionPeriod.quarterly][intervalIndex]
-          : settings.preferredQuotaInterval,
-    ));
-  }
-
   Future<void> updateDailyCalorieTarget(DailyCalorieTarget? target) async {
     final settings = await loadSettings();
     await saveSettings(settings.copyWith(

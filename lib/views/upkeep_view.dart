@@ -575,7 +575,7 @@ class _UpkeepViewState extends State<UpkeepView> {
                   Expanded(
                     child: Text(
                       '$desiredDays-Day Target: ${_formatNumber(deficit.targetCalories.toInt())} kcal',
-                      style: theme.textTheme.bodyLarge,
+                      style: theme.textTheme.titleSmall,
                     ),
                   ),
                 ],

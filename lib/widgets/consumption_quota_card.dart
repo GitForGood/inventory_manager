@@ -56,145 +56,158 @@ class _FoodItemQuotaCardState extends State<FoodItemQuotaCard> {
 
   @override
   Widget build(BuildContext context) {
-    // With the new system, there should only be one quota per food item
-    final quota = widget.quotas.isNotEmpty ? widget.quotas.first : null;
-
-    if (quota == null) return const SizedBox.shrink();
+    if (widget.quotas.isEmpty) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final dateFormat = DateFormat('MMM dd, yyyy');
-    final isCollapsed = quota.isCompleted;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          // Display all quotas for this food item
+          ...widget.quotas.asMap().entries.map((entry) {
+            final index = entry.key;
+            final quota = entry.value;
+            final isLast = index == widget.quotas.length - 1;
+            final isCollapsed = quota.isCompleted;
+
+            return Column(
               children: [
-                // Header Row
-                Row(
-                  children: [
-                    // Food Icon
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: isCollapsed
-                            ? colorScheme.surfaceContainerHighest
-                            : colorScheme.secondary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.track_changes,
-                        color: isCollapsed
-                            ? colorScheme.onSurfaceVariant
-                            : colorScheme.secondary,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-
-                    // Title and Date
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.foodItemName,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.calendar_today,
-                                size: 16,
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Due: ${dateFormat.format(quota.targetDate)}',
-                                //style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Action Buttons / Indicators
-                    if (quota.isCompleted) ...[
-                      // Completed indicator
-                      Icon(
-                        Icons.check_circle,
-                        size: 32,
-                        color: colorScheme.tertiary,
-                      ),
-                      SizedBox(width: 8,)
-                    ] else ...[
-                      // Active quota button
-                      // Increment button
-                      IconButton(
-                        icon: const Icon(Icons.add_circle),
-                        color: colorScheme.primary,
-                        iconSize: 32,
-                        tooltip: 'Mark items as consumed',
-                        onPressed: () {
-                          _showIncrementDialog(context, quota);
-                        },
-                      ),
-                    ],
-                  ],
-                ),
-
-                // Progress Section (only shown when not collapsed)
-                if (!isCollapsed) ...[
-                  const SizedBox(height: 16),
-                  Row(
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // Header Row
+                      Row(
+                        children: [
+                          // Food Icon
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: isCollapsed
+                                  ? colorScheme.surfaceContainerHighest
+                                  : colorScheme.secondary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Icons.track_changes,
+                              color: isCollapsed
+                                  ? colorScheme.onSurfaceVariant
+                                  : colorScheme.secondary,
+                              size: 24,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+
+                          // Title and Date
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Progress',
-                                  style: Theme.of(context).textTheme.labelLarge
+                                  widget.foodItemName,
+                                  style: Theme.of(context).textTheme.titleMedium,
                                 ),
-                                Text(
-                                  '${quota.consumedCount}/${quota.targetCount} items',
-                                  style: Theme.of(context).textTheme.labelLarge
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.calendar_today,
+                                      size: 16,
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Due: ${dateFormat.format(quota.targetDate)}',
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: LinearProgressIndicator(
-                                value: quota.progressPercentage / 100,
-                                minHeight: 8,
-                                backgroundColor:
-                                    colorScheme.surfaceContainerHighest,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  _getProgressColor(quota.progressPercentage, context),
-                                ),
+                          ),
+
+                          // Action Buttons / Indicators
+                          if (quota.isCompleted) ...[
+                            // Completed indicator
+                            Icon(
+                              Icons.check_circle,
+                              size: 32,
+                              color: colorScheme.tertiary,
+                            ),
+                            const SizedBox(width: 8,)
+                          ] else ...[
+                            // Active quota button
+                            // Increment button
+                            IconButton(
+                              icon: const Icon(Icons.add_circle),
+                              color: colorScheme.primary,
+                              iconSize: 32,
+                              tooltip: 'Mark items as consumed',
+                              onPressed: () {
+                                _showIncrementDialog(context, quota);
+                              },
+                            ),
+                          ],
+                        ],
+                      ),
+
+                      // Progress Section (only shown when not collapsed)
+                      if (!isCollapsed) ...[
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Progress',
+                                        style: Theme.of(context).textTheme.labelLarge
+                                      ),
+                                      Text(
+                                        '${quota.consumedCount}/${quota.targetCount} items',
+                                        style: Theme.of(context).textTheme.labelLarge
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: LinearProgressIndicator(
+                                      value: quota.progressPercentage / 100,
+                                      minHeight: 8,
+                                      backgroundColor:
+                                          colorScheme.surfaceContainerHighest,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        _getProgressColor(quota.progressPercentage, context),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
+                      ],
                     ],
                   ),
-                ],
+                ),
+                // Add divider between multiple quotas (except after the last one)
+                if (!isLast)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Divider(height: 1),
+                  ),
               ],
-            ),
-          ),
+            );
+          }),
 
           // Recipe carousel (only shown when expanded)
           if (_isExpanded && _recipes != null && _recipes!.isNotEmpty) ...[
@@ -208,8 +221,8 @@ class _FoodItemQuotaCardState extends State<FoodItemQuotaCard> {
             ),
           ],
 
-          // Expand/Collapse bottom bar (only shown when not collapsed and recipes available)
-          if (!isCollapsed && _recipes != null && _recipes!.isNotEmpty)
+          // Expand/Collapse bottom bar (only shown when recipes available and at least one quota is not collapsed)
+          if (widget.quotas.any((q) => !q.isCompleted) && _recipes != null && _recipes!.isNotEmpty)
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(12),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:inventory_manager/models/ingredient.dart';
 import 'package:inventory_manager/models/recipe.dart';
@@ -6,7 +7,7 @@ import 'package:inventory_manager/models/recipe_ingredient.dart';
 import 'package:inventory_manager/models/unit.dart';
 import 'package:inventory_manager/services/recipe_database.dart';
 
-/// Service for importing recipes from a JSON file hosted on GitHub
+/// Service for importing recipes from a JSON file
 class RecipeImportService {
   final RecipeDatabase _database = RecipeDatabase.instance;
 
@@ -65,6 +66,7 @@ class RecipeImportService {
 
       int successCount = 0;
       int failCount = 0;
+      int skipCount = 0;
       final errors = <String>[];
 
       // Import each recipe
@@ -73,9 +75,13 @@ class RecipeImportService {
           await _importSingleRecipe(recipeData as Map<String, dynamic>);
           successCount++;
         } catch (e) {
-          failCount++;
           final title = recipeData['title'] ?? 'Unknown';
-          errors.add('Failed to import "$title": $e');
+          if (e.toString().contains('Recipe already exists')) {
+            skipCount++;
+          } else {
+            failCount++;
+            errors.add('Failed to import "$title": $e');
+          }
         }
       }
 
@@ -83,6 +89,89 @@ class RecipeImportService {
         success: true,
         recipesImported: successCount,
         recipesFailed: failCount,
+        recipesSkipped: skipCount,
+        errors: errors,
+      );
+    } catch (e) {
+      return ImportResult(
+        success: false,
+        error: 'Failed to import recipes: $e',
+      );
+    }
+  }
+
+  /// Import recipes from a local asset file
+  ///
+  /// Expected JSON format:
+  /// ```json
+  /// {
+  ///   "recipes": [
+  ///     {
+  ///       "title": "Recipe Name",
+  ///       "readyInMinutes": 30,
+  ///       "servings": 4,
+  ///       "summary": "Recipe description",
+  ///       "isFavorite": false,
+  ///       "steps": [
+  ///         {
+  ///           "stepNumber": 1,
+  ///           "instruction": "Step instruction"
+  ///         }
+  ///       ],
+  ///       "ingredients": [
+  ///         {
+  ///           "name": "Ingredient Name",
+  ///           "amount": 2,
+  ///           "unit": "g"
+  ///         }
+  ///       ]
+  ///     }
+  ///   ]
+  /// }
+  /// ```
+  Future<ImportResult> importRecipesFromAsset(String assetPath) async {
+    try {
+      // Load JSON from asset
+      final String jsonString = await rootBundle.loadString(assetPath);
+
+      // Parse JSON
+      final jsonData = json.decode(jsonString) as Map<String, dynamic>;
+
+      if (!jsonData.containsKey('recipes')) {
+        return ImportResult(
+          success: false,
+          error: 'Invalid JSON format: missing "recipes" field',
+        );
+      }
+
+      final recipesList = jsonData['recipes'] as List<dynamic>;
+
+      int successCount = 0;
+      int failCount = 0;
+      int skipCount = 0;
+      final errors = <String>[];
+
+      // Import each recipe
+      for (final recipeData in recipesList) {
+        try {
+          await _importSingleRecipe(recipeData as Map<String, dynamic>);
+          successCount++;
+        } catch (e) {
+          final title = recipeData['title'] ?? 'Unknown';
+          if (e.toString().contains('Recipe already exists')) {
+            skipCount++;
+          } else {
+            failCount++;
+            errors.add('Failed to import "$title": $e');
+          }
+        }
+      }
+
+      return ImportResult(
+        success: true,
+        recipesImported: successCount,
+        recipesFailed: failCount,
+        recipesSkipped: skipCount,
         errors: errors,
       );
     } catch (e) {
@@ -95,6 +184,13 @@ class RecipeImportService {
 
   /// Import a single recipe from JSON data
   Future<void> _importSingleRecipe(Map<String, dynamic> recipeData) async {
+    // Check if recipe already exists
+    final title = recipeData['title'] as String;
+    final exists = await _database.recipeExistsByTitle(title);
+    if (exists) {
+      throw Exception('Recipe already exists');
+    }
+
     // Parse instructions/steps
     final instructions = <String>[];
 
@@ -168,6 +264,7 @@ class ImportResult {
   final bool success;
   final int recipesImported;
   final int recipesFailed;
+  final int recipesSkipped;
   final String? error;
   final List<String> errors;
 
@@ -175,6 +272,7 @@ class ImportResult {
     required this.success,
     this.recipesImported = 0,
     this.recipesFailed = 0,
+    this.recipesSkipped = 0,
     this.error,
     this.errors = const [],
   });
@@ -184,11 +282,22 @@ class ImportResult {
       return error ?? 'Import failed';
     }
 
+    final parts = <String>[];
+    if (recipesImported > 0) {
+      parts.add('$recipesImported imported');
+    }
+    if (recipesSkipped > 0) {
+      parts.add('$recipesSkipped skipped');
+    }
     if (recipesFailed > 0) {
-      return 'Imported $recipesImported recipes successfully, $recipesFailed failed';
+      parts.add('$recipesFailed failed');
     }
 
-    return 'Successfully imported $recipesImported recipes';
+    if (parts.isEmpty) {
+      return 'No recipes to import';
+    }
+
+    return 'Import complete: ${parts.join(', ')}';
   }
 
   bool get hasErrors => errors.isNotEmpty;

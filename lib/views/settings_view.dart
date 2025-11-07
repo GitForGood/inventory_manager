@@ -158,7 +158,7 @@ class SettingsView extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.restaurant_menu_outlined),
                   title: const Text('Import Recipes'),
-                  subtitle: const Text('Load recipes from GitHub repository'),
+                  subtitle: const Text('Load bundled recipes into database'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => _showRecipeImportDialog(context),
                 ),
@@ -342,8 +342,8 @@ class SettingsView extends StatelessWidget {
   }
 
   void _showRecipeImportDialog(BuildContext context) {
-    // Hardcoded URL to the official recipe repository
-    const recipeUrl = 'https://raw.githubusercontent.com/GitForGood/inventory_manager/refs/heads/main/data/recipes.json';
+    // Path to the local recipe asset
+    const recipeAssetPath = 'assets/data/recipes.json';
 
     showDialog(
       context: context,
@@ -354,7 +354,7 @@ class SettingsView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'This will import recipes from the official repository and add them to your local database.',
+              'This will import the bundled recipes and add them to your local database.',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
@@ -393,7 +393,7 @@ class SettingsView extends StatelessWidget {
 
               try {
                 final importService = RecipeImportService();
-                final result = await importService.importRecipesFromUrl(recipeUrl);
+                final result = await importService.importRecipesFromAsset(recipeAssetPath);
 
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
 

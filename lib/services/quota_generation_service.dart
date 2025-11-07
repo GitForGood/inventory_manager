@@ -56,9 +56,22 @@ class QuotaGenerationService {
       )
     );
 
-    return batches
+    final expiringBatches = batches.where((batch) => batch.expirationDate.isBefore(periodEnd));
+    final nonExpiringBatches = batches.where((batch) => batch.expirationDate.isAfter(periodEnd));
+
+    final expiringQuotas = expiringBatches.map((batch){
+      return ConsumptionQuota(
+        id: '${batch.item.name.replaceAll(' ', '_')}_expiring_${batch.id}_${now.millisecondsSinceEpoch}',
+        foodItemId: batch.item.id,
+        foodItemName: batch.item.name,
+        targetCount: batch.count,
+        targetDate: batch.expirationDate
+      );
+    }).toList();
+
+    final maintenanceQuotas = nonExpiringBatches
       .where((batch) => batch.count > 0)
-      .fold(<FoodItem,(double,double)>{}, 
+      .fold(<FoodItem,(double,double)>{},
         (acc, batch){
           final item = batch.item;
           final evaluation = evaluator(batch);
@@ -67,10 +80,57 @@ class QuotaGenerationService {
           return acc;
       }).entries
       .map((entry) => ConsumptionQuota(
-        id: '${entry.key.name.replaceAll(' ', '_')}_${now.millisecondsSinceEpoch}', 
-        foodItemId: entry.key.id, 
-        foodItemName: entry.key.name, 
-        targetDate: periodEnd, 
+        id: '${entry.key.name.replaceAll(' ', '_')}_maintenance_${now.millisecondsSinceEpoch}',
+        foodItemId: entry.key.id,
+        foodItemName: entry.key.name,
+        targetDate: periodEnd,
+        targetCount: (decider(entry.value) + roundingOffsetGracePeriod).round()
+      )).toList();
+    
+    return (expiringQuotas) + (maintenanceQuotas);
+  }
+
+  static List<ConsumptionQuota> generateQuotasForEntireQuarter({
+    required List<InventoryBatch> batches,
+    double roundingOffsetGracePeriod = 0.1,
+    double proportionLimitForBatch = 0.5,
+  }) {
+    final period = ConsumptionPeriod.quarterly;
+    final start = period.getCurrentPeriodStart(DateTime.now());
+    final periodEnd = period.getCurrentPeriodEnd();
+    final daysUntilPeriodEnd = periodEnd.difference(start).inDays;
+
+    // Calculation helpers
+    final decider = (
+      ((double,double) highestTotal) => 
+      (highestTotal.$1/highestTotal.$2 >= proportionLimitForBatch 
+        ? highestTotal.$1 
+        : highestTotal.$2)
+    );
+    final evaluator = (
+      (InventoryBatch batch) => 
+      min (
+        (batch.count * daysUntilPeriodEnd).toDouble() / 
+        (batch.expirationDate.difference(start).inDays).toDouble(),
+        batch.count.toDouble()
+      )
+    );
+
+    return batches
+      .where((batch) => batch.count > 0)
+      .fold(<FoodItem,(double,double)>{},
+        (acc, batch){
+          final item = batch.item;
+          final evaluation = evaluator(batch);
+          final (highest, total) = acc.putIfAbsent(item, () => (0.0,0.0));
+          acc[item] = (highest < evaluation ? evaluation : highest, evaluation + total);
+          return acc;
+      }).entries
+      .map((entry) => ConsumptionQuota(
+        id: '${entry.key.name.replaceAll(' ', '_')}_quarterly_${start.millisecondsSinceEpoch}',
+        foodItemId: entry.key.id,
+        foodItemName: entry.key.name,
+        targetDate: periodEnd,
         targetCount: (decider(entry.value) + roundingOffsetGracePeriod).round()
       )).toList();
   }
