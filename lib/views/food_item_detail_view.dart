@@ -155,11 +155,6 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text('Add batch'),
-        icon: Icon(Icons.add),
-        onPressed: () => _showQuickRestockDialog(context)
-        ),
       body: Stack(
         children: [
           ListView.builder(
@@ -195,11 +190,11 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
                       runSpacing: 8,
                       children: [
                         AssistChip(
-                          icon: Icons.inventory_2,
+                          icon: Symbols.package_2,
                           labelText: '${currentGroup.totalCount} Items',
                         ),
                         AssistChip(
-                          icon: Symbols.package_2,
+                          icon: Symbols.trolley,
                           labelText: '${currentGroup.batchCount} Batches',
                         ),
                         AssistChip(
@@ -245,11 +240,25 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    'Batches',
-                    style: Theme.of(context).textTheme.titleLarge,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Batches',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      FilledButton.icon(
+                        onPressed: () => _showQuickRestockDialog(context),
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text('Add Batch'),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                const SizedBox(height: 8),
               ],
             );
           }
@@ -264,19 +273,6 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
           return Card(
             margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
             child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: isExpired
-                  ? colorScheme.errorContainer
-                  : colorScheme.primary,
-                child: Text(
-                  batch.count.toString(),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: isExpired
-                    ? colorScheme.onErrorContainer
-                    : colorScheme.onPrimary,
-                  ),
-                )
-              ),
               title: Text(
                 'Batch ${batchIndex + 1}',
               ),
@@ -286,18 +282,18 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit_outlined),
-                    onPressed: () => _showEditBatchDialog(context, batch),
-                    tooltip: 'Edit',
+                  Text(
+                      batch.count.toString(),
+                      style: Theme.of(context).textTheme.labelLarge
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline),
-                    onPressed: () => _confirmDeleteBatch(context, batch.id),
-                    tooltip: 'Delete',
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.chevron_right,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ],
               ),
+              onTap: () => _showBatchOptionsDialog(context, batch),
             ),
           );
         },
@@ -449,68 +445,148 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
     );
   }
 
-  void _showEditBatchDialog(BuildContext context, InventoryBatch batch) {
+  void _showBatchOptionsDialog(BuildContext context, InventoryBatch batch) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Batch Options'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.edit_outlined),
+              title: const Text('Change Amount'),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _showChangeAmountDialog(context, batch);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_today),
+              title: const Text('Change Expiration Date'),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _showChangeExpirationDialog(context, batch);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+              title: Text('Delete Batch', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                _confirmDeleteBatch(context, batch.id);
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showChangeAmountDialog(BuildContext context, InventoryBatch batch) {
     final countController = TextEditingController(text: batch.count.toString());
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Change Amount'),
+        content: TextFormField(
+          controller: countController,
+          decoration: const InputDecoration(
+            labelText: 'Quantity',
+            border: OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.number,
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final count = int.tryParse(countController.text);
+              if (count == null || count < 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Please enter a valid quantity'),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                  ),
+                );
+                return;
+              }
+
+              final updatedBatch = batch.copyWith(count: count);
+              context.read<InventoryBloc>().add(UpdateInventoryBatch(updatedBatch));
+
+              Navigator.pop(dialogContext);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Amount updated successfully'),
+                  backgroundColor: Theme.of(context).colorScheme.tertiary,
+                ),
+              );
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showChangeExpirationDialog(BuildContext context, InventoryBatch batch) {
     DateTime expirationDate = batch.expirationDate;
 
     showDialog(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: 48),
-          title: const Text('Edit Batch'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: countController,
-                decoration: const InputDecoration(
-                  labelText: 'Quantity',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              Card(
-                  margin: EdgeInsets.zero,
-                  child: InkWell(
-                  onTap: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: expirationDate,
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365 * 25)),
-                    );
-                    if (picked != null) {
-                      setState(() {
-                        expirationDate = picked;
-                      });
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          title: const Text('Change Expiration Date'),
+          content: Card(
+            margin: EdgeInsets.zero,
+            child: InkWell(
+              onTap: () async {
+                final picked = await showDatePicker(
+                  context: context,
+                  initialDate: expirationDate,
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 365 * 25)),
+                );
+                if (picked != null) {
+                  setState(() {
+                    expirationDate = picked;
+                  });
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Expiration Date:', style: Theme.of(context).textTheme.labelSmall?.copyWith(fontStyle: FontStyle.normal)),
+                    const SizedBox(width: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text('Expiration Date:', style: Theme.of(context).textTheme.labelSmall?.copyWith(fontStyle: FontStyle.normal)),
-                        const SizedBox(width: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              _formatDate(expirationDate),
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            const SizedBox(width: 8),
-                            const Icon(Icons.calendar_today),
-                          ],
+                        Text(
+                          _formatDate(expirationDate),
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.calendar_today),
                       ],
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
           actions: [
             TextButton(
@@ -519,29 +595,13 @@ class _FoodItemDetailViewState extends State<FoodItemDetailView> {
             ),
             ElevatedButton(
               onPressed: () {
-                final count = int.tryParse(countController.text);
-                if (count == null || count < 0) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Please enter a valid quantity'),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                  );
-                  return;
-                }
-
-                // Update batch
-                final updatedBatch = batch.copyWith(
-                  count: count,
-                  expirationDate: expirationDate,
-                );
-
+                final updatedBatch = batch.copyWith(expirationDate: expirationDate);
                 context.read<InventoryBloc>().add(UpdateInventoryBatch(updatedBatch));
 
                 Navigator.pop(dialogContext);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: const Text('Batch updated successfully'),
+                    content: const Text('Expiration date updated successfully'),
                     backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
                 );

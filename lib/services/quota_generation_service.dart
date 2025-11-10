@@ -85,7 +85,9 @@ class QuotaGenerationService {
         foodItemName: entry.key.name,
         targetDate: periodEnd,
         targetCount: (decider(entry.value) + roundingOffsetGracePeriod).round()
-      )).toList();
+      ))
+      .where((quota) => quota.targetCount > 0)
+      .toList();
     
     return (expiringQuotas) + (maintenanceQuotas);
   }

@@ -211,25 +211,13 @@ class _HomeViewState extends State<HomeView> {
                     // List items
                     final itemIndex = index - 2;
                     final group = groupedItems[itemIndex];
-
-                    final colorScheme = Theme.of(context).colorScheme;
-
                     return Card(
                       margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
                       shape: Theme.of(context).cardTheme.shape,
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: group.hasExpiredBatch
-                            ? colorScheme.errorContainer
-                            : colorScheme.primary,
-                          child: Text(
-                            group.totalCount.toString(),
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: group.hasExpiredBatch
-                              ? colorScheme.onErrorContainer
-                              : colorScheme.onPrimary,
-                            ),
-                          )
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          child: Icon(Symbols.storage, color: Theme.of(context).colorScheme.onPrimary,),
                         ),
                         title: Text(group.foodItem.name),
                         subtitle: Text(
@@ -241,11 +229,11 @@ class _HomeViewState extends State<HomeView> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              group.batchCount.toString(),
+                              group.totalCount.toString(),
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
-                            const SizedBox(width: 8),
-                            const Icon(Symbols.package_2),
+                            const SizedBox(width: 4),
+                            const Icon(Icons.chevron_right),
                           ],
                         ),
                         onTap: () {

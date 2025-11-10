@@ -266,6 +266,16 @@ class ConsumptionQuotaBloc extends Bloc<ConsumptionQuotaEvent, ConsumptionQuotaS
       final period = await _repository.getPreferredPeriod();
       final allBatches = await _database.getAllInventoryBatches();
 
+      // If there are no batches, emit empty loaded state instead of trying to regenerate
+      if (allBatches.isEmpty) {
+        emit(ConsumptionQuotaLoaded(
+          quotasByFoodItem: {},
+          selectedPeriod: period,
+          lastUpdated: DateTime.now(),
+        ));
+        return;
+      }
+
       // Generate aggregated quotas for current period
       final quotas = QuotaGenerationService.generateQuotasForCurrentPeriod(
         batches: allBatches,

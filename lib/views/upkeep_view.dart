@@ -396,7 +396,7 @@ class _UpkeepViewState extends State<UpkeepView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Storage Upkeep', style: Theme.of(context).textTheme.headlineMedium),
+        title: Text('Storage Refill', style: Theme.of(context).textTheme.headlineMedium),
       ),
       body: BlocBuilder<InventoryBloc, InventoryState>(
         builder: (context, inventoryState) {

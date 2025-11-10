@@ -75,8 +75,8 @@ class StorageSummaryCard extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   children: [
-                    AssistChip(icon: Icons.inventory, labelText: '${status.totalItems.toString()} Items'),
-                    AssistChip(icon: Symbols.package_2, labelText: '${status.totalBatches.toString()} Batches'),
+                    AssistChip(icon: Symbols.package_2, labelText: '${status.totalItems.toString()} Items'),
+                    AssistChip(icon: Symbols.trolley, labelText: '${status.totalBatches.toString()} Batches'),
                     // Only show Days chip if daily consumption is configured
                     if (status.estimatedDays != null) ...[
                       AssistChip(icon: Icons.calendar_today, labelText: '${status.estimatedDays!.toStringAsFixed(1)} Days'),

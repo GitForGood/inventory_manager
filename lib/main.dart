@@ -123,8 +123,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<NavigationDestination> _destinations = const [
     NavigationDestination(
-      icon: Icon(Icons.inventory_2_outlined),
-      selectedIcon: Icon(Icons.inventory_2),
+      icon: Icon(Icons.warehouse),
+      selectedIcon: Icon(Icons.warehouse),
       label: 'Inventory',
     ),
     NavigationDestination(
@@ -133,9 +133,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       label: 'Quota',
     ),
     NavigationDestination(
-      icon: Icon(Icons.import_export),
-      selectedIcon: Icon(Icons.import_export),
-      label: 'Upkeep',
+      icon: Icon(Icons.shopping_cart_outlined),
+      selectedIcon: Icon(Icons.shopping_cart),
+      label: 'Refill',
     ),
     NavigationDestination(
       icon: Icon(Icons.restaurant_menu_outlined),

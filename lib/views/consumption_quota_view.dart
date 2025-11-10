@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_manager/bloc/consumption_quota/consumption_quota_barrel.dart';
 import 'package:inventory_manager/bloc/inventory/inventory_barrel.dart';
+import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/widgets/consumption_quota_card.dart';
 import 'package:inventory_manager/widgets/outlined_card.dart';
 
@@ -79,6 +80,79 @@ class _ConsumptionQuotaViewState extends State<ConsumptionQuotaView> {
     );
   }
 
+  void _showChangePeriodDialog(BuildContext context) {
+    final state = context.read<ConsumptionQuotaBloc>().state;
+    ConsumptionPeriod currentPeriod = ConsumptionPeriod.weekly;
+
+    if (state is ConsumptionQuotaLoaded) {
+      currentPeriod = state.selectedPeriod;
+    }
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Change Consumption Period'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Select how often you want your consumption quotas to reset:',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 16),
+              ...ConsumptionPeriod.values.map((period) => RadioListTile<ConsumptionPeriod>(
+                title: Text(period.displayName),
+                subtitle: Text(_getPeriodDescription(period)),
+                value: period,
+                groupValue: currentPeriod,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      currentPeriod = value;
+                    });
+                  }
+                },
+              )),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.read<ConsumptionQuotaBloc>().add(
+                  RegenerateAllQuotas(currentPeriod),
+                );
+                Navigator.pop(dialogContext);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Period changed to ${currentPeriod.displayName}'),
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                  ),
+                );
+              },
+              child: const Text('Apply'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getPeriodDescription(ConsumptionPeriod period) {
+    switch (period) {
+      case ConsumptionPeriod.weekly:
+        return 'Monday to Sunday';
+      case ConsumptionPeriod.monthly:
+        return 'First to last day of month';
+      case ConsumptionPeriod.quarterly:
+        return 'Three-month periods';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,9 +166,21 @@ class _ConsumptionQuotaViewState extends State<ConsumptionQuotaView> {
                 context.read<ConsumptionQuotaBloc>().add(const RefreshQuotas());
               } else if (value == 'regenerate') {
                 _showRegenerateDialog(context);
+              } else if (value == 'change_period') {
+                _showChangePeriodDialog(context);
               }
             },
             itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'change_period',
+                child: Row(
+                  children: [
+                    Icon(Icons.calendar_month),
+                    SizedBox(width: 12),
+                    Text('Change Period'),
+                  ],
+                ),
+              ),
               const PopupMenuItem(
                 value: 'refresh',
                 child: Row(
@@ -181,26 +267,50 @@ class _ConsumptionQuotaViewState extends State<ConsumptionQuotaView> {
           if (state is ConsumptionQuotaLoaded) {
             if (state.quotasByFoodItem.isEmpty) {
               return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.calendar_today,
-                      size: 64,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No consumption quotas yet',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Add some inventory batches to get started',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 80,
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        'No Consumption Quotas Yet',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'To get started with consumption quotas:',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      _EmptyStateHintCard(
+                        icon: Icons.add_shopping_cart,
+                        title: '1. Add inventory',
+                        description: 'Create some food items and add batches to your inventory',
+                      ),
+                      const SizedBox(height: 12),
+                      _EmptyStateHintCard(
+                        icon: Icons.settings,
+                        title: '2. Check your settings',
+                        description: 'Adjust your desired consumption period in settings if needed',
+                      ),
+                      const SizedBox(height: 12),
+                      _EmptyStateHintCard(
+                        icon: Icons.auto_fix_high,
+                        title: '3. Quotas generate automatically',
+                        description: 'Quotas will appear here once you have inventory',
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
@@ -328,6 +438,62 @@ class _ProgressOverview extends StatelessWidget {
             ),
           ),
         ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyStateHintCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+
+  const _EmptyStateHintCard({
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Card(
+      elevation: 0,
+      color: colorScheme.surfaceContainerHighest,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              icon,
+              color: colorScheme.primary,
+              size: 28,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
