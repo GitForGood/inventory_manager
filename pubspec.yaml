@@ -104,13 +104,17 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: false
-  # Path to your app icon image file (1024x1024 recommended)
-  # Uncomment and set the path after adding your icon
+
+  # Fallback icon for older Android versions
   image_path: "assets/icon/app_icon.png"
 
-  # For a more modern look with adaptive icons on Android
-  # adaptive_icon_background: "#FFFFFF"
-  # adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"
+  # Adaptive icons for Android 8.0+ (automatically handles circular, rounded square, etc.)
+  adaptive_icon_background: "#000000"  # Black background to match your icon
+  adaptive_icon_foreground: "assets/icon/app_icon.png"
+
+  # This ensures the icon works for Play Store and all launcher shapes
+  # Android will automatically apply the appropriate mask (circle, rounded corners, etc.)
+  min_sdk_android: 21  # Supports Android 5.0+
 
   # Remove the default Flutter launcher icon
   remove_alpha_ios: true

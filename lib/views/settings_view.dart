@@ -4,12 +4,14 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:inventory_manager/bloc/settings/settings_barrel.dart';
 import 'package:inventory_manager/models/consumption_period.dart';
 import 'package:inventory_manager/models/daily_calorie_target.dart';
+// DEBUG: Database management imports
 import 'package:inventory_manager/services/recipe_database.dart';
 import 'package:inventory_manager/services/recipe_import_service.dart';
 import 'package:inventory_manager/services/backup_service.dart';
 import 'package:inventory_manager/widgets/calorie_target_bottom_sheet.dart';
 import 'package:inventory_manager/widgets/notification_settings_view.dart';
-import 'package:inventory_manager/views/theme_swatch_view.dart';
+// DEBUG: Theme swatch viewer import
+// import 'package:inventory_manager/views/theme_swatch_view.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -74,19 +76,20 @@ class SettingsView extends StatelessWidget {
                     },
                   ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.palette_outlined),
-                  title: const Text('Theme Colors'),
-                  subtitle: const Text('View all theme colors'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const ThemeSwatchView(),
-                      ),
-                    );
-                  },
-                ),
+                // DEBUG: Theme color swatch viewer
+                // ListTile(
+                //   leading: const Icon(Icons.palette_outlined),
+                //   title: const Text('Theme Colors'),
+                //   subtitle: const Text('View all theme colors'),
+                //   trailing: const Icon(Icons.chevron_right),
+                //   onTap: () {
+                //     Navigator.of(context).push(
+                //       MaterialPageRoute(
+                //         builder: (context) => const ThemeSwatchView(),
+                //       ),
+                //     );
+                //   },
+                // ),
                 const Divider(),
                 const Padding(
                   padding: EdgeInsets.all(16.0),
@@ -148,13 +151,14 @@ class SettingsView extends StatelessWidget {
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => _showResetDialog(context),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.build_outlined),
-                  title: const Text('Recreate Database Tables'),
-                  subtitle: const Text('Reset database structure (keeps data)'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showRecreateTablesDialog(context),
-                ),
+                // DEBUG: Database migration and management tools
+                // ListTile(
+                //   leading: const Icon(Icons.build_outlined),
+                //   title: const Text('Recreate Database Tables'),
+                //   subtitle: const Text('Reset database structure (keeps data)'),
+                //   trailing: const Icon(Icons.chevron_right),
+                //   onTap: () => _showRecreateTablesDialog(context),
+                // ),
                 ListTile(
                   leading: const Icon(Icons.restaurant_menu_outlined),
                   title: const Text('Import Recipes'),
@@ -341,6 +345,7 @@ class SettingsView extends StatelessWidget {
     );
   }
 
+  // DEBUG: Recipe import functionality
   void _showRecipeImportDialog(BuildContext context) {
     // Path to the local recipe asset
     const recipeAssetPath = 'assets/data/recipes.json';
@@ -469,6 +474,7 @@ class SettingsView extends StatelessWidget {
     );
   }
 
+  // DEBUG: Database clearing functionality
   void _showClearDataDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -505,123 +511,122 @@ class SettingsView extends StatelessWidget {
                 );
               },
             ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.inventory),
-              title: const Text('Clear Inventory'),
-              subtitle: const Text('Delete all batches and quotas'),
-              onTap: () {
-                Navigator.pop(dialogContext);
-                _confirmClearData(
-                  context,
-                  'Clear All Inventory',
-                  'Are you sure you want to delete all inventory batches and quotas? This cannot be undone.',
-                  () async {
-                    await RecipeDatabase.instance.clearAllInventory();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('All inventory cleared'),
-                        backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.event_busy),
-              title: const Text('Clear Quotas Only'),
-              subtitle: const Text('Delete all consumption quotas'),
-              onTap: () {
-                Navigator.pop(dialogContext);
-                _confirmClearData(
-                  context,
-                  'Clear All Quotas',
-                  'Are you sure you want to delete all consumption quotas? This cannot be undone.',
-                  () async {
-                    await RecipeDatabase.instance.clearAllQuotas();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('All quotas cleared'),
-                        backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: Icon(Icons.delete_forever, color: Theme.of(context).colorScheme.error),
-              title: Text('Clear All Data', style: TextStyle(color: Theme.of(context).colorScheme.error)),
-              subtitle: const Text('Delete everything (recipes, inventory, food items)'),
-              onTap: () {
-                Navigator.pop(dialogContext);
-                _confirmClearData(
-                  context,
-                  'Clear ALL Data',
-                  'Are you sure you want to delete ALL data including recipes, inventory, food items, and quotas? This cannot be undone!',
-                  () async {
-                    await RecipeDatabase.instance.clearAllData();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('All data cleared'),
-                        backgroundColor: Theme.of(context).colorScheme.error,
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.inventory),
+            title: const Text('Clear Inventory'),
+            subtitle: const Text('Delete all batches and quotas'),
+            onTap: () {
+              Navigator.pop(dialogContext);
+              _confirmClearData(
+                context,
+                'Clear All Inventory',
+                'Are you sure you want to delete all inventory batches and quotas? This cannot be undone.',
+                () async {
+                  await RecipeDatabase.instance.clearAllInventory();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('All inventory cleared'),
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.event_busy),
+            title: const Text('Clear Quotas Only'),
+            subtitle: const Text('Delete all consumption quotas'),
+            onTap: () {
+              Navigator.pop(dialogContext);
+              _confirmClearData(
+                context,
+                'Clear All Quotas',
+                'Are you sure you want to delete all consumption quotas? This cannot be undone.',
+                () async {
+                  await RecipeDatabase.instance.clearAllQuotas();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('All quotas cleared'),
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: Icon(Icons.delete_forever, color: Theme.of(context).colorScheme.error),
+            title: Text('Clear All Data', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+            subtitle: const Text('Delete everything (recipes, inventory, food items)'),
+            onTap: () {
+              Navigator.pop(dialogContext);
+              _confirmClearData(
+                context,
+                'Clear ALL Data',
+                'Are you sure you want to delete ALL data including recipes, inventory, food items, and quotas? This cannot be undone!',
+                () async {
+                  await RecipeDatabase.instance.clearAllData();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('All data cleared'),
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ],
       ),
-    );
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext),
+          child: const Text('Cancel'),
+        ),
+      ],
+    ),
+  );
   }
 
-  void _confirmClearData(
-    BuildContext context,
-    String title,
-    String message,
-    Future<void> Function() onConfirm,
-  ) {
+void _confirmClearData(
+  BuildContext context,
+  String title,
+  String message,
+  Future<void> Function() onConfirm) {
     showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(dialogContext);
-              try {
-                await onConfirm();
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Error: $e'),
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                  ),
-                );
-              }
-            },
-            child: Text('Delete', style: TextStyle(color: Theme.of(context).colorScheme.error)),
-          ),
-        ],
-      ),
-    );
-  }
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: Text(title),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.pop(dialogContext);
+            try {
+              await onConfirm();
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Error: $e'),
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+              );
+            }
+          },
+          child: Text('Delete', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+        ),
+      ],
+    )
+  );
+}
 
   void _showCalorieTargetSheet(BuildContext context, DailyCalorieTarget? currentTarget) {
     showModalBottomSheet(
@@ -640,113 +645,114 @@ class SettingsView extends StatelessWidget {
     );
   }
 
-  void _showRecreateTablesDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Recreate Database Tables'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'This will drop and recreate all database tables with empty structures.',
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.errorContainer,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.warning_outlined,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'This will delete ALL data including recipes, inventory, and quotas!',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onErrorContainer,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Use this only if:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-            const Text('• Database is corrupted', style: TextStyle(fontSize: 12)),
-            const Text('• Tables are missing or broken', style: TextStyle(fontSize: 12)),
-            const Text('• App won\'t load properly', style: TextStyle(fontSize: 12)),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(dialogContext);
+  // DEBUG: Database table recreation functionality
+  // void _showRecreateTablesDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (dialogContext) => AlertDialog(
+  //       title: const Text('Recreate Database Tables'),
+  //       content: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           const Text(
+  //             'This will drop and recreate all database tables with empty structures.',
+  //           ),
+  //           const SizedBox(height: 16),
+  //           Container(
+  //             padding: const EdgeInsets.all(12),
+  //             decoration: BoxDecoration(
+  //               color: Theme.of(context).colorScheme.errorContainer,
+  //               borderRadius: BorderRadius.circular(8),
+  //             ),
+  //             child: Row(
+  //               children: [
+  //                 Icon(
+  //                   Icons.warning_outlined,
+  //                   color: Theme.of(context).colorScheme.error,
+  //                 ),
+  //                 const SizedBox(width: 12),
+  //                 Expanded(
+  //                   child: Text(
+  //                     'This will delete ALL data including recipes, inventory, and quotas!',
+  //                     style: TextStyle(
+  //                       fontSize: 12,
+  //                       fontWeight: FontWeight.bold,
+  //                       color: Theme.of(context).colorScheme.onErrorContainer,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           const SizedBox(height: 12),
+  //           const Text(
+  //             'Use this only if:',
+  //             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+  //           ),
+  //           const Text('• Database is corrupted', style: TextStyle(fontSize: 12)),
+  //           const Text('• Tables are missing or broken', style: TextStyle(fontSize: 12)),
+  //           const Text('• App won\'t load properly', style: TextStyle(fontSize: 12)),
+  //         ],
+  //       ),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () => Navigator.pop(dialogContext),
+  //           child: const Text('Cancel'),
+  //         ),
+  //         TextButton(
+  //           onPressed: () async {
+  //             Navigator.pop(dialogContext);
 
-              // Show loading
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                      SizedBox(width: 16),
-                      Text('Recreating database tables...'),
-                    ],
-                  ),
-                  duration: Duration(seconds: 10),
-                ),
-              );
+  //             // Show loading
+  //             ScaffoldMessenger.of(context).showSnackBar(
+  //               const SnackBar(
+  //                 content: Row(
+  //                   children: [
+  //                     SizedBox(
+  //                       width: 20,
+  //                       height: 20,
+  //                       child: CircularProgressIndicator(strokeWidth: 2),
+  //                     ),
+  //                     SizedBox(width: 16),
+  //                     Text('Recreating database tables...'),
+  //                   ],
+  //                 ),
+  //                 duration: Duration(seconds: 10),
+  //               ),
+  //             );
 
-              try {
-                await RecipeDatabase.instance.recreateAllTables();
+  //             try {
+  //               await RecipeDatabase.instance.recreateAllTables();
 
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('Database tables recreated successfully!'),
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
-                    duration: const Duration(seconds: 3),
-                  ),
-                );
-              } catch (e) {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Error recreating tables: $e'),
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                    duration: const Duration(seconds: 5),
-                  ),
-                );
-              }
-            },
-            child: Text(
-              'Recreate Tables',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  //               ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  //               ScaffoldMessenger.of(context).showSnackBar(
+  //                 SnackBar(
+  //                   content: const Text('Database tables recreated successfully!'),
+  //                   backgroundColor: Theme.of(context).colorScheme.tertiary,
+  //                   duration: const Duration(seconds: 3),
+  //                 ),
+  //               );
+  //             } catch (e) {
+  //               ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  //               ScaffoldMessenger.of(context).showSnackBar(
+  //                 SnackBar(
+  //                   content: Text('Error recreating tables: $e'),
+  //                   backgroundColor: Theme.of(context).colorScheme.error,
+  //                   duration: const Duration(seconds: 5),
+  //                 ),
+  //               );
+  //             }
+  //           },
+  //           child: Text(
+  //             'Recreate Tables',
+  //             style: TextStyle(color: Theme.of(context).colorScheme.error),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   void _showExportDialog(BuildContext context) {
     showDialog(
